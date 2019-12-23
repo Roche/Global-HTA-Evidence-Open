@@ -1,0 +1,25 @@
+#' rpsftmPlus: An R package for Rank Preserving Structural Time models
+#'
+#' The package extends the rpsftm package with some useful default reports and functions to facilitate sensitivity analysis. Covering descriptive, diagnostic and reporting aspects. All the functions are designed to take an rpsftm object (see rpstm::rpsftm() for details on creation) as an argument. The descriptive functions do not actually require an rspft model to be fit but rather just use it as a convenient way to store information about switching alongside survival.
+#'
+#' The following functions are then used for descriptive analysis:
+#' * ggexposure: ggexposure(x). This function plots a single line per patient showing exposure prior to event or censoring.
+#' * ggatrisk: ggatrisk(x). This function plots at risk on treatments.
+#' * rpsftm.atrisk: rpstm.atrisk(x, eval.times). This function returns n and % of patients on risk by treatment.
+#' * ggdiscount: ggdiscount(x). This function plots hypothetical results from removing switch treatment from control arm.
+#'
+#' The following functions are used for diagnostics:
+#' * ggpsi: ggpsi(x). This function plots psi vs Z(psi) to assess a unique solution.
+#' * gglatent: gglatent(x). This function plots the latent survival time to assess if balanced.
+#'
+#' The following functions are used for reporting:
+#' * rpsftm.coxph: rpsftm.coxph(x). This function compares observed experimental and latent control arms with a cox model. It inflates the variance to account for the g-estimation step and correct the CI limits.
+#'
+#' The following functions are used for sensitivity analysis of the common treatment effect:
+#' * rpsftm.refit: rpsftm.refit(x, k). This function refits an rpsftm model varying the treat_modifier parameter. Allowing sensitivities to the common treatment effect assumption.
+#'
+#' The following functions are utilities that may have further use elsewhere and do not take an rpsftm() object as a parameter:
+#' * as.data.frame.survfit: as.data.frame.survfit(x). For a given survfit() object returns KM estimates and strata in a dataframe.
+#' @docType package
+#' @name rpsftmPlus
+NULL
