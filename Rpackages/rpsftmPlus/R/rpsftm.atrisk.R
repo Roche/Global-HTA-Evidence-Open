@@ -67,9 +67,11 @@ rpsftm.atrisk <- function(x, eval.times = NULL){
 
   stat.df <- right_join(exp.df, stat.all, by = c(".arm", "uid")) %>%
     mutate(final.event = ifelse(cens==1, "Event", "Censored"),
-           status = ifelse(eval.time >= time, final.event,
-                           ifelse(eval.time >= cnt.start & eval.time <= cnt.stop, "At risk on Control",
-                                  ifelse(eval.time >= exp.start & eval.time <= exp.stop, "At risk on Experimental", NA)
+           status = ifelse(eval.time > time, final.event,
+                           ifelse(eval.time > cnt.start & eval.time <= cnt.stop, "At risk on Control",
+                                  ifelse(eval.time > exp.start & eval.time <= exp.stop, "At risk on Experimental", 
+                                        ifelse(.arm == 0,  "At risk on Control",  "At risk on Experimental")
+                                        )
                            )
            )
     ) %>%
