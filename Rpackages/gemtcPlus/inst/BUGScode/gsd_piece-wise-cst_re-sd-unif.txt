@@ -1,0 +1,70 @@
+# Piecewise constant hazard model (=piecewise exponential) for digitized KM data, random effects
+# Prior for between-trial-heterogeneity: uniform U(0, max) for RE standard deviation
+# -----------------------------------------------------------------------------------------------
+# Apr 2017, Sandro Gsteiger
+
+model{
+
+## Sampling model (likelihood)
+for (i in 1:Nobs){
+
+  # likelihood: digitized KM curves
+  r[i] ~ dbin(p[i], n[i])
+  p[i] <- 1 - exp(-h[i] * dt[i])  # cumulative hazard over interval [t,t+dt] expressed as deaths per person-month
+
+  # piecewise constant model
+  log(h[i]) <- Beta[s[i], a[i], segment[i]]
+}
+
+
+## Arm level parameters = study effect + trt effect (i.e. contrast)
+for (i in 1:Ns){
+  for (j in 1:Na[i]){
+    for (k in 1:(Ncuts + 1)){
+      Beta[i, j, k] <- mu[i, k] + delta[i, j, k]
+    }
+  }
+}
+
+
+## Random effects (multi-arm correction; consistency eq for population parameters)
+for (i in 1:Ns){
+  # j=1
+    for (k in 1:(Ncuts + 1)){
+      w[i, 1, k] <- 0
+      delta[i, 1, k] <- 0
+    }
+
+  # j>1
+  for (j in 2:Na[i]){
+    for (k in 1:(Ncuts + 1)){
+      delta[i, j, k] ~ dnorm(md[i, j, k], re.prec.d[i, j, k])
+      md[i, j, k] <- d[t[i, j], k] - d[t[i, 1], k] + sw[i, j, k]
+      w[i, j, k] <- (delta[i, j, k] - d[t[i, j], k] + d[t[i, 1], k])
+      sw[i, j, k] <- sum(w[i, 1:(j - 1), k]) / (j - 1) 
+      re.prec.d[i, j, k] <- re.prec * 2 * (j - 1) / j 
+    }
+  }
+}
+
+
+
+
+## Priors
+for (i in 1:Ns){
+  for (k in 1:(Ncuts + 1)){
+    mu[i, k] ~ dnorm(feprior_mean, feprior_prec) 
+  }
+}
+
+for (k in 1:(Ncuts + 1)){
+  d[1, k] <- 0
+  for (i in 2:Ntrt){
+    d[i, k] ~ dnorm(feprior_mean, feprior_prec) 
+  }
+}
+
+sd ~ dunif(0, reprior_sd_unif_max)
+re.prec <- 1 / (sd * sd)
+
+} # end of model

@@ -1,0 +1,45 @@
+---
+title: "General Development Workflow"
+author: "Nick Howlett, Sandro Gsteiger"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{General Development Workflow}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+### General Development Workflow
+
+Interactive development of new functions and reports is easy using `devtools`. Any R code (functions etc) go in the `R` folder of the package root. A good convention to follow is to have one file per function, however if you have a collection of related functions it may be best to keep them together. Please see later on how to document and test your functions. The latest code can be loaded into the R session (as if you had built, installed, and attached the package) by using the `devtools::load_all()` function. A useful shortcut for this inside RStudio is `ctlr+shift+L`.
+
+Here's an example workflow for adding a function to the package step by step
+
+1. Create `function_name.R` script in the `R` directory
+1. Write function code
+1. Load package with `ctlr+shift+L`
+1. Test function by calling it in the `R` session
+1. Fix bugs etc
+1. Document function (see later for details)
+1. Build tests for function (see later for details)
+
+Once you are happy with your addition to the package you can build a source version for others to install and use with the following function.
+
+```{r, eval = FALSE}
+devtools::build()
+```
+
+If you are are adding or modifying a vignette (built in report) then make sure you build with the following argument
+
+```{r, eval = FALSE}
+devtools::build(vignettes = TRUE)
+```
+
+The vignettes are slow to build so I suggest only running them when you are working on the vignettes.

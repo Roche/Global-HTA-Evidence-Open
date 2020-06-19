@@ -1,0 +1,42 @@
+# Piecewise constant hazard model (=piecewise exponential) for digitized KM data, fixed effects
+# -----------------------------------------------------------------------------------------------
+# Apr 2017, Sandro Gsteiger
+
+model{
+
+## Sampling model (likelihood)
+for (i in 1:Nobs){
+
+  # likelihood: digitized KM curves
+  r[i] ~ dbin(p[i], n[i])
+  p[i] <- 1 - exp(-h[i] * dt[i])  # cumulative hazard over interval [t,t+dt] expressed as deaths per person-month
+
+  # piecewise constant model
+  log(h[i]) <- Beta[s[i], a[i], segment[i]]
+}
+
+
+## Arm level parameters = study effect + trt effect (consistency eq)
+for (i in 1:Ns){
+  for (j in 1:Na[i]){
+    for (k in 1:(Ncuts + 1)){
+      Beta[i, j, k] <- mu[i, k] + d[t[i, j], k] - d[t[i, 1], k]
+    }
+  }
+}
+     
+## Priors
+for (i in 1:Ns){
+  for (k in 1:(Ncuts + 1)){
+    mu[i, k] ~ dnorm(feprior_mean, feprior_prec) 
+  }
+}
+
+for (k in 1:(Ncuts + 1)){
+  d[1, k] <- 0
+  for (i in 2:Ntrt){
+    d[i, k] ~ dnorm(feprior_mean, feprior_prec) 
+  }
+}
+
+} # end of model

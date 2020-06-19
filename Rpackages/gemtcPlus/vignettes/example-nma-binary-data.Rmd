@@ -1,0 +1,185 @@
+---
+title: "NMA for Binary data (2-arm trials)"
+author: "Beth Ashlee"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{NMA for Binary data (2-arm trials)}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+  
+## Introduction
+This vignette provides a short example of a Bayesian NMA for Binary data. The model fit relies on the `gemtc` package, pre- and post-processing is done with `gemtcPlus`. 
+
+## Prepare the environment
+```{r, warning = FALSE, results = "hide", message=FALSE}
+library(dplyr)
+library(gemtc)        
+library(gemtcPlus)     
+library(ggmcmc)  
+
+```
+
+
+## Load in the data
+```{r}
+data("binary_data", package = "gemtcPlus") # This should be binary
+
+```
+
+
+## Plan the model 
+```{r}
+model_plan <- plan_binary(bth.model = "RE", 
+                          n.chain = 3, 
+                          n.iter = 6000, 
+                          thin = 1,
+                          n.adapt = 1000, 
+                          link = "logit",
+                          bth.prior =  mtc.hy.prior(type = "var",
+                                                   distr = "dlnorm",-4.18, 1 / 1.41 ^ 2)
+                          )
+```
+
+## Ready the data 
+```{r}
+model_input <- nma_pre_proc(binary_data, plan = model_plan)
+
+```
+
+
+__Figure__ Network plot
+```{r, results='asis', fig.height=6, fig.width=6}
+plot(model_input$fitting_data)
+```
+
+## Fit the model 
+```{r}
+model  <- nma_fit(model_input = model_input)
+```
+
+
+# Post processing
+## Inspect convergence
+The `ggmcmc` package provides ggplot2 versions of all major convergence plots and diagnostics. 
+
+__Figure__ Traceplot
+```{r, results='asis', fig.height=9, fig.width=6}
+ggs_traceplot(ggs(model$samples))
+```
+
+__Figure__ Densityplot
+```{r, results='asis', fig.height=9, fig.width=6}
+ggs_density(ggs(model$samples))
+```
+
+Many more diagnostic plots are available, such as Brooks-Gelman-Rubin convergence diagnostic (Rhat), auto-correlation plot, or  running means.
+```{r}
+ggs_Rhat(ggs(model$samples))
+ggs_autocorrelation(ggs(model$samples))
+ggs_running(ggs(model$samples))
+```
+
+
+
+# Produce outputs of interest
+
+## Posterior summaries (log-scale)
+The contrasts in this model are log-odds ratios.
+
+Unfortunately, `gemtc` does not provide an estimate of the effective sample size (`n.eff`). Instead, a time-series SE is given. As a rule of thumb, the length of the MCMC is sufficient if the time-series SE is smaller than 2%(-5%) of the posterior SD.
+
+```{r}
+summary(model)
+```
+
+To judge overall model fit, the residual deviance should be compared to the number of independent data points (which can be done via a small utility function in `gemtcPlus`).
+
+```{r}
+get_mtc_sum(model)
+```
+
+
+## Odds ratio (OR) estimates
+
+Assume new treatment is "A" and is to be compared vs all other treatments.
+
+__Table__ Odds ratios treatment A vs other treatments
+```{r}
+OR <- get_mtc_newVsAll(model, new.lab = "A", transform = "exp", digits = 2)
+OR
+```
+
+__Table__ Probability A better than other treatments (better meaning larger OR)
+```{r}
+get_mtc_probBetter(model, new.lab = "A", smaller.is.better = FALSE, sort.by = "effect")
+```
+
+__Figure__ Forest plot A vs other treatments
+```{r, results='asis', fig.height=3, fig.width=6, warning=FALSE}
+plot_mtc_forest(x = OR, 
+                lab = "Odds ratio A vs others",
+                breaks = c(0.125, 0.25, 0.5, 0.8, 1, 1.25, 2, 4, 8, 12), 
+                sort.by = "effect")  
+```
+
+
+
+__Table__ Cross-tabulation of ORs
+```{r, results='asis'}
+ctab <- round(exp(relative.effect.table(model)), 2)
+pander::pandoc.table(as.data.frame(ctab), split.tables = Inf)
+```
+
+
+
+## Treatment rankings
+```{r}
+rk  <- rank.probability(model, preferredDirection = 1)
+mrk <- reshape2::melt(rk[,], varnames = c("Treatment", "Rank"), value.name = "Probability")
+
+fig <- ggplot(data = mrk) +
+  geom_line(aes(Rank, Probability, color = Treatment, linetype = Treatment), size = 1.5) +
+  theme_bw()
+```
+
+__Figure__ Rankogram
+```{r, results='asis', fig.height=3, fig.width=6}
+plot(fig)
+```
+
+__Table__ Rank probabilities
+```{r}
+colnames(rk) <- paste("Rank", 1:ncol(rk))
+rk
+```
+
+
+# Node-splitting (inconsistency assessment)
+```{r, fig.height=6, fig.width=6}
+nsplit <- mtc.nodesplit(model$model$network)
+summary(nsplit)
+plot(summary(nsplit))
+```
+
+# Forest plot
+```{r}
+HR_i    <- get_mtc_newVsAll(model, new.lab = "A", transform = "exp", digits = 2)
+plot_mtc_forest(HR_i)
+```
+
+# Extract model code (e.g. for Appendix)
+```{r}
+cat(model$code)
+```
+
+
+# Session info
+```{r}
+sessionInfo()
+```
+
+
+
+```

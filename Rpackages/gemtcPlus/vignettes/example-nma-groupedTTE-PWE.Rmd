@@ -1,0 +1,332 @@
+---
+title: 'Bayesian FE & RE NMA using piecewise exponential model'
+author: "Sandro Gsteiger"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Bayesian FE & RE NMA using PWE model (example)}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+_"Minimal" example that might serve as template_
+
+## Introduction
+This vignette provides a short example of a Bayesian piecewise exponential (PWE) NMA for grouped survival data. The model fit calls jags via the `R2jags` package. Pre- and post-processing is done with `gemtcPlus`.
+
+## Prepare the environment
+```{r, warning = FALSE, results = "hide", message=FALSE}
+library(dplyr)
+library(gemtc)        
+library(gemtcPlus)     
+library(ggmcmc)       
+
+```
+
+# Load input data
+The PWE NMA for grouped survival data requires columns "study", "treatment", "t.start" and "t.end" (identifying the time interval), "n.event", "n.censored", and "n.risk" (identifying the observed events, numbers of censorings, and patients at risk for the given interval).
+
+The `gemtcPlus` package contains such an example data set.
+
+## Load in the data
+```{r, warning = FALSE}
+data("grouped_TTE")
+
+```
+
+
+## Plan the model 
+```{r, warning = FALSE}
+model_plan <- plan_pwe(model.pars = list(cut.pts =  c(3, 10)),
+                       bth.model = "FE", ref.std = "STUDY2", nma.ref.trt = "B",
+                       n.chains = 2,
+                       n.iter = 6000,
+                       n.burnin = 1000,
+                       n.thin = 1)
+
+```
+
+## Ready the data 
+```{r, warning = FALSE}
+# Returns list list contaiing a jags list ready for input to `nma_fit` and a network object
+model_input <- nma_pre_proc(grouped_TTE, model_plan)
+```
+
+
+## Fit the model 
+```{r, warning = FALSE}
+model  <- nma_fit(model_input = model_input)
+```
+
+JAGS summary. Check convergence by inspecting Rhat (should be at least <1.05), and see whether the effective sample size is large enough to allow for inference (rule of thumb: n.eff >1000, though this may be demanding).
+```{r}
+model
+```
+
+
+## Post processing
+Produce diagnostic plots to further assess convergence. Here: select the contrasts trt 2 vs trt 1 for visibility.
+```{r, warning = FALSE}
+
+# Prepare plot data
+nodes <- colnames(as.mcmc(model)[[1]])
+sel <- grep("d[2,", nodes, fixed = TRUE)
+plot_data <- ggs(as.mcmc(model)[, sel])
+```
+
+__Figure__ Traceplot
+```{r, results='asis', fig.height=5, fig.width=6}
+ggs_traceplot(plot_data)
+```
+
+__Figure__ Densityplot
+```{r, results='asis', fig.height=5, fig.width=6}
+ggs_density(plot_data)
+```
+
+__Figure__ Auto-correlation plot
+```{r, results='asis', fig.height=5, fig.width=6}
+ggs_autocorrelation(plot_data)
+```
+
+__Figure__ Running means
+```{r, results='asis', fig.height=5, fig.width=6}
+ggs_running(plot_data)
+```
+
+Save the FE results for later use.
+```{r}
+fixed_effect_model <- model
+rm(model)
+```
+
+
+
+### Random effects model
+__Informative prior by Turner et al. LN(-4.2, 1.4^2)__
+Create a new plan and run-run the fit for the random effects model.
+
+
+## Plan the model 
+```{r, warning = FALSE}
+model_plan <- plan_pwe(model.pars = list(cut.pts =  c(3, 10)),
+                       bth.model = "RE", ref.std = "STUDY2", nma.ref.trt = "B",
+                    
+                       n.chains = 2,
+                       n.iter = 6000,
+                       n.burnin = 1000,
+                       n.thin = 1,
+                       bth.prior = bth_prior(type = "var", distr = "ln", param = list(mean = 1, prec = 1.5)))
+```
+
+```{r}
+# Returns list list contaiing a jags list ready for input to `nma_fit` and a network object
+model_input <- nma_pre_proc(grouped_TTE, model_plan)
+```
+
+
+## Fit the model 
+
+```{r, warning = FALSE}
+model  <- nma_fit(model_input = model_input)
+```
+
+JAGS summary. Inspect Rhat and n.eff.
+```{r}
+model
+```
+
+
+## Post processing
+
+Produce diagnostic plots to further assess convergence. Here, let's select the random effects standard deviation.
+__Figure__ Traceplot
+```{r, results='asis', fig.height=3.5, fig.width=6}
+ggs_traceplot(ggs(as.mcmc(model), family = "sd"))
+```
+
+__Figure__ Densityplot
+```{r, results='asis', fig.height=3.5, fig.width=6}
+ggs_density(ggs(as.mcmc(model), family = "sd"))
+```
+
+
+Save the FE results for later use.
+```{r}
+random_effects_model <- model
+rm(model)
+```
+
+
+
+
+
+# Produce outputs of interest
+
+Start with an object collecting all fits done.
+```{r}
+all_res <- list(fixed_effect_model, random_effects_model)
+```
+
+
+## Model comparison
+```{r, results='asis'}
+dcompare <- get_pwe_comparison(all_res)
+knitr::kable(dcompare, caption = "__Table__ Model comparison")
+```
+
+
+## Hazard ratio estimates
+```{r, results='asis', warning=FALSE, fig.height=6, fig.width=6}
+# loop through fits
+for(i in seq_along(all_res)){
+  res_i <- all_res[[i]]
+  title <- res_i$descr
+  cat("### ", title, "  \n")
+  
+  ## Tables: Hazard ratio estimates for each segment
+  HR_rev<- get_pwe_contrasts(fit = res_i, 
+                             ref = "A",  
+                             digits = 3,
+                             exponentiate = TRUE, 
+                             reverse = TRUE)
+  print(knitr::kable(HR_rev %>% select(-x, -xend), caption = "__Table__ Hazard ratio estimates of A vs other treatments"))
+  cat("\n\n")
+
+  
+  ## Graphs (needs the HR data calculated above)
+  ymax <- 10
+  dhr <- HR_rev
+  drib <- data.frame(x = as.vector(t(dhr[c("x", "xend")])),           # data structure for ribbons
+                     ylo = rep(dhr$lCrI, each = 2),                   #  cap ribbon at ymax
+                     yup = rep(dhr$uCrI, each = 2),
+                     Comparison = rep(dhr$Comparison, each = 2)) %>%
+    mutate(yup = ifelse(yup > ymax, ymax, yup))
+
+  fig <- ggplot(data = dhr) + 
+    geom_ribbon(data = drib, aes(x = x, ymin = ylo, ymax = yup), fill = "lightblue", alpha = 0.8) +
+    geom_hline(aes(yintercept = 1), col = "darkgrey") +
+    geom_segment(aes(x = x, xend = xend, y = Median, yend = Median)) +
+    facet_wrap(~Comparison, ncol = 2) +
+    scale_y_log10(breaks = c(0.1, 0.5, 1, 2, 10)) +
+    coord_cartesian(ylim = c(0.1, ymax)) +
+    xlab("Month") + ylab("Hazard ratio") +
+    theme_bw()
+  
+  cat("__Figure__ Hazard ratio estimates A vs other treatments\n")
+  plot(fig)
+  cat("\n\n")
+  
+  rm(res_i)
+}
+```
+
+
+## Survivor function estimates
+The NMA baseline estimate from the `ref_trt` arm from `ref_std` is used. The contrast estimates from the NMA are then added to obtain the survivor functions for the other interventions.
+
+```{r, results='asis', warning=FALSE, fig.height=4, fig.width=6}
+ref_trt <- "B"
+ref_std <- "STUDY2"
+hor <- 60
+
+# loop through fits
+for(i in seq_along(all_res)){
+  res_i <- all_res[[i]]
+  title <- res_i$descr
+  cat("### ", title, "  \n")
+  
+  ## Plots of survivor functions over time ("NMA result"), ref study/arm and timehorizons specified in settings function
+  sel_ref <- which(attr(res_i$data.jg, "d_arms")$study == ref_std & attr(res_i$data.jg, "d_arms")$treatment == ref_trt)
+  id_ref_std <- attr(res_i$data.jg, "d_arms")$studyn[sel_ref]
+  id_ref_arm <- attr(res_i$data.jg, "d_arms")$arm[sel_ref]
+
+  S_extrap <- get_pwe_S(fit = res_i,  
+                        ref.std = id_ref_std, 
+                        ref.arm = id_ref_arm,  
+                        time = seq(0, hor, 0.1))
+  
+  fig <- ggplot(data = S_extrap) +        
+    geom_line(aes(x = time, y = S, col = treatment, linetype = treatment)) +
+    ylim(0, 1) +
+    xlab("Month") + ylab("Survival probability") +
+    theme_bw() +
+    theme(legend.title = element_blank())
+  cat("__Figure__ Survivor function estimates (time horizon:", hor, "months) \n")
+  plot(fig)
+  cat("\n\n")
+  
+  fig <- ggplot(data = S_extrap) + 
+    facet_wrap(~treatment) +
+    geom_ribbon(aes(x = time, ymin = lCrI, ymax = uCrI), fill = "lightblue", alpha = 0.8) +
+    geom_line(aes(x = time, y = S)) +
+    ylim(0, 1) +
+    xlab("Month") + ylab("Survival probability") +
+    theme_bw()
+  cat("__Figure__ Survivor function estimates by treatment (time horizon:", hor, "months) \n")
+  plot(fig)
+  cat("\n\n")
+  
+  rm(list = c("S_extrap", "fig"))
+  rm(res_i)
+}
+```
+
+
+## Model fit: observed KM data vs estimated S(t)
+
+```{r, results='asis', warning=FALSE, fig.height=6, fig.width=6}
+# loop through fits
+for(i in seq_along(all_res)){
+  res_i <- all_res[[i]]
+  title <- res_i$descr
+  cat("### ", title, "  \n")
+
+  gof <- get_pwe_GoF(fit = res_i, 
+                     data.arms = attr(res_i$data.jg, "d_arms"),
+                     data.jg = res_i$data.jg)
+   
+  fig <- ggplot() + 
+    geom_line(data = gof %>% filter(type == "nma"), aes(x = time, y = S, col = treatment)) +
+    geom_line(data = gof %>% filter(type == "obs"), aes(x = time, y = S, col = treatment), linetype = "dashed") +
+    facet_wrap(~study, ncol = 2) +
+    ylim(0, 1) + xlim(0, 36) +
+    xlab("Month") + ylab("Survival probability") +
+    theme_bw() +
+    theme(legend.position = "top", legend.title = element_blank())
+
+  cat("__Figure__ Goodness-of-fit: estimated (solid lines) and observed (dashed) survivor functions for each study\n")
+  plot(fig)
+  cat("\n\n")
+  
+  rm(list = c("gof", "fig"))
+  rm(out)
+}  
+```
+
+
+# Appendix
+
+```{r, results='asis', warning=FALSE}
+# loop through fits
+for(i in seq_along(all_res)){
+  res_i <- all_res[[i]]
+  title <- res_i$descr
+  cat("## ", title, "  \n\n")
+
+  jginfo <- get_jags_info(res_i, include.comments = TRUE)
+  cat("```\n", jginfo, "\n```\n\n")
+  
+  rm(jginfo)
+  rm(out)
+}  
+```
+
+
+# Session info
+```{r}
+date()
+sessionInfo()
+```
+
+

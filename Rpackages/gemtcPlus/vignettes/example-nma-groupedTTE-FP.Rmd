@@ -1,0 +1,380 @@
+---
+title: 'Bayesian FE & RE fractional polynomial NMA for grouped survival data'
+author: "Sandro Gsteiger"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Bayesian FE & RE NMA using FP model (example)}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+_"Minimal" example that might serve as template_
+## Introduction
+This vignette provides a short example of a Bayesian NMA for GSD data. The model fit relies on the `gemtc` package, pre- and post-processing is done with `gemtcPlus`. 
+
+## Prepare the environment
+```{r, warning = FALSE, results = "hide", message=FALSE}
+library(dplyr)
+library(gemtc)        
+library(gemtcPlus)     
+library(ggmcmc)       
+
+```
+
+
+## Load in the data
+```{r, warning = FALSE}
+data("grouped_TTE")
+
+```
+
+
+## Plan the model 
+```{r, warning = FALSE}
+model_plan <-  plan_fp(model.pars = list(exponents = 0, t.eval = "midpoint"),
+                       bth.model = "FE", ref.std = "STUDY2", nma.ref.trt = "B",
+                       n.chains = 2,
+                       n.iter = 6000,
+                       n.burnin = 1000,
+                       n.thin = 1
+                       )
+```
+
+## Ready the data 
+```{r, warning = FALSE}
+# Returns list list contaiing a jags list ready for input to `nma_fit` and a network object
+model_input <- nma_pre_proc(grouped_TTE, model_plan)
+```
+
+__Figure__ Network graph
+```{r, fig.height=7, fig.width=7} 
+plot(model_input$network, displaylabels = TRUE)
+```
+
+## Fit the model 
+```{r, warning = FALSE}
+model  <- nma_fit(model_input = model_input)
+```
+
+
+## Post processing
+```{r, warning = FALSE}
+
+# Prepare plot data
+nodes <- colnames(as.mcmc(model)[[1]])
+sel <- grep("d[2,", nodes, fixed = TRUE)
+plot_data <- ggs(as.mcmc(model)[, sel])
+
+```
+
+Produce diagnostic plots to further assess convergence. Here: select the contrasts trt 2 vs trt 1 for visibility.
+
+
+__Figure__ Traceplot
+```{r, results='asis', fig.height=5, fig.width=6}
+ggs_traceplot(plot_data)
+```
+
+__Figure__ Densityplot
+```{r, results='asis', fig.height=5, fig.width=6}
+ggs_density(plot_data)
+```
+
+__Figure__ Auto-correlation plot
+```{r, results='asis', fig.height=5, fig.width=6}
+ggs_autocorrelation(plot_data)
+```
+
+__Figure__ Running means
+```{r, results='asis', fig.height=5, fig.width=6}
+ggs_running(plot_data)
+```
+
+
+
+Save the FE results for later use.
+```{r}
+res_fe1 <- model
+rm(model)
+```
+
+
+# Second order fractional polynomial, fixed effect model
+Create a new model plan and re-run the fit.
+
+
+## Plan the model 
+```{r, warning = FALSE}
+model_plan <-  plan_fp(model.pars = list(exponents = c(0, 1), t.eval = "midpoint"),
+                       bth.model = "FE", ref.std = "STUDY2", nma.ref.trt = "B",
+                       n.chains = 2,
+                       n.iter = 6000,
+                       n.burnin = 1000,
+                       n.thin = 1, descr = "Second order fractional polynomial model (fixed effect)"
+                       )
+
+```
+
+## Ready the data 
+```{r, warning = FALSE}
+# Returns list list contaiing a jags list ready for input to `nma_fit` and a network object
+model_input <- nma_pre_proc(grouped_TTE,  model_plan)
+```
+
+
+## Fit the model 
+```{r, warning = FALSE}
+model  <- nma_fit(model_input = model_input)
+```
+
+JAGS summary. Check convergence by inspecting Rhat (should be at least <1.05), and see whether the effective sample size is large enough to allow for inference (rule of thumb: n.eff >1000, though this may be demanding).
+
+
+Produce diagnostic plots to further assess convergence. Here: select the contrasts trt 2 vs trt 1 for visibility.
+
+## Post processing
+```{r, warning = FALSE}
+
+# Prepare plot data
+nodes <- colnames(as.mcmc(model)[[1]])
+sel <- grep("d[2,", nodes, fixed = TRUE)
+plot_data <- ggs(as.mcmc(model)[, sel])
+
+```
+
+__Figure__ Traceplot
+```{r, results='asis', fig.height=5, fig.width=6}
+ggs_traceplot(plot_data)
+```
+
+The chains are obviously MUCH too short!
+
+
+Save the results for later use.
+```{r}
+res_fe2 <- model
+rm(model)
+```
+
+
+# Produce outputs of interest
+
+Start with an object collecting all fits.
+```{r}
+all_res <- list(res_fe1, res_fe2)
+```
+
+
+## Model comparison
+```{r, results='asis'}
+dcompare <- get_fp_comparison(all_res)
+cat("__Table__ Model comparison")
+pander::pandoc.table(dcompare, row.names = FALSE, split.tables = Inf)
+```
+
+
+## Hazard ratio estimates
+```{r, results='asis', warning=FALSE, fig.height=6, fig.width=6}
+# loop through fits
+for(i in seq_along(all_res)){
+  res_i <- all_res[[i]]
+  title <- res_i$descr
+  cat("### ", title, "  \n")
+  
+  ## Tables: Hazard ratio estimates for each segment
+
+  HR_rev <- get_fp_HR(x = seq(0.1, 24, 0.1), 
+                      fit = res_i, 
+                      trt.nos = 1:res_i$data.jg$Ntrt, 
+                      ref.no = 2, # use this treatment in the list of treatments as reference for the HRs 
+                      revert = TRUE # revert to get HRs ref vs other treatments
+                      ) 
+  
+  fig1 <- plot_fp_HR(HR_rev, xlab = "Month", breaks = c(0.25, 0.5, 1, 2))
+  fig2 <- plot_fp_HR(HR_rev, xlab = "Month", breaks = c(0.25, 0.5, 1, 2), facet = TRUE) # !! HERE: ADD CIs !!
+  
+  
+  dHRtab <- HR_rev %>%
+    mutate(Month = round(x, 1)) %>%        # trick, otherwise equality testing fails to pick out all timepoints in filter step
+    filter(Month %in% seq(3, 24, 3)) %>%
+    mutate(Comparison = lab, Month, HR = round(median, 3), lCI = round(lCI, 3), uCI = round(uCI, 3)) %>%
+    select(Comparison, Month, HR, lCI, uCI)
+  
+  
+  cat("## ", title, "  \n\n")
+  cat("__Figure__ Hazard ratios treatment A vs other treatments\n")
+  plot(fig1)
+  cat("\n\n")
+  cat("__Figure__ Hazard ratios treatment A vs other treatments (multi-panel)\n")
+  plot(fig2)
+  cat("\n\n")
+  cat("__Table__ Hazard ratios treatment A vs other treatments\n")
+  pander::pandoc.table(dHRtab, row.names = FALSE, split.tables = Inf)
+  cat("\n\n")
+  cat("\n\n")
+  
+  rm(HR_rev)
+  rm(dHRtab)
+  rm(fig1)
+  rm(fig2)
+  rm(res_i)
+}
+```
+
+
+## Survivor function estimates
+The NMA baseline estimate from the `ref_trt` arm from `ref_std` is used. These are combined with the time-varying hazard-ratio functions from the NMA to obtain the survivor functions for the other interventions.
+
+```{r, results='asis', warning=FALSE, fig.height=4, fig.width=6}
+ref_trt <- "B"
+ref_std <- "STUDY2"
+hor <- 60
+
+# loop through fits
+for(i in seq_along(all_res)){
+  res_i <- all_res[[i]]
+  title <- res_i$descr
+  cat("### ", title, "  \n")
+  
+  ## Plots of survivor functions over time ("NMA result"), ref study/arm and timehorizons specified in settings function
+  sel_ref <- which(attr(res_i$data.jg, "d_arms")$study == ref_std & attr(res_i$data.jg, "d_arms")$treatment == ref_trt)
+  id_ref_std <- attr(res_i$data.jg, "d_arms")$studyn[sel_ref]
+  id_ref_arm <- attr(res_i$data.jg, "d_arms")$arm[sel_ref]
+    
+  S_extrap <- get_fp_S(fit = res_i, 
+                       ref.std = id_ref_std, 
+                       ref.arm = id_ref_arm, 
+                       time = seq(0.1, hor, 0.1))
+
+  fig <- ggplot(data = S_extrap) +        
+    geom_line(aes(x = time, y = S, col = treatment, linetype = treatment)) +
+    ylim(0, 1) +
+    xlab("Month") + ylab("Survival probability") +
+    theme_bw() +
+    theme(legend.title = element_blank())
+  cat("__Figure__ Survivor function estimates (time horizon:", hor, "months) \n")
+  plot(fig)
+  cat("\n\n")
+  
+  fig <- ggplot(data = S_extrap) + 
+    facet_wrap(~treatment) +
+    geom_ribbon(aes(x = time, ymin = lCrI, ymax = uCrI), fill = "lightblue", alpha = 0.8) +
+    geom_line(aes(x = time, y = S)) +
+    ylim(0, 1) +
+    xlab("Month") + ylab("Survival probability") +
+    theme_bw()
+  cat("__Figure__ Survivor function estimates by treatment (time horizon:", hor, "months) \n")
+  plot(fig)
+  cat("\n\n")
+  
+  rm(list = c("S_extrap", "fig"))
+  rm(res_i)
+}
+```
+
+
+## Model fit: observed KM data vs estimated S(t)
+For every arm in every study, the study baseline hazard estimate is combined with the corresponding contrast estimate (both from the NMA) to obtain the estimated survivor functions.
+
+```{r, results='asis', warning=FALSE, fig.height=6, fig.width=6}
+hor <- 36
+# loop through fits
+for(i in seq_along(all_res)){
+  res_i <- all_res[[i]]
+  title <- res_i$descr
+  cat("### ", title, "  \n")
+  
+  gof <- get_fp_GoF(fit = res_i, time = seq(0.1, hor, 0.1))
+
+  fig <- ggplot() + 
+    geom_line(data = gof %>% filter(type == "nma"), aes(x = time, y = S, col = treatment)) +
+    geom_line(data = gof %>% filter(type == "obs"), aes(x = time, y = S, col = treatment), linetype = "dashed") +
+    facet_wrap(~study, ncol = 2) +
+    ylim(0, 1) + xlim(0, 36) +
+    xlab("Month") + ylab("Survival probability") +
+    theme_bw() +
+    theme(legend.position = "top", legend.title = element_blank())
+
+  cat("__Figure__ Goodness-of-fit: estimated (solid lines) and observed (dashed) survivor functions for each study\n")
+  plot(fig)
+  cat("\n\n")
+  
+  rm(list = c("gof", "fig"))
+  rm(res_i)
+}
+```
+
+
+## Parameter estimates (baseline and contrasts)
+
+```{r, results='asis', warning=FALSE, fig.height=6, fig.width=6}
+# loop through fits
+for(i in seq_along(all_res)){
+  res_i <- all_res[[i]]
+  title <- res_i$descr
+  cat("### ", title, "  \n")
+
+  cest <- get_fp_contrasts(res_i)
+
+  cat("\n\n")
+  cat("__Table__ Contrast estimates in fractional polynomial vs network reference\n")
+  pander::pandoc.table(cest, row.names = FALSE, split.tables = Inf)
+  cat("\n\n")
+
+  rm(cest)
+  rm(res_i)
+}
+```
+
+
+
+## Posterior correlation plots
+
+```{r, results='asis', warning=FALSE, fig.height=6, fig.width=6}
+# loop through fits
+for(i in seq_along(all_res)){
+  res_i <- all_res[[i]]
+  title <- res_i$descr
+  cat("### ", title, "  \n")
+
+  corrs <- get_fp_corrs(res_i)
+
+  for(j in 1:res_i$data.jg$Ntrt){
+    cat("\n\n")
+    cat("__Table__ Posterior correlations of (multivariate) contrasts for", dimnames(corrs)$treatment[j],"vs reference\n")
+    pander::pandoc.table(corrs[j,,], row.names = dimnames(corrs[j,,])[[1]], split.tables = Inf)
+    cat("\n\n")
+  }
+  
+  rm(corrs)
+  rm(res_i)
+}
+```
+
+
+
+# Appendix
+
+```{r, results='asis', warning=FALSE}
+# loop through fits
+for(i in seq_along(all_res)){
+  res_i <- all_res[[i]]
+  title <- res_i$descr
+  cat("## ", title, "  \n\n")
+
+  jginfo <- get_jags_info(res_i, include.comments = TRUE)
+  cat("```\n", jginfo, "\n```\n\n")
+  
+  rm(jginfo)
+  rm(out)
+}  
+```
+
+
+# Session info
+```{r}
+date()
+sessionInfo()
+```
+

@@ -1,0 +1,46 @@
+---
+title: "Documenting Functions"
+author: "Nick Howlett, Sandro Gsteiger"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Documenting Functions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Function documentation
+
+One of the great advantages to packaging your code is that you can build function documentation into the package. This is handled by the `roxygen2` package. To utilise this you need to create roxygen headers in the function. There are many resources to learn how to use roxygen2 - for instance [here](http://r-pkgs.had.co.nz/man.html). The basic gist is that all the function details are laid out using special tags. As an example here is our function, `dat_pre_proc()` with roxygen headers.
+
+```{r, eval = FALSE}
+#' Data pre-processing function for grouped scaling and centering
+#'
+#' @param dat a \code{data.frame} of numerics
+#' @param center \code{logical} do you want the values centred before scaling?
+#'
+#' @return \code{data.frame} of scaled values
+#' @export
+
+dat_pre_proc <- function(dat, center = TRUE) {
+  `%>%` <- magrittr::`%>%`
+  
+  dat <- dat %>%
+    dplyr::group_by(grouping_var) %>%
+    dplyr::mutate_all(dplyr::funs(scale(., center = center)))
+  
+}
+
+```
+
+Note we must include the `@export` tag if we want the function to be accessible to end-users. Otherwise the function will not be available after loading the package.
+
+
+These roxygen headers are **not** optional if you wish to contribute the package. The package will not build if there are missing/incomplete headers. This sets the standard that any objects provided by your package have some minimal documentation.

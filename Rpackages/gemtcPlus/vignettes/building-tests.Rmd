@@ -1,0 +1,46 @@
+---
+title: "Building tests for your functions"
+author: "Nick Howlett, Sandro Gsteiger"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Building tests for your functions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Building tests for your functions
+
+Another requirement of developing functions for the package is that they have some testing built in. Testing is the process of specifying the expected resuts of your function given a fixed input. Once a proper set of tests for a function has been built you can modify the function and the tests will inform you if the behaviour has changed. This can be extremely helpful when developing a colleciton of functions which are interdependant, as it will alert you to when the behavior of a function changes during development even if you were not currently changing that function.
+
+The standard for test frameworks in R is `testthat` which is an R package that comes with a set of functions for constructing tests and integrates with `devtools` so that the tests are run every time the package is built. Tests must be written into files with names beginning with `test_` which are then placed in the `tests/testthat` folder relative to the package root. A typical convention is to have one test file per function (as with function writing). 
+
+This document will not cover the principles of unit-testing here, there are many resources for this - (see [here](http://r-pkgs.had.co.nz/tests.html)) - a simple example test is shown below.
+
+```{r, eval = FALSE}
+context("Must calculate the cumulative hazard over [0, tmax] for piecewise constant model")
+
+test_that("`pwe_H`", {
+  # Generate output - function vectorises with 'time' arg, so we use a vector
+  # of length > 1 to test this functionality
+  output <- pwe_H(time = 1:10, cut.pts = c(0, 3, 10, Inf), haz.rates = 1:5)
+
+  # check class
+  expect_is(output, "numeric")
+  # check values
+  expect_equal(output, c(2, 4, 6, 9, 12, 15, 18, 21, 24, 27.0001144483108))
+})
+
+```
+
+The call to `context()`lets us preface the following test with a statement of the functional requirement. This is helpful when the automated testing happens as this title will help direct us to any failing test in the console output. It's also good practice to explicitly state the functional requirement so any other developers reading these tests are clear on what you intended the function to do (and not do). After `context()` there is a `test_that("", {})` chunk where we lay out our expectations of the function.  Schematically we generate a fixed output for a fixed input passed through the function we are testing, and we then check our expectations on that output such that they satisfy our requirement laid out above in `context()`.
+
+Tests can be run interactively using the `devtools::test()` function.
+
