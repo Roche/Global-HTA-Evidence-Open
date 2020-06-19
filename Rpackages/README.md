@@ -3,6 +3,18 @@
 
 This folder contains source code for R-packages.
 
+
+## gemtcPlus
+
+This package implements some convinience functions for perfoming Bayesian NMA using the [gemtc package](https://github.com/gertvv/gemtc/). 
+
+```
+#installation code
+devtools::install_github(
+  "roche/Global-HTA-Evidence-Open", subdir = "/Rpackages/gemtcPlus"
+  )
+```
+
 ## rpsftmPlus
 
 This package implements some convinience functions for working with the [rpsftm package](https://cran.r-project.org/web/packages/rpsftm/) and general analysis of trials affected by treatment switching. [Vignette](rpsftmPlus/inst/doc/rpsftmPlus-vignette.pdf).
