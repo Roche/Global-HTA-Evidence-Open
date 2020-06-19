@@ -18,6 +18,14 @@ The package contains functions for standard NMA models for binary and hazard rat
 
 ## Installation
 
+First install gemtc
+
+```
+devtools::install_github(
+  "gertvv/gemtc", subdir = "gemtc"
+)
+```
+
 Install directly from this repo via
 
 ```
