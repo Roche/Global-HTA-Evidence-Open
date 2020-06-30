@@ -36,6 +36,13 @@ devtools::install_github(
 
 After successful installation, the package can be loaded normally (`library(gemtcPlus)`).
 
+## Examples
+* [Vignette - Bayesian NMA of binary data](https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/gemtcPlus/example-nma-binary-data.html)
+* [Vignette - Bayesian NMA of Hazard Ratios](https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/gemtcPlus/example-nma-hr-data.html)
+* [Vignette - Bayesian NMA of survival data using Piecewise Exponential models](https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/gemtcPlus/example-nma-groupedTTE-PWE.html)
+* [Vignette - Bayesian NMA of survival data using Fractional Polynomial models](https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/gemtcPlus/example-nma-groupedTTE-FP.html)
+
+
 ## Getting Started
 
 There are some quick-start guides which are built into this package in vignettes. The guides cover the basics and any specific conventions regarding report writing, function building, unit testing. An easy way to see these guides (and example analysis reports) is by calling `browseVignettes(package = "gemtcPlus")` after the package has been installed. These examples can be used as templates.
