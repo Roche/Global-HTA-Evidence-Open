@@ -11,6 +11,8 @@
 #' @param comparator_data A data frame containing pseudo individual patient data
 #'   from the comparator study needed to derive the relative treatment effect.
 #'   The outcome variables names must match intervention_data.
+#' @param min_weight A numeric value that defines the minimum weight allowed. 
+#'   This value (default 0.0001) will replace weights estimated at 0 in a sample.
 #'
 #' @details This function is intended to be used in conjunction with the
 #'   \code{\link{boot}} function to return the statistic to be
@@ -26,7 +28,7 @@
 #' @example inst/examples/MAIC_example_analysis.R
 #'
 #' @export
-bootstrap_HR <- function(intervention_data, matching, i, model, comparator_data){
+bootstrap_HR <- function(intervention_data, matching, i, model, comparator_data, min_weight = 0.0001){
 
   # Samples the data
   bootstrap_data <- intervention_data[i,]
@@ -41,6 +43,9 @@ bootstrap_HR <- function(intervention_data, matching, i, model, comparator_data)
   combined_data <- dplyr::bind_rows(perform_wt$analysis_data, comparator_data_wts)
   combined_data$ARM <- relevel(as.factor(combined_data$ARM), ref="Comparator")
 
+  # set weights that are below eta to eta to avoid issues with 0 values
+  combined_data$wt <- ifelse(combined_data$wt < min_weight, min_weight, combined_data$wt)
+  
   # survival data stat
   cox_model <- survival::coxph(model, data = combined_data, weights = wt)
   HR <- exp(cox_model$coefficients)
@@ -59,6 +64,8 @@ bootstrap_HR <- function(intervention_data, matching, i, model, comparator_data)
 #' @param comparator_data A data frame containing pseudo individual patient data
 #'   from the comparator study needed to derive the relative treatment effect.
 #'   The outcome variables names must match intervention_data.
+#' @param min_weight A numeric value that defines the minimum weight allowed. 
+#'   This value (default 0.0001) will replace weights estimated at 0 in a sample.
 #'
 #' @details This function is intended to be used in conjunction with the
 #'   \code{\link{boot}} function to return the statistic to be
@@ -74,7 +81,7 @@ bootstrap_HR <- function(intervention_data, matching, i, model, comparator_data)
 #' @example inst/examples/MAIC_example_analysis.R
 #'
 #' @export
-bootstrap_OR <- function(intervention_data, matching, i, model, comparator_data){
+bootstrap_OR <- function(intervention_data, matching, i, model, comparator_data, min_weight = 0.0001){
 
   # Samples the data
   bootstrap_data <- intervention_data[i,]
@@ -89,6 +96,9 @@ bootstrap_OR <- function(intervention_data, matching, i, model, comparator_data)
   combined_data <- dplyr::bind_rows(perform_wt$analysis_data, comparator_data_wts)
   combined_data$ARM <- relevel(as.factor(combined_data$ARM), ref="Comparator")
 
+  # set weights that are below eta to eta to avoid issues with 0 values
+  combined_data$wt <- ifelse(combined_data$wt < min_weight, min_weight, combined_data$wt)
+  
   # Perform logistic regression and extract the OR estimate
   logistic.regr <- suppressWarnings(glm(formula = model, family=binomial(link="logit"), data = combined_data, weight = wt))
   OR <- exp(as.numeric(coef(logistic.regr)[2]))
