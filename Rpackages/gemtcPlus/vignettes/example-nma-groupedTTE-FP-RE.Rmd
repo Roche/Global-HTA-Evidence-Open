@@ -208,12 +208,52 @@ rm(model)
 ```
 
 
+# Second order random intercept model (uniform distribution for RE standard deviation)
+
+## Plan the model 
+```{r, warning = FALSE}
+model_plan <-  plan_fp(model.pars = list(exponents = c(0, 1), t.eval = "midpoint"),
+                       bth.model = "REINT", ref.std = "STUDY2", nma.ref.trt = "B",
+                       bth.prior = list(type = "sd", distr = "unif", min = 0, max = 2),
+                       n.chains = 2,
+                       n.iter = 6000,
+                       n.burnin = 1000,
+                       n.thin = 1,
+                       descr = "Second order random intercept model (unif[0,2] prior)",
+                       descr_s = "FP (2o, REint, U[0,2])"
+                       )
+```
+
+## Ready the data 
+```{r, warning = FALSE}
+# Returns list list contaiing a jags list ready for input to `nma_fit` and a network object
+model_input <- nma_pre_proc(grouped_TTE, model_plan)
+```
+
+
+## Fit the model 
+```{r, warning = FALSE}
+model  <- nma_fit(model_input = model_input)
+```
+
+## Post processing
+Do convergence assessment as above (not shown).
+
+The chains are obviously MUCH too short!
+
+Save the results for later use.
+```{r}
+res_re4 <- model
+rm(model)
+```
+
+
 
 # Produce outputs of interest
 
 Start with an object collecting all fits.
 ```{r}
-all_res <- list(res_re1, res_re2, res_re3)
+all_res <- list(res_re1, res_re2, res_re3, res_re4)
 ```
 
 
