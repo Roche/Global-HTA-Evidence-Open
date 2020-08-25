@@ -1,17 +1,19 @@
 ---
-title: 'Bayesian FE fractional polynomial NMA for grouped survival data'
+title: 'Bayesian RE fractional polynomial NMA for grouped survival data'
 author: "Sandro Gsteiger"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Bayesian FE NMA using FP model (example)}
+  %\VignetteIndexEntry{Bayesian RE NMA using FP model (example)}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-_"Minimal" example that might serve as template_
-## Introduction
-This vignette provides a short example of a Bayesian fixed effect fractional polynomial NMA model for grouped survival data.
+_Tested on BEE R 3.6.1_
+
+# Introduction
+This vignette provides a short example of a Bayesian random effects fractional polynomial NMA model for grouped survival data. A random effect is put on the intercept term only (i.e. on the proportional hazards part of the polynomial) but not on the time-varying terms of the hazard ratio.
+
 
 
 ## Prepare the environment
@@ -30,15 +32,21 @@ data("grouped_TTE")
 
 ```
 
+# First order random intercept model (log-normal distribution for RE variance)
 
 ## Plan the model 
 ```{r, warning = FALSE}
 model_plan <-  plan_fp(model.pars = list(exponents = 0, t.eval = "midpoint"),
-                       bth.model = "FE", ref.std = "STUDY2", nma.ref.trt = "B",
+                       bth.model = "REINT", ref.std = "STUDY2", nma.ref.trt = "B",
+                       bth.prior = list(type = "var", distr = "dlnorm", 
+                                        meanlog = -2.71, 
+                                        sdlog = 1.74),
                        n.chains = 2,
                        n.iter = 6000,
                        n.burnin = 1000,
-                       n.thin = 1
+                       n.thin = 1,
+                       descr = "First order random intercept model (LN prior for RE Var)",
+                       descr_s = "FP (1o, REint, LN)"
                        )
 ```
 
@@ -93,46 +101,47 @@ ggs_running(plot_data)
 ```
 
 
+The diagnostic plots show that the chains are _much_ (!) too short in this example (for real use, run longer chains and consider thinning).
 
-Save the FE results for later use.
+
+Save the results for later use.
 ```{r}
-res_fe1 <- model
+res_re1 <- model
 rm(model)
 ```
 
 
-# Second order fractional polynomial, fixed effect model
-Create a new model plan and re-run the fit.
-
+# Second order random intercept model (log-normal distribution for RE variance)
 
 ## Plan the model 
 ```{r, warning = FALSE}
-model_plan <-  plan_fp(model.pars = list(exponents = c(0, 1), t.eval = "midpoint"),
-                       bth.model = "FE", ref.std = "STUDY2", nma.ref.trt = "B",
+model_plan <-  plan_fp(model.pars = list(exponents = c(0, 1), 
+                                         t.eval = "midpoint"),
+                       bth.model = "REINT", ref.std = "STUDY2", nma.ref.trt = "B",
+                       bth.prior = list(type = "var", distr = "dlnorm", 
+                                        meanlog = -2.71, 
+                                        sdlog = 1.74),
                        n.chains = 2,
                        n.iter = 6000,
                        n.burnin = 1000,
-                       n.thin = 1, descr = "Second order fractional polynomial model (fixed effect)"
+                       n.thin = 1,
+                       descr = "Second order random intercept model (LN prior for RE Var)",
+                       descr_s = "FP (2o, REint, LN)"
                        )
-
 ```
 
 ## Ready the data 
 ```{r, warning = FALSE}
 # Returns list list contaiing a jags list ready for input to `nma_fit` and a network object
-model_input <- nma_pre_proc(grouped_TTE,  model_plan)
+model_input <- nma_pre_proc(grouped_TTE, model_plan)
 ```
-
-
 ## Fit the model 
 ```{r, warning = FALSE}
 model  <- nma_fit(model_input = model_input)
 ```
 
-JAGS summary. Check convergence by inspecting Rhat (should be at least <1.05), and see whether the effective sample size is large enough to allow for inference (rule of thumb: n.eff >1000, though this may be demanding).
 
 
-Produce diagnostic plots to further assess convergence. Here: select the contrasts trt 2 vs trt 1 for visibility.
 
 ## Post processing
 ```{r, warning = FALSE}
@@ -154,16 +163,57 @@ The chains are obviously MUCH too short!
 
 Save the results for later use.
 ```{r}
-res_fe2 <- model
+res_re2 <- model
 rm(model)
 ```
+
+
+# First order random intercept model (uniform distribution for RE standard deviation)
+
+## Plan the model 
+```{r, warning = FALSE}
+model_plan <-  plan_fp(model.pars = list(exponents = 0, t.eval = "midpoint"),
+                       bth.model = "REINT", ref.std = "STUDY2", nma.ref.trt = "B",
+                       bth.prior = list(type = "sd", distr = "unif", min = 0, max = 2),
+                       n.chains = 2,
+                       n.iter = 6000,
+                       n.burnin = 1000,
+                       n.thin = 1,
+                       descr = "First order random intercept model (unif[0,2] prior)",
+                       descr_s = "FP (1o, REint, U[0,2])"
+                       )
+```
+
+## Ready the data 
+```{r, warning = FALSE}
+# Returns list list contaiing a jags list ready for input to `nma_fit` and a network object
+model_input <- nma_pre_proc(grouped_TTE, model_plan)
+```
+
+
+## Fit the model 
+```{r, warning = FALSE}
+model  <- nma_fit(model_input = model_input)
+```
+
+## Post processing
+Do convergence assessment as above (not shown).
+
+The chains are obviously MUCH too short!
+
+Save the results for later use.
+```{r}
+res_re3 <- model
+rm(model)
+```
+
 
 
 # Produce outputs of interest
 
 Start with an object collecting all fits.
 ```{r}
-all_res <- list(res_fe1, res_fe2)
+all_res <- list(res_re1, res_re2, res_re3)
 ```
 
 
@@ -182,7 +232,6 @@ for(i in seq_along(all_res)){
   res_i <- all_res[[i]]
   title <- res_i$descr
   cat("### ", title, "  \n")
-
 
   ## Tables: Hazard ratio estimates for each segment
 
@@ -352,7 +401,6 @@ for(i in seq_along(all_res)){
   rm(res_i)
 }
 ```
-
 
 
 # Appendix

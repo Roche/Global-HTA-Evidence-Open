@@ -97,10 +97,29 @@ groupedTTE_fp_pre_proc <- function(dat,
   dat_jg$feprior_prec <- diag(feprior_prec, length(model.pars$exponents) + 1)
   
   # Add random effect priors
-  for(i in seq_along(bth.prior$args)){
-    name <- paste("reprior", bth.prior$type, bth.prior$distr, names(bth.prior$args[i]), sep = "_")
-    dat_jg[[name]] <- bth.prior$args[[i]]
+  # for(i in seq_along(bth.prior$args)){
+  #   name <- paste("reprior", bth.prior$type, bth.prior$distr, names(bth.prior$args[i]), sep = "_")
+  #   dat_jg[[name]] <- bth.prior$args[[i]]
+  # }
+  if (!is.null(bth.prior)){
+    if (bth.prior$dist %in% c("dlnorm", "ln", "LN")){
+      if (bth.prior$type != "var") {
+        stop("Log-normal distribution currently only supported for RE variance (bth.prior$type must be 'var').")
+      }
+      dat_jg[["reprior_meanlog"]] <- bth.prior$meanlog
+      dat_jg[["reprior_sdlog"]]   <- bth.prior$sdlog
+    }
+    
+    if (bth.prior$dist == "unif"){
+      if (bth.prior$type != "sd") {
+        stop("Uniform distribution currently only supported for RE standard deviation (bth.prior$type must be 'sd').")
+      }
+      dat_jg[["reprior_min"]]   <- bth.prior$min
+      dat_jg[["reprior_max"]]   <- bth.prior$max
+    }
+    
   }
+  
   
   # arm information needed later for proper labelling in post-processing
   attr(dat_jg, "d_arms") <- d_arms

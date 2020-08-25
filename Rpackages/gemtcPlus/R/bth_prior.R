@@ -2,9 +2,9 @@
 #'
 #' @param model One of "PWE" or "FP"
 #' @param bth.model If model is PWE then must be "RE". If model is FP then One of "RE" or "REINT"
-#' @param type If PWE RE or FP RE then one of "sd" or "var". If FP REINT then "vcov"
-#' @param distr If type is "sd" then one of "unif" or "hn". If type is "var" then "ln". If typeis "vocov" then "invwish"
-#' @param param A \code{list} with ... if distibution is "unif" then named value max (numeric > 0). If distribution is hn or ln then list must contain mean and precision.
+#' @param type If PWE RE or FP REINT then one of "sd" or "var". If FP RE then "vcov"
+#' @param distr If type is "sd" then one of "unif" or "hn". If type is "var" then "ln". If typeis "vcov" then "invwish"
+#' @param param A \code{list} with ... if distibution is "unif" then named values min, max (numeric > 0). If distribution is hn or ln then list must contain mean and precision.
 #'              Of distribution in invwish then names value "scale" (a matrix).
 #' 
 #' @export

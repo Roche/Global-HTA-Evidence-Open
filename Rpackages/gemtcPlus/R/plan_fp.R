@@ -14,12 +14,15 @@
 #' @param n.iter A \code{numeric} value representing n.iter
 #' @param n.burnin A \code{numeric} value representing n.burnin
 #' @param n.thin A \code{numeric} value representing n.thin
-#' @param bth.prior A \code{list} containing type & distr. Only required if bth.model == "FE"
+#' @param bth.prior A \code{list} containing type & distr and the parameters of distr. Only required if bth.model != "FE"
 #' @param rsd \code{numeric} seed to be set
 #' @param model.file Path to BUGS file. If NULL file name will be built from input parameters and extracted from BUGScode folder if present
 #' @param ... any other named arguments must match arguments names from \code{dic.samples} or \code{jags} functions
 #'
 #' @return A list containing model, engine, analysis and model params
+#' 
+#' @details See the vignettes for the specification of \code{bth.prior}. Currently parameter names not fully aligned betwen PWE and FP.
+#' 
 #' @examples
 #' plan_fp(model.pars = list(exponents = 0, t.eval = "midpoint"),
 #'         bth.model = "FE", ref.std = "STUDY2", nma.ref.trt = "B",
@@ -49,18 +52,19 @@ plan_fp <- function(model.pars,
                     ...
                     ){
   # Basic checks
-  if(engine != "rjags") stop("rjags is currently the only supported engine")
+  if(engine != "rjags") stop("rjags is currently the only supported engine for fractional polynomial models")
   if(data.type != "GSD") stop("GSD is currently the only supported data type")
   if(data.type == "GSD" & !any(names(model.pars) %in% c("exponents", "t.eval"))) stop("model.pars requires a list with exponents and t.eval")
   bth.model <- match.arg(bth.model)
   if(bth.model != "FE" & is.null(bth.prior)) stop("For selected model bth.prior must not be NULL")
   if(bth.model == "FE" & !is.null(bth.prior)) warning("For Fixed Effect bth.prior will be ignored.")
   
-  parameters <- if(engine == "rjags") 
+  parameters <- if(engine == "rjags") {
     switch(bth.model,
            "FE" = c("d", "mu"),
            "REINT" = c("d", "mu", "sd"),
            "RE" = c("d", "mu", "V"))
+  }
    
 
   # Extract BUGS file from parameters given
@@ -83,7 +87,8 @@ plan_fp <- function(model.pars,
   deviance_params <- match_args_to_func(all_args, rjags::dic.samples)
   deviance_params$type <- "pD"
   
-  fit_params <- list(RE = ifelse(bth.model == "RE", TRUE, FALSE), 
+  fit_params <- list(REINT = ifelse(bth.model == "REINT", TRUE, FALSE), 
+                     RE =    ifelse(bth.model == "RE", TRUE, FALSE), 
                      descr_s = descr_s, 
                      descr = descr)
 
