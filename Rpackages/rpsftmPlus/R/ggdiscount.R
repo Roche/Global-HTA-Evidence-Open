@@ -12,7 +12,7 @@
 #' immdef$rx <- with(immdef, 1 - xoyrs/progyrs)
 #'
 #' # fit the model
-#' imm.fit <- rpsftm(Surv(progyrs, prog) ~ rand(imm, rx),
+#' imm.fit <- rpsftm::rpsftm(Surv(progyrs, prog) ~ rand(imm, rx),
 #'                   data=immdef,
 #'                   censor_time=censyrs)
 #'

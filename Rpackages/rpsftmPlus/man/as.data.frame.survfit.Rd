@@ -20,6 +20,7 @@ This function returns a data frame containing following variables derived from a
 }
 }
 \examples{
+library(survival)
 sf <- survfit(Surv(time, status)~x, data = survival::aml)
 as.data.frame(sf)
 }

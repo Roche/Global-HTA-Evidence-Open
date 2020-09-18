@@ -14,6 +14,7 @@ This function returns a ggplot derived from an rpsftm object showing psi vs test
 }
 \examples{
 # use data included in rpsftm package
+library(rpsftm)
 immdef <- rpsftm::immdef
 immdef$rx <- with(immdef, 1 - xoyrs/progyrs)
 

@@ -36,12 +36,10 @@ devtools::install_github(
 
 After successful installation, the package can be loaded normally (`library(gemtcPlus)`).
 
-## Examples
-* [Vignette - Bayesian NMA of binary data](https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/gemtcPlus/example-nma-binary-data.html)
-* [Vignette - Bayesian NMA of Hazard Ratios](https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/gemtcPlus/example-nma-hr-data.html)
-* [Vignette - Bayesian NMA of survival data using Piecewise Exponential models](https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/gemtcPlus/example-nma-groupedTTE-PWE.html)
-* [Vignette - Bayesian NMA of survival data using Fractional Polynomial models](https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/gemtcPlus/example-nma-groupedTTE-FP.html)
 
+## documentation
+
+https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/gemtcPlus/docs/index.html
 
 ## Getting Started
 
@@ -61,10 +59,6 @@ Each planning function comes with a help file detailing the model input paramete
 * plan_hr
 * plan_binary
 
-### Workflow
-The below image is a schemeatic representation of the new workflow. The information boxes within each section give an idea of which functions are being called in the backend.
 
-
-### <img src="inst/basic_workflow.png" width="400">
 
 

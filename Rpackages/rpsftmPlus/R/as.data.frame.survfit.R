@@ -15,6 +15,7 @@
 #' @keywords survival
 #' @export
 #' @examples
+#' library(survival)
 #' sf <- survfit(Surv(time, status)~x, data = survival::aml)
 #' as.data.frame(sf)
 #' @import survival

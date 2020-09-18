@@ -1,9 +1,6 @@
 ---
 title: "rpsftmPlus-vignette"
 output: 
-  rmarkdown::pdf_document: 
-    fig_width: 7
-    fig_height: 4
   rmarkdown::html_vignette: 
     fig_width: 7 
     fig_height: 4

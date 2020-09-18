@@ -1,0 +1,24 @@
+reference:
+- title: "Assessing switching patterns"
+  desc: "Functions for assessing impact of switching before adjustment"
+- contents: 
+  - ggexposure
+  - ggatrisk
+  - rpsftm.atrisk
+  - ggdiscount
+- title: "Diagnostics"
+  desc: "Functions for diagnositics of grid estimation."
+- contents:
+  - ggpsi
+  - gglatent
+- title: "Analysis and Reporting of RPSFT models"
+  desc: "Functions for analysing and reporting RPSFT models."
+- contents:
+  - rpsftm.refit
+  - rpsftm.coxph
+  - ggcfact
+- title: "Helper functions"
+  desc: "Helper functions."
+- contents:
+  - as.data.frame.survfit
+  

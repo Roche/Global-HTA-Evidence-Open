@@ -19,6 +19,7 @@ See also documentation for rpsftm call treat_modifier= value.
 }
 \examples{
 # use data included in rpsftm package
+library(rpsftm)
 immdef <- rpsftm::immdef
 immdef$rx <- with(immdef, 1 - xoyrs/progyrs)
 

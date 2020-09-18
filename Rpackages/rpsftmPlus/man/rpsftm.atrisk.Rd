@@ -25,6 +25,7 @@ It assumes that only a single switch in treatment occurs i.e. a patient who is r
 }
 \examples{
 # use data included in rpsftm package
+library(rpsftm)
 immdef <- rpsftm::immdef
 immdef$rx <- with(immdef, 1 - xoyrs/progyrs)
 

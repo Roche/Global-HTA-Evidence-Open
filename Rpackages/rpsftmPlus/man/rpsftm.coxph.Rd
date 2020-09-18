@@ -14,6 +14,7 @@ This function fits a cox model to an rpsftm object. It estimates a hazard ratio 
 }
 \examples{
 # use data included in rpsftm package
+library(rpsftm)
 immdef <- rpsftm::immdef
 immdef$rx <- with(immdef, 1 - xoyrs/progyrs)
 
