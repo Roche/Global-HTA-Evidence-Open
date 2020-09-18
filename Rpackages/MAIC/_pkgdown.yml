@@ -1,0 +1,23 @@
+reference:
+- title: "Weight estimation"
+  desc: "Functions for estimating weights"
+- contents: 
+  - estimate_weights
+- title: "Diagnostics"
+  desc: "Functions for diagnositics of weights."
+- contents:
+  - estimate_ess
+  - hist_wts
+  - profile_wts
+  - summarize_wts
+  - wt_diagnostics
+- title: "Analysis of MAIC models"
+  desc: "Functions for analysing and reporting after weights have been estimated."
+- contents:
+  - bootstrap_HR
+  - bootstrap_OR
+- title: "Example data"
+- contents:
+  - est_weights
+  - target_pop_standard
+  

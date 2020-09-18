@@ -4,7 +4,14 @@
 \alias{bootstrap_HR}
 \title{Bootstrapping for MAIC weighted hazard ratios}
 \usage{
-bootstrap_HR(intervention_data, matching, i, model, comparator_data)
+bootstrap_HR(
+  intervention_data,
+  matching,
+  i,
+  model,
+  comparator_data,
+  min_weight = 1e-04
+)
 }
 \arguments{
 \item{intervention_data}{A data frame containing individual patient data
@@ -22,6 +29,9 @@ intervention_data.}
 \item{comparator_data}{A data frame containing pseudo individual patient data
 from the comparator study needed to derive the relative treatment effect.
 The outcome variables names must match intervention_data.}
+
+\item{min_weight}{A numeric value that defines the minimum weight allowed. 
+This value (default 0.0001) will replace weights estimated at 0 in a sample.}
 }
 \value{
 The HR as a numeric value.

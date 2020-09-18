@@ -4,7 +4,14 @@
 \alias{bootstrap_OR}
 \title{Bootstrapping for MAIC weighted odds ratios}
 \usage{
-bootstrap_OR(intervention_data, matching, i, model, comparator_data)
+bootstrap_OR(
+  intervention_data,
+  matching,
+  i,
+  model,
+  comparator_data,
+  min_weight = 1e-04
+)
 }
 \arguments{
 \item{intervention_data}{A data frame containing individual patient data
@@ -21,6 +28,9 @@ names need to match the corresponding columns in intervention_data.}
 \item{comparator_data}{A data frame containing pseudo individual patient data
 from the comparator study needed to derive the relative treatment effect.
 The outcome variables names must match intervention_data.}
+
+\item{min_weight}{A numeric value that defines the minimum weight allowed. 
+This value (default 0.0001) will replace weights estimated at 0 in a sample.}
 }
 \value{
 The OR as a numeric value.

@@ -25,3 +25,20 @@ file.copy(from = "Rpackages/rpsftmPlus/docs",
           overwrite = TRUE, 
           recursive = TRUE)
 
+##############################################
+# MAIC
+##############################################
+# 1) make any updates to the package 
+# 2) update documentation using devtools
+devtools::document(pkg = "Rpackages/MAIC")
+
+# 3) update the file Rpackages/MAIC/_pkgdown.yml
+# 4) rebuild documentation using pkgdown
+pkgdown::build_site(pkg = "Rpackages/MAIC")
+
+# 5) copy site to correct location in repo for github sites hosting
+file.copy(from = "Rpackages/MAIC/docs", 
+          to = "docs/Rpackages/MAIC", 
+          overwrite = TRUE, 
+          recursive = TRUE)
+
