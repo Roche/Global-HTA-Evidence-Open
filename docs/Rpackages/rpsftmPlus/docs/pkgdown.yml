@@ -2,6 +2,6 @@ pandoc: 2.7.3
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
-  rpsftmPlus-vignette: rpsftmPlus-vignette.html
-last_built: 2020-09-18T05:17Z
+  rpsftmPlus: rpsftmPlus.html
+last_built: 2020-09-18T06:41Z
 
