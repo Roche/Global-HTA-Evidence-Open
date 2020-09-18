@@ -4,8 +4,7 @@
 \alias{get_fp_contrasts}
 \title{Extract the treatment contrasts vs the reference in the network}
 \usage{
-get_fp_contrasts(fit.jg, treatments = NULL, node = "d",
-  revert = FALSE)
+get_fp_contrasts(fit.jg, treatments = NULL, node = "d", revert = FALSE)
 }
 \arguments{
 \item{fit.jg}{The jags output object.}

@@ -4,8 +4,7 @@
 \alias{get_pwe_conv_diag}
 \title{Utility function: convergence diagnostics for piece-wise constant models}
 \usage{
-get_pwe_conv_diag(fit, file = NULL, patterns = c("d", "mu"),
-  re.pattern = "sd")
+get_pwe_conv_diag(fit, file = NULL, patterns = c("d", "mu"), re.pattern = "sd")
 }
 \arguments{
 \item{fit}{\code{rjags} object which is the return of \code{R2jags::jags()}}

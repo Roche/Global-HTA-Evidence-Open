@@ -4,12 +4,26 @@
 \alias{plan_pwe}
 \title{Creates a fractional polynomial model plan}
 \usage{
-plan_pwe(model.pars, bth.model = c("FE", "RE"), ref.std, nma.ref.trt,
-  engine = "rjags", data.type = "GSD", feprior_mean = 0,
-  feprior_prec = 1e-04, descr = "Piecewise Exponential model",
-  descr_s = "PWE", n.chains = NULL, n.iter = NULL, n.burnin = NULL,
-  n.thin = NULL, bth.prior = NULL, rsd = 13579, model.file = NULL,
-  ...)
+plan_pwe(
+  model.pars,
+  bth.model = c("FE", "RE"),
+  ref.std,
+  nma.ref.trt,
+  engine = "rjags",
+  data.type = "GSD",
+  feprior_mean = 0,
+  feprior_prec = 1e-04,
+  descr = "Piecewise Exponential model",
+  descr_s = "PWE",
+  n.chains = NULL,
+  n.iter = NULL,
+  n.burnin = NULL,
+  n.thin = NULL,
+  bth.prior = NULL,
+  rsd = 13579,
+  model.file = NULL,
+  ...
+)
 }
 \arguments{
 \item{model.pars}{A named \code{list} containing `cut.pts` when using GSD}

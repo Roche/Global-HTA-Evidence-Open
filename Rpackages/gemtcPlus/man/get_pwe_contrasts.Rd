@@ -4,9 +4,16 @@
 \alias{get_pwe_contrasts}
 \title{Utility function to extract HR estimates from piece-wise exponential model fit in (format needed for ggplot)}
 \usage{
-get_pwe_contrasts(fit, treatments = NULL,
-  ref = "Atezolizumab+Bevacizumab", reverse = FALSE,
-  exponentiate = TRUE, xmax = 24, digits = 3, alpha = 0.05)
+get_pwe_contrasts(
+  fit,
+  treatments = NULL,
+  ref,
+  reverse = FALSE,
+  exponentiate = TRUE,
+  xmax = 24,
+  digits = 3,
+  alpha = 0.05
+)
 }
 \arguments{
 \item{fit}{\code{rjags} object which is the return of \code{R2jags::jags()}}

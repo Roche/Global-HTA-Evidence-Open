@@ -4,8 +4,7 @@
 \alias{get_pw_segments}
 \title{Utility function to get segments (as character strings) from vector with cutpoints}
 \usage{
-get_pw_segments(x = NULL, cuts, right = FALSE,
-  ordered_results = TRUE)
+get_pw_segments(x = NULL, cuts, right = FALSE, ordered_results = TRUE)
 }
 \arguments{
 \item{x}{NULL value}

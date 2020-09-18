@@ -4,9 +4,14 @@
 \alias{plot_fp_HR}
 \title{Produce ggplot from HR values in data.frame (medians vs time for several trts, all in one plot)}
 \usage{
-plot_fp_HR(HRs, xlab = "Month", legend.pos = "right",
-  breaks = c(0.125, 0.25, 0.5, 1, 2, 4, 8), facet = FALSE,
-  ncol = NULL)
+plot_fp_HR(
+  HRs,
+  xlab = "Month",
+  legend.pos = "right",
+  breaks = c(0.125, 0.25, 0.5, 1, 2, 4, 8),
+  facet = FALSE,
+  ncol = NULL
+)
 }
 \arguments{
 \item{HRs}{}

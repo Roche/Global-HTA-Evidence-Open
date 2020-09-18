@@ -4,11 +4,23 @@
 \alias{plan_hr}
 \title{Creates a model plan for hazard ratio}
 \usage{
-plan_hr(bth.model = c("FE", "RE"), engine = "gemtc",
-  data.type = "HR", binary_data_type = "relative_effect",
-  jags_init = NULL, n.chain = NULL, n.iter = NULL, n.adapt = NULL,
-  thin = NULL, bth.prior = NULL, rsd = 13579, model = "binom",
-  link = "identity", om.scale = 5, ...)
+plan_hr(
+  bth.model = c("FE", "RE"),
+  engine = "gemtc",
+  data.type = "HR",
+  binary_data_type = "relative_effect",
+  jags_init = NULL,
+  n.chain = NULL,
+  n.iter = NULL,
+  n.adapt = NULL,
+  thin = NULL,
+  bth.prior = NULL,
+  rsd = 13579,
+  model = "binom",
+  link = "identity",
+  om.scale = 5,
+  ...
+)
 }
 \arguments{
 \item{bth.model}{One of "FE",  or "RE"}

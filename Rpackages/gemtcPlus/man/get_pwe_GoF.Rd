@@ -5,8 +5,14 @@
 \title{Calculate the survivor function estimates for each study and arm. Calculate also the observed survival curves
 from the binned KM data to compare observed and estimated survivor functions.}
 \usage{
-get_pwe_GoF(fit, data.arms, data.jg, time = 0:60, bl.node = "mu",
-  contrast.node = "d")
+get_pwe_GoF(
+  fit,
+  data.arms,
+  data.jg,
+  time = 0:60,
+  bl.node = "mu",
+  contrast.node = "d"
+)
 }
 \arguments{
 \item{fit}{JAGS object with NMA fit.}

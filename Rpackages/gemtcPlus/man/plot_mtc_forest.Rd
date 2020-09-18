@@ -4,8 +4,13 @@
 \alias{plot_mtc_forest}
 \title{Utility function to do forest plot from data.frame with effect estimates.}
 \usage{
-plot_mtc_forest(x, sort.by = c("name", "effect")[1], lab = NULL,
-  do.log = TRUE, breaks = c(0.25, 0.5, 0.8, 1, 1.25, 2, 4))
+plot_mtc_forest(
+  x,
+  sort.by = c("name", "effect")[1],
+  lab = NULL,
+  do.log = TRUE,
+  breaks = c(0.25, 0.5, 0.8, 1, 1.25, 2, 4)
+)
 }
 \arguments{
 \item{x}{A data.frame with columns: Comparator, Med, CIlo, CIup.}

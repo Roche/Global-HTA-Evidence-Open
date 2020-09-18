@@ -4,8 +4,7 @@
 \alias{mtc.prob.better.table}
 \title{Utility function providing pairwise probability of being better (col vs row). (Adapted from gemtc::relative.effect.table()).}
 \usage{
-mtc.prob.better.table(x, smaller.is.better, threshold = 0,
-  covariate = NA)
+mtc.prob.better.table(x, smaller.is.better, threshold = 0, covariate = NA)
 }
 \arguments{
 \item{x}{Object of class \code{mtc.result} which is the output from a \code{mtc.run}.}

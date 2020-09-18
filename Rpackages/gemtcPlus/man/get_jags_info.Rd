@@ -4,8 +4,11 @@
 \alias{get_jags_info}
 \title{Utility function to return jags data and model for reporting (e.g. in appendix)}
 \usage{
-get_jags_info(sims, include.comments = FALSE,
-  input.round.function = function(x) signif(x, digits = 4))
+get_jags_info(
+  sims,
+  include.comments = FALSE,
+  input.round.function = function(x) signif(x, digits = 4)
+)
 }
 \arguments{
 \item{sims}{rjags object}

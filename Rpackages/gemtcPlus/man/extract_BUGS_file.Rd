@@ -4,8 +4,13 @@
 \alias{extract_BUGS_file}
 \title{Helper function to extract BUGS files for given input parameters}
 \usage{
-extract_BUGS_file(data.type, bth.model, bth.prior, model.pars = NULL,
-  model.type = c("PWE", "FP"))
+extract_BUGS_file(
+  data.type,
+  bth.model,
+  bth.prior,
+  model.pars = NULL,
+  model.type = c("PWE", "FP")
+)
 }
 \arguments{
 \item{data.type}{Only GSD currently supported}

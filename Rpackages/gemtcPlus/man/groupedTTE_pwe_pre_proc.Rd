@@ -4,9 +4,15 @@
 \alias{groupedTTE_pwe_pre_proc}
 \title{Utility function for pre-processing: prepare jags input data for PWE model.}
 \usage{
-groupedTTE_pwe_pre_proc(dat, ref.std = NULL, nma.ref.trt = NULL,
-  model.pars = NULL, feprior_mean = NULL, feprior_prec = NULL,
-  bth.prior = NULL)
+groupedTTE_pwe_pre_proc(
+  dat,
+  ref.std = NULL,
+  nma.ref.trt = NULL,
+  model.pars = NULL,
+  feprior_mean = NULL,
+  feprior_prec = NULL,
+  bth.prior = NULL
+)
 }
 \arguments{
 \item{dat}{A \code{data.frame} with columns study, treatment, t.start, t.end, n.event, n.risk.}

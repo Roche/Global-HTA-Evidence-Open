@@ -42,3 +42,20 @@ file.copy(from = "Rpackages/MAIC/docs",
           overwrite = TRUE, 
           recursive = TRUE)
 
+
+##############################################
+# gemtcPlus
+##############################################
+# 1) make any updates to the package 
+# 2) update documentation using devtools
+devtools::document(pkg = "Rpackages/gemtcPlus")
+
+# 3) update the file Rpackages/gemtcPlus/_pkgdown.yml
+# 4) rebuild documentation using pkgdown
+pkgdown::build_site(pkg = "Rpackages/gemtcPlus")
+
+# 5) copy site to correct location in repo for github sites hosting
+file.copy(from = "Rpackages/gemtcPlus/docs", 
+          to = "docs/Rpackages/gemtcPlus", 
+          overwrite = TRUE, 
+          recursive = TRUE)

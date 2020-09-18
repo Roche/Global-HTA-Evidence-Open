@@ -3,7 +3,6 @@
 \docType{package}
 \name{gemtcPlus}
 \alias{gemtcPlus}
-\alias{gemtcPlus-package}
 \title{gemtcPlus: A package for performing NMA in R}
 \description{
 This package was designed to work alongside the \code{gemtc} package.

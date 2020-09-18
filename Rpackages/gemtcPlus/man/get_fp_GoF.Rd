@@ -4,8 +4,7 @@
 \alias{get_fp_GoF}
 \title{Calculate the study and arm level survivor functions estimates from a fractional polynomial NMA. These estimates provide the basis for a goodness-of-fit graph when plotted along with the input data.}
 \usage{
-get_fp_GoF(fit, treatments, time = 1:24, bl.node = "mu",
-  contrast.node = "d")
+get_fp_GoF(fit, treatments, time = 1:24, bl.node = "mu", contrast.node = "d")
 }
 \arguments{
 \item{fit}{JAGS object with FP NMA fit.}

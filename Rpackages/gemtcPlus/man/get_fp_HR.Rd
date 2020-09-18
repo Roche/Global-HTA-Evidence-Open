@@ -4,8 +4,16 @@
 \alias{get_fp_HR}
 \title{Calculate the time-dependent hazard ratios obtained from fitting a fractional polynomial model (first or second order).}
 \usage{
-get_fp_HR(x, fit, trt.nos, ref.no, trt.labs = NULL, node = "d",
-  CI = TRUE, revert = FALSE)
+get_fp_HR(
+  x,
+  fit,
+  trt.nos,
+  ref.no,
+  trt.labs = NULL,
+  node = "d",
+  CI = TRUE,
+  revert = FALSE
+)
 }
 \arguments{
 \item{x}{A vector with the dependent variable.}

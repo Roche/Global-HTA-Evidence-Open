@@ -4,12 +4,26 @@
 \alias{plan_fp}
 \title{Creates a fractional polynomial model plan}
 \usage{
-plan_fp(model.pars, bth.model = c("FE", "REINT", "RE"), ref.std,
-  nma.ref.trt, engine = "rjags", data.type = "GSD", feprior_mean = 0,
-  feprior_prec = 1e-04, descr = "Fractional polynomial model",
-  descr_s = "FP", n.chains = NULL, n.iter = NULL, n.burnin = NULL,
-  n.thin = NULL, bth.prior = NULL, rsd = 13579, model.file = NULL,
-  ...)
+plan_fp(
+  model.pars,
+  bth.model = c("FE", "REINT", "RE"),
+  ref.std,
+  nma.ref.trt,
+  engine = "rjags",
+  data.type = "GSD",
+  feprior_mean = 0,
+  feprior_prec = 1e-04,
+  descr = "Fractional polynomial model",
+  descr_s = "FP",
+  n.chains = NULL,
+  n.iter = NULL,
+  n.burnin = NULL,
+  n.thin = NULL,
+  bth.prior = NULL,
+  rsd = 13579,
+  model.file = NULL,
+  ...
+)
 }
 \arguments{
 \item{model.pars}{A named \code{list} containing `exponents` & `t.val` when using GSD}
@@ -40,7 +54,7 @@ plan_fp(model.pars, bth.model = c("FE", "REINT", "RE"), ref.std,
 
 \item{n.thin}{A \code{numeric} value representing n.thin}
 
-\item{bth.prior}{A \code{list} containing type & distr. Only required if bth.model == "FE"}
+\item{bth.prior}{A \code{list} containing type & distr and the parameters of distr. Only required if bth.model != "FE"}
 
 \item{rsd}{\code{numeric} seed to be set}
 
@@ -53,6 +67,9 @@ A list containing model, engine, analysis and model params
 }
 \description{
 Creates a fractional polynomial model plan
+}
+\details{
+See the vignettes for the specification of \code{bth.prior}. Currently parameter names not fully aligned betwen PWE and FP.
 }
 \examples{
 plan_fp(model.pars = list(exponents = 0, t.eval = "midpoint"),

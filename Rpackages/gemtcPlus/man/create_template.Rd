@@ -4,10 +4,12 @@
 \alias{create_template}
 \title{Creates a minimal project template for selected model type}
 \usage{
-create_template(type = c("binary", "gsd", "fp", "pwe"))
+create_template(type = c("binary", "gsd", "fp", "pwe"), file = NULL)
 }
 \arguments{
 \item{type}{model type}
+
+\item{file}{file name (optional); if not provided, default filename will be <type>_model.Rmd. The .Rmd extension will be added.}
 }
 \description{
 Creates a minimal project template for selected model type

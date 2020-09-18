@@ -4,8 +4,14 @@
 \alias{get_mtc_probBetter}
 \title{Utility function to extract probabilities of new treatment being better from gemtc fit (e.g. P(HR<1) for HRs new vs other).}
 \usage{
-get_mtc_probBetter(x, new.lab, smaller.is.better = TRUE, threshold = 0,
-  sort.by = c("name", "effect")[1], digits = 3)
+get_mtc_probBetter(
+  x,
+  new.lab,
+  smaller.is.better = TRUE,
+  threshold = 0,
+  sort.by = c("name", "effect")[1],
+  digits = 3
+)
 }
 \arguments{
 \item{x}{Object of class mtc.result containing the NMA fit.}

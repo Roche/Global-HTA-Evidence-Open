@@ -4,11 +4,23 @@
 \alias{plan_binary}
 \title{Creates a model plan for binary data}
 \usage{
-plan_binary(bth.model = c("FE", "RE"), engine = "gemtc",
-  data.type = "BINARY", binary_data_type = "arm_level",
-  jags_init = NULL, n.chain = NULL, n.iter = NULL, n.adapt = NULL,
-  thin = NULL, bth.prior = NULL, rsd = 13579, model = "binom",
-  link = "logit", om.scale = 5, ...)
+plan_binary(
+  bth.model = c("FE", "RE"),
+  engine = "gemtc",
+  data.type = "BINARY",
+  binary_data_type = "arm_level",
+  jags_init = NULL,
+  n.chain = NULL,
+  n.iter = NULL,
+  n.adapt = NULL,
+  thin = NULL,
+  bth.prior = NULL,
+  rsd = 13579,
+  model = "binom",
+  link = "logit",
+  om.scale = 5,
+  ...
+)
 }
 \arguments{
 \item{bth.model}{One of "FE",  or "RE"}

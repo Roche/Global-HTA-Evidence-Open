@@ -5,8 +5,15 @@
 \title{Calculate the survivor functions estimated in piecewise-constant NMA model. The absolute S(t) estimates combining the estimated baseline survival
 from a reference trial (in the NMA) with the piecewise-constant hazard ratio estimates to construct the S(t) functions for each treatment.}
 \usage{
-get_pwe_S(fit, ref.std, ref.arm, treatments = NULL, time = 0:24,
-  bl.node = "mu", contrast.node = "d")
+get_pwe_S(
+  fit,
+  ref.std,
+  ref.arm,
+  treatments = NULL,
+  time = 0:24,
+  bl.node = "mu",
+  contrast.node = "d"
+)
 }
 \arguments{
 \item{fit}{JAGS object with NMA fit.}

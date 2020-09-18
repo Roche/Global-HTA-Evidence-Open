@@ -5,8 +5,15 @@
 \title{Calculate the survivor functions estimated in a 2nd order fractional polynomial NMA model. The absolute S(t) estimates combining the estimated baseline survival
 from a reference trial (in the NMA) with the fractional polynomial (log)hazard ratio estimates to construct the S(t) functions for each treatment.}
 \usage{
-get_fp_2o_S(fit, ref.std, ref.arm, treatments, time = 1:24,
-  bl.node = "mu", contrast.node = "d")
+get_fp_2o_S(
+  fit,
+  ref.std,
+  ref.arm,
+  treatments,
+  time = 1:24,
+  bl.node = "mu",
+  contrast.node = "d"
+)
 }
 \arguments{
 \item{fit}{JAGS object with FP NMA fit.}
