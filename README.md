@@ -11,13 +11,15 @@ This folder contains source code for R packages
 
 This package facilitates performing matching-adjusted indirect comparison (MAIC) anaylsis for a disconnected treatment network where the endpoint of interest is either time-to-event (e.g. overall survival) or binary (e.g. objective tumor response).
 
-### examples
-* [Vignette - Illustration of MAIC analysis for a time-to-event (e.g. overall survival) and binary (e.g. objective tumor response) endpoint using simulated data](https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/MAIC/MAIC.html)
+### Documentation
 
-### installation code
+https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/MAIC/docs/index.html
+
+### Installation code
 ```
 devtools::install_github(
-  "roche/Global-HTA-Evidence-Open", subdir = "/Rpackages/MAIC"
+  "roche/Global-HTA-Evidence-Open", 
+  subdir = "Rpackages/MAIC"
   )
 ```
 
@@ -41,7 +43,7 @@ devtools::install_github(
 )
 
 devtools::install_github(
-  "roche/Global-HTA-Evidence-Open", subdir = "/Rpackages/gemtcPlus"
+  "roche/Global-HTA-Evidence-Open", subdir = "Rpackages/gemtcPlus"
   )
 ```
 
@@ -49,13 +51,14 @@ devtools::install_github(
 
 This package implements some convinience functions for working with the [rpsftm package](https://cran.r-project.org/web/packages/rpsftm/) and general analysis of trials affected by treatment switching.
 
-### examples
-* [Vignette - illustration of functions](Rpackages/rpsftmPlus/inst/doc/rpsftmPlus-vignette.pdf)
+### Documentation
+https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/rpsftmPlus/docs/index.html
 
-### installation code
+### Installation code
 ```
 devtools::install_github(
-  "roche/Global-HTA-Evidence-Open", subdir = "/Rpackages/rpsftmPlus"
+  "roche/Global-HTA-Evidence-Open", 
+  subdir = "Rpackages/rpsftmPlus"
   )
 ```
 
