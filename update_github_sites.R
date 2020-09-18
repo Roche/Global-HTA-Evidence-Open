@@ -4,9 +4,13 @@
 
 ##############################################
 # Updates to add a new package
-# when adding a new package is necessary to include links in the following files as well as in this script:
+# when adding a new package is necessary to include links/make updates in the following files as well as in this script:
 # README.md 
-# docs/index.md
+# all existing _pkgdown.yml files (update the navbar section for other packages)
+
+# update the index page (just converts the README.md to html)
+
+markdown::markdownToHTML("README.md", output = "docs/index.html")
 
 ##############################################
 # rpsftmPlus
