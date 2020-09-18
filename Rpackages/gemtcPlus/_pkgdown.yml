@@ -1,0 +1,45 @@
+navbar:
+   title: "gemtcPlus"
+   left:
+    - icon: fa-home
+      href: index.html
+    - text: "Vignettes"
+      href: articles/index.html
+    - text: "Functions"
+      href: reference/index.html
+    - text: "Other Packages"
+      menu:
+        - text: "MAIC"
+          href: https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/MAIC/docs/index.html
+        - text: "gemtcPlus"
+          href: https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/gemtcPlus/docs/index.html
+        - text: "rpsftmPlus"
+          href: https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/rpsftmPlus/docs/index.html
+
+
+articles:
+- title: "Examples of reporting standard NMA"
+  desc: >
+    These examples illustrate how **gemtcPlus** can be used to simplify the 
+    reporting of NMA performed via gemtc. Includes an example for an NMA 
+    for Hazard Ratio (HR) and Odds Ratio (OR).
+  contents: 
+  - example-nma-binary-data
+  - example-nma-hr-data
+- title: "Examples of Time to Event NMA"
+  desc: >
+    These examples illustrate the use of more complex models included into
+    gemtcPlus for handling NMA on time to event data without making proportional
+    hazard assumptions. This includes Piecewise Exponential (PWE) models and 
+    Fractional Polynomiol (FP) models with and without Random Effects (RE). 
+  contents:
+  - example-nma-groupedTTE-PWE
+  - example-nma-groupedTTE-FP
+  - example-nma-groupedTTE-FP-RE
+- title: "Developer examples"
+  desc: "These vignettes document the development process to contribute to this package."
+  contents:
+  - general-development-workflow
+  - documenting-functions
+  - building-tests
+  - building-reports

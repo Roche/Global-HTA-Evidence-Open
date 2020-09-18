@@ -1,7 +1,4 @@
----
-title: "gemtcPlus README"
-output: github_document
----
+# gemtcPlus
 
 _Package under development (draft)._
 
@@ -15,29 +12,23 @@ of functions that aid the workflow.
 The package contains functions for standard NMA models for binary and hazard ratio data (which are fitted via the `gemtc` package). More importantly, the package provides models and functions to fit non-standard NMAs: piecewise exponential models and fractional polynomial models for grouped survival data (derived from digitized Kaplan-Meier curves). These more sophisticated models are fitted by calling JAGS.
 
 
-
 ## Installation
 
-First install gemtc
+First ensure you have installed from CRAN [gemtc package](https://cran.r-project.org/web/packages/gemtc/) and [rjags package](https://cran.r-project.org/web/packages/rjags/) and that you also have [JAGS](http://mcmc-jags.sourceforge.net/) installed.
+
+gemtcPlus can the be installed directly from this repo via
 
 ```
 devtools::install_github(
-  "gertvv/gemtc", subdir = "gemtc"
-)
-```
-
-Install directly from this repo via
-
-```
-devtools::install_github(
-  "roche/Global-HTA-Evidence-Open", subdir = "/Rpackages/gemtcPlus"
+  "roche/Global-HTA-Evidence-Open", 
+  subdir = "Rpackages/gemtcPlus"
   )
 ```
 
 After successful installation, the package can be loaded normally (`library(gemtcPlus)`).
 
 
-## documentation
+## Documentation
 
 https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/gemtcPlus/docs/index.html
 

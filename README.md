@@ -29,12 +29,9 @@ This package implements some convinience functions for perfoming Bayesian NMA us
 https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/gemtcPlus/docs/index.html
 
 ### Installation code
-```
-# note as of June 2020 gemtc is not available via CRAN
-devtools::install_github(
-  "gertvv/gemtc", subdir = "gemtc"
-)
+First ensure you have installed from CRAN [gemtc package](https://cran.r-project.org/web/packages/gemtc/) and [rjags package](https://cran.r-project.org/web/packages/rjags/) and that you also have [JAGS](http://mcmc-jags.sourceforge.net/) installed.
 
+```
 devtools::install_github(
   "roche/Global-HTA-Evidence-Open", 
   subdir = "Rpackages/gemtcPlus"
@@ -55,7 +52,3 @@ devtools::install_github(
   subdir = "Rpackages/rpsftmPlus"
   )
 ```
-
-# [Publications](Publications)
-
-This folder contains source code supporting published articles

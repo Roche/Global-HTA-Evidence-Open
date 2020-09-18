@@ -1,7 +1,9 @@
 
 #' Plots hypothetical results from an rpsftm object
 #'
-#' This function returns a ggplot derived from an rpsftm object showing hazard ratio and 95% CI for each psi tested in the g-estimation. A flat line suggests that there is no impact of switching on the results. A sloped line indicates that switching does affect the results.
+#' This function returns a ggplot derived from an rpsftm object showing hazard ratio and 
+#' 95 percent CI for each psi tested in the g-estimation. A flat line suggests that there is no 
+#' impact of switching on the results. A sloped line indicates that switching does affect the results.
 #'
 #' @param x rpsftm object (rpsftm)
 #' @keywords survival, rpsftm

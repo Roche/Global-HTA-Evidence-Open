@@ -4,7 +4,7 @@
 
 ##############################################
 # Updates to add a new package
-# when adding a new package is necessary to include links in the following files as well as this script:
+# when adding a new package is necessary to include links in the following files as well as in this script:
 # README.md 
 # docs/index.md
 
@@ -15,11 +15,14 @@
 # 2) update documentation using devtools
 devtools::document(pkg = "Rpackages/rpsftmPlus")
 
-# 3) update the file Rpackages/rpsftmPlus/_pkgdown.yml
-# 4) rebuild documentation using pkgdown
+# 3) reinstall the updated package 
+devtools::install(pkg = "Rpackages/rpsftmPlus")
+
+# 4) update the file Rpackages/rpsftmPlus/_pkgdown.yml
+# 5) rebuild documentation using pkgdown
 pkgdown::build_site(pkg = "Rpackages/rpsftmPlus")
 
-# 5) copy site to correct location in repo for github sites hosting
+# 6) copy site to correct location in repo for github sites hosting
 file.copy(from = "Rpackages/rpsftmPlus/docs", 
           to = "docs/Rpackages/rpsftmPlus", 
           overwrite = TRUE, 
@@ -32,11 +35,14 @@ file.copy(from = "Rpackages/rpsftmPlus/docs",
 # 2) update documentation using devtools
 devtools::document(pkg = "Rpackages/MAIC")
 
-# 3) update the file Rpackages/MAIC/_pkgdown.yml
-# 4) rebuild documentation using pkgdown
+# 3) reinstall the updated package
+devtools::install(pkg = "Rpackages/MAIC")
+
+# 4) update the file Rpackages/MAIC/_pkgdown.yml
+# 5) rebuild documentation using pkgdown
 pkgdown::build_site(pkg = "Rpackages/MAIC")
 
-# 5) copy site to correct location in repo for github sites hosting
+# 6) copy site to correct location in repo for github sites hosting
 file.copy(from = "Rpackages/MAIC/docs", 
           to = "docs/Rpackages/MAIC", 
           overwrite = TRUE, 
@@ -50,11 +56,21 @@ file.copy(from = "Rpackages/MAIC/docs",
 # 2) update documentation using devtools
 devtools::document(pkg = "Rpackages/gemtcPlus")
 
-# 3) update the file Rpackages/gemtcPlus/_pkgdown.yml
-# 4) rebuild documentation using pkgdown
+# 3) reinstall the updated package
+devtools::install(pkg = "Rpackages/gemtcPlus")
+
+# 4) update the file Rpackages/gemtcPlus/_pkgdown.yml
+# 5) rebuild documentation using pkgdown
 pkgdown::build_site(pkg = "Rpackages/gemtcPlus")
 
-# 5) copy site to correct location in repo for github sites hosting
+# Note as the vignettes for gemtcPlus can take a long time to run it is
+# also possible just to update partial sections by just running the 
+# below functions without regenerating the vignettes
+pkgdown::build_home(pkg = "Rpackages/gemtcPlus")
+pkgdown::build_reference(pkg = "Rpackages/gemtcPlus")
+pkgdown::build_articles_index(pkg = "Rpackages/gemtcPlus")
+
+# 6) copy site to correct location in repo for github sites hosting
 file.copy(from = "Rpackages/gemtcPlus/docs", 
           to = "docs/Rpackages/gemtcPlus", 
           overwrite = TRUE, 

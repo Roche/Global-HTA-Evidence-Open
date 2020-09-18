@@ -1,3 +1,21 @@
+navbar:
+   title: "MAIC"
+   left:
+    - icon: fa-home
+      href: index.html
+    - text: "Vignette"
+      href: articles/MAIC.html
+    - text: "Functions"
+      href: reference/index.html
+    - text: "Other Packages"
+      menu:
+        - text: "MAIC"
+          href: https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/MAIC/docs/index.html
+        - text: "gemtcPlus"
+          href: https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/gemtcPlus/docs/index.html
+        - text: "rpsftmPlus"
+          href: https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/rpsftmPlus/docs/index.html
+
 reference:
 - title: "Weight estimation"
   desc: "Functions for estimating weights"

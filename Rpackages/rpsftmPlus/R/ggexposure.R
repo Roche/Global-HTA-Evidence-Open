@@ -2,13 +2,15 @@
 #' Plots exposure status from an rpsftm object
 #'
 #' This function returns a ggplot derived from an rpsftm object showing exposure to randomized and switch treatment over time.
-#' It assumes that only a single switch in treatment occurs i.e. a patient who is randomized to control but has 25% exposure to experimental is assumed to have switched at 0.75*event time.
+#' It assumes that only a single switch in treatment occurs i.e. a patient who is randomized to control but has 25 percents exposure 
+#' to experimental is assumed to have switched at 0.75 times the event time.
 #'
 #' @param x rpsftm object (rpsftm)
 #' @keywords survival, rpsftm
 #' @export
 #' @examples
 #' # use data included in rpsftm package
+#' library(rpsftm)
 #' immdef <- rpsftm::immdef
 #' immdef$rx <- with(immdef, 1 - xoyrs/progyrs)
 #'
