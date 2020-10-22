@@ -16,7 +16,13 @@
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+<![endif]--><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-181075487-1"></script><script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-181075487-1');
+</script>
 </head>
 <body data-spy="scroll" data-target="#toc">
     <div class="container template-article">
@@ -39,18 +45,43 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../articles/index.html">Vignettes</a>
 </li>
 <li>
-  <a href="../articles/index.html">Articles</a>
+  <a href="../reference/index.html">Functions</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Other Packages
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+<li>
+      <a href="https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/MAIC/docs/index.html">MAIC</a>
+    </li>
+    <li>
+      <a href="https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/gemtcPlus/docs/index.html">gemtcPlus</a>
+    </li>
+    <li>
+      <a href="https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/rpsftmPlus/docs/index.html">rpsftmPlus</a>
+    </li>
+  </ul>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/Roche/Global-HTA-Evidence-Open/tree/master/Rpackages/gemtcPlus">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -60,13 +91,14 @@
 
       
 
-      </header><div class="row">
+      </header><link href="example-nma-groupedTTE-FP_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
+<script src="example-nma-groupedTTE-FP_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Bayesian FE fractional polynomial NMA for grouped survival data</h1>
                         <h4 class="author">Sandro Gsteiger</h4>
             
-            <h4 class="date">2020-09-18</h4>
+            <h4 class="date">2020-10-22</h4>
       
       
       <div class="hidden name"><code>example-nma-groupedTTE-FP.Rmd</code></div>
@@ -1846,7 +1878,7 @@ for (k in 2:Ntrt){
 <h1 class="hasAnchor">
 <a href="#session-info" class="anchor"></a>Session info</h1>
 <div class="sourceCode" id="cb33"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/date.html">date</a></span>()</pre></body></html></div>
-<pre><code>## [1] "Fri Sep 18 10:31:53 2020"</code></pre>
+<pre><code>## [1] "Thu Oct 22 18:30:37 2020"</code></pre>
 <div class="sourceCode" id="cb35"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span>()</pre></body></html></div>
 <pre><code>## R version 3.6.3 (2020-02-29)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
@@ -1868,24 +1900,24 @@ for (k in 2:Ntrt){
 ## 
 ## other attached packages:
 ## [1] ggmcmc_1.5.0    ggplot2_3.3.2   tidyr_1.1.2     gemtcPlus_1.0.0
-## [5] R2jags_0.6-1    rjags_4-10      gemtc_0.8-7     coda_0.19-3    
+## [5] R2jags_0.6-1    rjags_4-10      gemtc_0.8-7     coda_0.19-4    
 ## [9] dplyr_1.0.2    
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] Rcpp_1.0.5         RColorBrewer_1.1-2 compiler_3.6.3     pillar_1.4.6      
-##  [5] plyr_1.8.6         tools_3.6.3        boot_1.3-25        digest_0.6.25     
+##  [5] plyr_1.8.6         tools_3.6.3        boot_1.3-25        digest_0.6.26     
 ##  [9] gtable_0.3.0       evaluate_0.14      memoise_1.1.0      lifecycle_0.2.0   
-## [13] tibble_3.0.3       lattice_0.20-41    pkgconfig_2.0.3    rlang_0.4.7       
-## [17] igraph_1.2.5       GGally_2.0.0       rstudioapi_0.11    yaml_2.2.1        
-## [21] parallel_3.6.3     pkgdown_1.5.1      xfun_0.16          withr_2.2.0       
-## [25] stringr_1.4.0      knitr_1.29         generics_0.0.2     desc_1.2.0        
+## [13] tibble_3.0.4       lattice_0.20-41    pkgconfig_2.0.3    rlang_0.4.8       
+## [17] igraph_1.2.6       GGally_2.0.0       rstudioapi_0.11    yaml_2.2.1        
+## [21] parallel_3.6.3     pkgdown_1.5.1      xfun_0.18          withr_2.3.0       
+## [25] stringr_1.4.0      knitr_1.30         generics_0.0.2     desc_1.2.0        
 ## [29] fs_1.5.0           vctrs_0.3.4        rprojroot_1.3-2    grid_3.6.3        
 ## [33] tidyselect_1.1.0   reshape_0.8.8      glue_1.4.2         R6_2.4.1          
-## [37] rmarkdown_2.3      pander_0.6.3       farver_2.0.3       purrr_0.3.4       
-## [41] magrittr_1.5       scales_1.1.1       backports_1.1.9    htmltools_0.5.0   
+## [37] rmarkdown_2.5      pander_0.6.3       farver_2.0.3       purrr_0.3.4       
+## [41] magrittr_1.5       scales_1.1.1       backports_1.1.10   htmltools_0.5.0   
 ## [45] ellipsis_0.3.1     R2WinBUGS_2.1-21   MASS_7.3-51.6      assertthat_0.2.1  
-## [49] abind_1.4-5        colorspace_1.4-1   labeling_0.3       stringi_1.4.6     
-## [53] network_1.16.0     munsell_0.5.0      crayon_1.3.4</code></pre>
+## [49] abind_1.4-5        colorspace_1.4-1   labeling_0.4.2     stringi_1.5.3     
+## [53] network_1.16.1     munsell_0.5.0      crayon_1.3.4</code></pre>
 </div>
   </div>
 

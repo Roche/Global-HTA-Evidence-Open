@@ -16,7 +16,13 @@
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+<![endif]--><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-181075487-1"></script><script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-181075487-1');
+</script>
 </head>
 <body data-spy="scroll" data-target="#toc">
     <div class="container template-article">
@@ -68,7 +74,14 @@
   </ul>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/Roche/Global-HTA-Evidence-Open/tree/master/Rpackages/rpsftmPlus">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -78,7 +91,8 @@
 
       
 
-      </header><div class="row">
+      </header><link href="rpsftmPlus_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
+<script src="rpsftmPlus_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>rpsftmPlus-vignette</h1>
@@ -234,7 +248,7 @@
 <h2 class="hasAnchor">
 <a href="#exposure-plot-patient-profile" class="anchor"></a>Exposure Plot (patient profile)</h2>
 <p>The first plot to review shows the exposure to experimental treatment in control arm prior to event or censoring. This assumes only a single switch per patient (either control -&gt; experimental or experimental -&gt; control respectively. Each line represents a single patîent.</p>
-<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/rpsftmPlus/man/ggexposure.html">ggexposure</a></span>(<span class="no">imm.fit</span>)
+<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="fu"><a href="../reference/ggexposure.html">ggexposure</a></span>(<span class="no">imm.fit</span>)
 <span class="co">#&gt; Warning: `transmute_()` is deprecated as of dplyr 0.7.0.</span>
 <span class="co">#&gt; Please use `transmute()` instead.</span>
 <span class="co">#&gt; See vignette('programming') for more help</span>
@@ -246,10 +260,10 @@
 <h2 class="hasAnchor">
 <a href="#at-risk-plot-and-table" class="anchor"></a>At risk plot and table</h2>
 <p>The second plot to consider shows the patient status over time. These are mutually exclusive states. I.e. the total percent of patients at risk is the sum of patients at risk on control and experimental.</p>
-<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/rpsftmPlus/man/ggatrisk.html">ggatrisk</a></span>(<span class="no">imm.fit</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="fu"><a href="../reference/ggatrisk.html">ggatrisk</a></span>(<span class="no">imm.fit</span>)</pre></body></html></div>
 <p><img src="rpsftmPlus_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
 <p>The plot data can be retrieved using the <strong>rpsftm.atrisk()</strong> function for tabulation.</p>
-<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/rpsftmPlus/man/rpsftm.atrisk.html">rpsftm.atrisk</a></span>(<span class="no">imm.fit</span>, <span class="kw">eval.times</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0</span>,<span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span>)) <span class="kw">%&gt;%</span>
+<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="fu"><a href="../reference/rpsftm.atrisk.html">rpsftm.atrisk</a></span>(<span class="no">imm.fit</span>, <span class="kw">eval.times</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0</span>,<span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span>)) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/pkg/reshape2/man/cast.html">dcast</a></span>(<span class="no">Arm</span> + <span class="no">Status</span> ~ <span class="no">Time</span>, <span class="kw">value.var</span> <span class="kw">=</span> <span class="st">"Count"</span>) <span class="kw">%&gt;%</span>
   <span class="kw pkg">pander</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/pander/man/pander.html">pander</a></span>()</pre></body></html></div>
 <table class="table">
@@ -341,7 +355,7 @@
 <h2 class="hasAnchor">
 <a href="#discount-plot" class="anchor"></a>Discount Plot</h2>
 <p>This plot allows an assessment of the impact of switching. It shows hypothetical results for different levels of discount. A flat line indicates no impact of switching on results while a sloping line indicates that the switch does affect the results.</p>
-<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/rpsftmPlus/man/ggdiscount.html">ggdiscount</a></span>(<span class="no">imm.fit</span>)
+<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="fu"><a href="../reference/ggdiscount.html">ggdiscount</a></span>(<span class="no">imm.fit</span>)
 <span class="co">#&gt; Warning: `data_frame()` is deprecated as of tibble 1.1.0.</span>
 <span class="co">#&gt; Please use `tibble()` instead.</span>
 <span class="co">#&gt; This warning is displayed once every 8 hours.</span>
@@ -357,14 +371,14 @@
 <h2 class="hasAnchor">
 <a href="#psi-plot" class="anchor"></a>Psi plot</h2>
 <p>This shows the evaluated values of psi in the g-estimation. For convergence should be a single root. In this case it appears fine.</p>
-<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/rpsftmPlus/man/ggpsi.html">ggpsi</a></span>(<span class="no">imm.fit</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="fu"><a href="../reference/ggpsi.html">ggpsi</a></span>(<span class="no">imm.fit</span>)</pre></body></html></div>
 <p><img src="rpsftmPlus_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
 </div>
 <div id="latent-survival-plot" class="section level2">
 <h2 class="hasAnchor">
 <a href="#latent-survival-plot" class="anchor"></a>Latent survival plot</h2>
 <p>This shows the latent survival times for both arms. For convergence should be a overlapping per randomization. In this case it appears fine.</p>
-<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/rpsftmPlus/man/gglatent.html">gglatent</a></span>(<span class="no">imm.fit</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="fu"><a href="../reference/gglatent.html">gglatent</a></span>(<span class="no">imm.fit</span>)</pre></body></html></div>
 <p><img src="rpsftmPlus_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
 </div>
 </div>
@@ -376,14 +390,14 @@
 <h2 class="hasAnchor">
 <a href="#survival-plot" class="anchor"></a>Survival plot</h2>
 <p>This shows the observed survival for both arms alongside the latent survial time for the control arm (as detected by rpsftm).</p>
-<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/rpsftmPlus/man/ggcfact.html">ggcfact</a></span>(<span class="no">imm.fit</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="fu"><a href="../reference/ggcfact.html">ggcfact</a></span>(<span class="no">imm.fit</span>)</pre></body></html></div>
 <p><img src="rpsftmPlus_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
 </div>
 <div id="cox-model" class="section level2">
 <h2 class="hasAnchor">
 <a href="#cox-model" class="anchor"></a>Cox model</h2>
 <p>This function fits a cox model comparing the observed experimental time to latent control time. Importantly it corrects the variance of the coefficient to account for the g-estimation procedure i.e. it inflates the variance based on the itt p-value.</p>
-<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/rpsftmPlus/man/rpsftm.coxph.html">rpsftm.coxph</a></span>(<span class="no">imm.fit</span>) <span class="kw">%&gt;%</span>
+<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="fu"><a href="../reference/rpsftm.coxph.html">rpsftm.coxph</a></span>(<span class="no">imm.fit</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>()
 <span class="co">#&gt; Call:</span>
 <span class="co">#&gt; coxph(formula = rpsftm.formula(x), data = cfact.df)</span>
@@ -408,8 +422,8 @@
 <a href="#sensitivity-of-common-treatment-effect" class="anchor"></a>Sensitivity of common treatment effect</h2>
 <p>This function refits an rpsft model with modified treatment effect in the control arm. This allows assessment of the sensitivity to the common treatment effect assumption.</p>
 <div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="co"># 50% efficacy for switchers</span>
-<span class="no">imm.fit.s1</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/rpsftmPlus/man/rpsftm.refit.html">rpsftm.refit</a></span>(<span class="no">imm.fit</span>, <span class="kw">k</span> <span class="kw">=</span> <span class="fl">0.5</span>)
-<span class="no">imm.fit.s1</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/rpsftmPlus/man/rpsftm.coxph.html">rpsftm.coxph</a></span>() <span class="kw">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>()
+<span class="no">imm.fit.s1</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/rpsftm.refit.html">rpsftm.refit</a></span>(<span class="no">imm.fit</span>, <span class="kw">k</span> <span class="kw">=</span> <span class="fl">0.5</span>)
+<span class="no">imm.fit.s1</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="../reference/rpsftm.coxph.html">rpsftm.coxph</a></span>() <span class="kw">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>()
 <span class="co">#&gt; Call:</span>
 <span class="co">#&gt; coxph(formula = rpsftm.formula(x), data = cfact.df)</span>
 <span class="co">#&gt; </span>
@@ -428,8 +442,8 @@
 <span class="co">#&gt; Wald test            = 4.43  on 1 df,   p=0.04</span>
 <span class="co">#&gt; Score (logrank) test = 4.45  on 1 df,   p=0.03</span></pre></body></html></div>
 <div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="co"># 80% efficacy for switchers</span>
-<span class="no">imm.fit.s2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/rpsftmPlus/man/rpsftm.refit.html">rpsftm.refit</a></span>(<span class="no">imm.fit</span>, <span class="kw">k</span> <span class="kw">=</span> <span class="fl">0.8</span>)
-<span class="no">imm.fit.s2</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/rpsftmPlus/man/rpsftm.coxph.html">rpsftm.coxph</a></span>() <span class="kw">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>()
+<span class="no">imm.fit.s2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/rpsftm.refit.html">rpsftm.refit</a></span>(<span class="no">imm.fit</span>, <span class="kw">k</span> <span class="kw">=</span> <span class="fl">0.8</span>)
+<span class="no">imm.fit.s2</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="../reference/rpsftm.coxph.html">rpsftm.coxph</a></span>() <span class="kw">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>()
 <span class="co">#&gt; Call:</span>
 <span class="co">#&gt; coxph(formula = rpsftm.formula(x), data = cfact.df)</span>
 <span class="co">#&gt; </span>

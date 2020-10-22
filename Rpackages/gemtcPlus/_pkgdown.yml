@@ -1,3 +1,7 @@
+template:
+  params:
+    ganalytics: UA-181075487-1
+
 navbar:
    title: "gemtcPlus"
    left:
@@ -15,7 +19,10 @@ navbar:
           href: https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/gemtcPlus/docs/index.html
         - text: "rpsftmPlus"
           href: https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/rpsftmPlus/docs/index.html
-
+   right:
+    - icon: fa-github
+      href: https://github.com/Roche/Global-HTA-Evidence-Open/tree/master/Rpackages/gemtcPlus
+       
 
 articles:
 - title: "Examples of reporting standard NMA"

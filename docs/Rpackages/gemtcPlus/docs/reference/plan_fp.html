@@ -55,6 +55,16 @@
 <![endif]-->
 
 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-181075487-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-181075487-1');
+</script>
+
 
   </head>
 
@@ -80,19 +90,42 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../articles/index.html">Vignettes</a>
 </li>
 <li>
-  <a href="../articles/index.html">Articles</a>
+  <a href="../reference/index.html">Functions</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Other Packages
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/MAIC/docs/index.html">MAIC</a>
+    </li>
+    <li>
+      <a href="https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/gemtcPlus/docs/index.html">gemtcPlus</a>
+    </li>
+    <li>
+      <a href="https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/rpsftmPlus/docs/index.html">rpsftmPlus</a>
+    </li>
+  </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/Roche/Global-HTA-Evidence-Open/tree/master/Rpackages/gemtcPlus">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -250,7 +283,7 @@
 #&gt; NULL
 #&gt; 
 #&gt; $params$model_params$model.file
-#&gt; [1] "/tmp/RtmpLgfTVf/temp_libpath190b79805d83/gemtcPlus/BUGScode/gsd_fracpoly-1o_fe.txt"
+#&gt; [1] "/tmp/Rtmp6QPKlB/temp_libpath21d05c77d824/gemtcPlus/BUGScode/gsd_fracpoly-1o_fe.txt"
 #&gt; 
 #&gt; $params$model_params$parameters
 #&gt; [1] "d"  "mu"
