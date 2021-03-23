@@ -647,7 +647,7 @@ KM_list <- list(Intervention = KM_int,
 #Produce the Kaplan-Meier plot
 KM_plot <- ggsurvplot(KM_list,
                       combine = TRUE,
-                      risk.table=T, # numbers at risk displayed on the plot
+                      risk.table=TRUE, # numbers at risk displayed on the plot
                       break.x.by=50,
                       xlab="Time (days)",
                       censor=FALSE,

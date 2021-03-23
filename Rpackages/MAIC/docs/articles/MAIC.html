@@ -45,7 +45,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fa fa-home"></span>
+    <span class="fas fa-home"></span>
      
   </a>
 </li>
@@ -77,7 +77,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/Roche/Global-HTA-Evidence-Open/tree/master/Rpackages/MAIC">
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -91,14 +91,14 @@
 
       
 
-      </header><link href="MAIC_files/tabwid-1.0.0/tabwid.css" rel="stylesheet">
-<script src="MAIC_files/tabwid-1.0.0/tabwid.js"></script><div class="row">
+      </header><script src="MAIC_files/header-attrs-2.6/header-attrs.js"></script><script src="MAIC_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="MAIC_files/tabwid-1.0.0/tabwid.css" rel="stylesheet">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Matching-Adjusted Indirect Comparison: Example using the <tt>MAIC</tt> package</h1>
                         <h4 class="author">Roche</h4>
             
-            <h4 class="date">2020-10-22</h4>
+            <h4 class="date">2021-03-23</h4>
       
       
       <div class="hidden name"><code>MAIC.Rmd</code></div>
@@ -287,7 +287,7 @@ pre { /* Code block - determines code spacing between lines */
 <div id="statistical-theory" class="section level2">
 <h2 class="hasAnchor">
 <a href="#statistical-theory" class="anchor"></a>Statistical theory</h2>
-<p>As described by Signorovitch et al. (supplemental appendix), we must find a <span class="math inline">\(\beta\)</span>, such that re-weighting baseline characteristics for the intervention, <span class="math inline">\(x_{i,ild}\)</span> exactly matches the mean baseline characteristics for the comparator data source for which only aggregate data is available.<span class="citation">[1]</span></p>
+<p>As described by Signorovitch et al. (supplemental appendix), we must find a <span class="math inline">\(\beta\)</span>, such that re-weighting baseline characteristics for the intervention, <span class="math inline">\(x_{i,ild}\)</span> exactly matches the mean baseline characteristics for the comparator data source for which only aggregate data is available.<span class="citation">[1]</span></p>
 <p>The weights are given by: <span class="math display">\[\hat{\omega}_i=\exp{(x_{i,ild}.\beta)}\qquad (1)\]</span> That is, we must find a solution to: <span class="math display">\[
 \bar{x}_{agg}\sum_{i=1}^n \exp{(x_{i,ild}.\beta)}  = \sum_{i=1}^n
 x_{i,ild}.\exp{(x_{i,ild}.\beta)}\qquad (2)  \]</span> This estimator is equivalent to solving the equation <span class="math display">\[ 0 = \sum_{i=1}^n (x_{i,ild} -  \bar{x}_{agg}
@@ -612,7 +612,7 @@ x_{i,ild}.\exp{(x_{i,ild}.\beta)}\qquad (2)  \]</span> This estimator is equival
 <span class="co">#Produce the Kaplan-Meier plot</span>
 <span class="no">KM_plot</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/survminer/man/ggsurvplot.html">ggsurvplot</a></span>(<span class="no">KM_list</span>,
                       <span class="kw">combine</span> <span class="kw">=</span> <span class="fl">TRUE</span>,
-                      <span class="kw">risk.table</span><span class="kw">=</span><span class="no">T</span>, <span class="co"># numbers at risk displayed on the plot</span>
+                      <span class="kw">risk.table</span><span class="kw">=</span><span class="fl">TRUE</span>, <span class="co"># numbers at risk displayed on the plot</span>
                       <span class="kw">break.x.by</span><span class="kw">=</span><span class="fl">50</span>,
                       <span class="kw">xlab</span><span class="kw">=</span><span class="st">"Time (days)"</span>,
                       <span class="kw">censor</span><span class="kw">=</span><span class="fl">FALSE</span>,
@@ -638,8 +638,8 @@ x_{i,ild}.\exp{(x_{i,ild}.\beta)}\qquad (2)  \]</span> This estimator is equival
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">transmute</a></span>(<span class="st">"HR"</span> <span class="kw">=</span> <span class="no">`exp(coef)`</span>, <span class="st">"HR_low_CI"</span> <span class="kw">=</span> <span class="no">`lower .95`</span>, <span class="st">"HR_upp_CI"</span> <span class="kw">=</span> <span class="no">`upper .95`</span>)
 
 <span class="no">HR_CI_cox</span>
-<span class="co">#&gt;          HR HR_low_CI HR_upp_CI</span>
-<span class="co">#&gt; 1 0.3748981  0.303901 0.4624815</span>
+<span class="co">#&gt;                        HR HR_low_CI HR_upp_CI</span>
+<span class="co">#&gt; ARMIntervention 0.3748981  0.303901 0.4624815</span>
 
 <span class="co"># Fit a Cox model with weights to estimate the weighted HR</span>
 <span class="no">weighted_cox</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/survival/man/coxph.html">coxph</a></span>(<span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html">Surv</a></span>(<span class="no">Time</span>, <span class="no">Event</span><span class="kw">==</span><span class="fl">1</span>) ~ <span class="no">ARM</span>, <span class="kw">data</span> <span class="kw">=</span> <span class="no">combined_data</span>, <span class="kw">weights</span> <span class="kw">=</span> <span class="no">wt</span>)
@@ -649,8 +649,8 @@ x_{i,ild}.\exp{(x_{i,ild}.\beta)}\qquad (2)  \]</span> This estimator is equival
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">transmute</a></span>(<span class="st">"HR"</span> <span class="kw">=</span> <span class="no">`exp(coef)`</span>, <span class="st">"HR_low_CI"</span> <span class="kw">=</span> <span class="no">`lower .95`</span>, <span class="st">"HR_upp_CI"</span> <span class="kw">=</span> <span class="no">`upper .95`</span>)
 
 <span class="no">HR_CI_cox_wtd</span>
-<span class="co">#&gt;          HR HR_low_CI HR_upp_CI</span>
-<span class="co">#&gt; 1 0.2864753 0.2072051 0.3960718</span>
+<span class="co">#&gt;                        HR HR_low_CI HR_upp_CI</span>
+<span class="co">#&gt; ARMIntervention 0.2864753 0.2072051 0.3960718</span>
 
 <span class="co">## Bootstrapping</span>
 
@@ -710,30 +710,82 @@ x_{i,ild}.\exp{(x_{i,ild}.\beta)}\qquad (2)  \]</span> This estimator is equival
   <span class="fu"><a href="https://rdrr.io/pkg/flextable/man/autofit.html">autofit</a></span>(<span class="kw">add_w</span> <span class="kw">=</span> <span class="fl">0.2</span>, <span class="kw">add_h</span> <span class="kw">=</span> <span class="fl">2</span>)
 
 <span class="no">HR_table</span></pre></body></html></div>
-<div class="tabwid"><table class="table">
+<template id="56eb261c-dc4a-4f5a-9c7a-ce0e2bbc1998"><style>
+.tabwid table{
+  border-collapse:collapse;
+  line-height:1;
+  margin-left:auto;
+  margin-right:auto;
+  border-width: 0;
+  display: table;
+  margin-top: 1.275em;
+  margin-bottom: 1.275em;
+  border-spacing: 0;
+  border-color: transparent;
+}
+.tabwid_left table{
+  margin-left:0;
+}
+.tabwid_right table{
+  margin-right:0;
+}
+.tabwid td {
+    padding: 0;
+}
+.tabwid a {
+  text-decoration: none;
+}
+.tabwid thead {
+    background-color: transparent;
+}
+.tabwid tfoot {
+    background-color: transparent;
+}
+.tabwid table tr {
+background-color: transparent;
+}
+</style>
+<div class="tabwid">
+<style>.cl-0b910560{border-collapse:collapse;}.cl-0b89fb3a{font-family:'Arial';font-size:14pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-0b89fb62{font-family:'Arial';font-size:14pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-0b8a1656{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-0b8a167e{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-0b8a54d6{width:285.3pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 1pt solid rgba(0, 0, 0, 1.00);border-right: 1pt solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-0b8a54fe{width:167.8pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 1pt solid rgba(0, 0, 0, 1.00);border-right: 1pt solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-0b8a5512{width:285.3pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 1pt solid rgba(0, 0, 0, 1.00);border-right: 1pt solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-0b8a5530{width:167.8pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 1pt solid rgba(0, 0, 0, 1.00);border-right: 1pt solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-0b8a5544{width:167.8pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 1pt solid rgba(0, 0, 0, 1.00);border-right: 1pt solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-0b8a554e{width:285.3pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 1pt solid rgba(0, 0, 0, 1.00);border-right: 1pt solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}caption {color: #777;margin-top: 10px;margin-bottom: 10px;text-align: center;}</style>
+<table class="table cl-0b910560">
 <thead><tr style="overflow-wrap:break-word;">
-<td style="width:285px;background-color:transparent;vertical-align: middle;border-bottom: 1.00px solid rgba(0, 0, 0, 1.00);border-top: 1.00px solid rgba(0, 0, 0, 1.00);border-left: 1.00px solid rgba(0, 0, 0, 1.00);border-right: 1.00px solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">Method</span></p></td>
-<td style="width:168px;background-color:transparent;vertical-align: middle;border-bottom: 1.00px solid rgba(0, 0, 0, 1.00);border-top: 1.00px solid rgba(0, 0, 0, 1.00);border-left: 1.00px solid rgba(0, 0, 0, 1.00);border-right: 1.00px solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">Hazard ratio (95% CI)</span></p></td>
+<td class="cl-0b8a554e"><p class="cl-0b8a1656"><span class="cl-0b89fb3a">Method</span></p></td>
+<td class="cl-0b8a5544"><p class="cl-0b8a167e"><span class="cl-0b89fb3a">Hazard ratio (95% CI)</span></p></td>
 </tr></thead>
 <tbody>
 <tr style="overflow-wrap:break-word;">
-<td style="width:285px;background-color:transparent;vertical-align: middle;border-bottom: 1.00px solid rgba(0, 0, 0, 1.00);border-top: 1.00px solid rgba(0, 0, 0, 1.00);border-left: 1.00px solid rgba(0, 0, 0, 1.00);border-right: 1.00px solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:14px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">HR (95% CI) from unadjusted Cox model</span></p></td>
-<td style="width:168px;background-color:transparent;vertical-align: middle;border-bottom: 1.00px solid rgba(0, 0, 0, 1.00);border-top: 1.00px solid rgba(0, 0, 0, 1.00);border-left: 1.00px solid rgba(0, 0, 0, 1.00);border-right: 1.00px solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:14px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">0.375 (0.304 to 0.462)</span></p></td>
+<td class="cl-0b8a54d6"><p class="cl-0b8a1656"><span class="cl-0b89fb62">HR (95% CI) from unadjusted Cox model</span></p></td>
+<td class="cl-0b8a54fe"><p class="cl-0b8a167e"><span class="cl-0b89fb62">0.375 (0.304 to 0.462)</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td style="width:285px;background-color:transparent;vertical-align: middle;border-bottom: 1.00px solid rgba(0, 0, 0, 1.00);border-top: 1.00px solid rgba(0, 0, 0, 1.00);border-left: 1.00px solid rgba(0, 0, 0, 1.00);border-right: 1.00px solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:14px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">HR (95% CI) from weighted Cox model</span></p></td>
-<td style="width:168px;background-color:transparent;vertical-align: middle;border-bottom: 1.00px solid rgba(0, 0, 0, 1.00);border-top: 1.00px solid rgba(0, 0, 0, 1.00);border-left: 1.00px solid rgba(0, 0, 0, 1.00);border-right: 1.00px solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:14px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">0.286 (0.207 to 0.396)</span></p></td>
+<td class="cl-0b8a5512"><p class="cl-0b8a1656"><span class="cl-0b89fb62">HR (95% CI) from weighted Cox model</span></p></td>
+<td class="cl-0b8a5530"><p class="cl-0b8a167e"><span class="cl-0b89fb62">0.286 (0.207 to 0.396)</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td style="width:285px;background-color:transparent;vertical-align: middle;border-bottom: 1.00px solid rgba(0, 0, 0, 1.00);border-top: 1.00px solid rgba(0, 0, 0, 1.00);border-left: 1.00px solid rgba(0, 0, 0, 1.00);border-right: 1.00px solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:14px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">Bootstrap median HR (95% percentile CI)</span></p></td>
-<td style="width:168px;background-color:transparent;vertical-align: middle;border-bottom: 1.00px solid rgba(0, 0, 0, 1.00);border-top: 1.00px solid rgba(0, 0, 0, 1.00);border-left: 1.00px solid rgba(0, 0, 0, 1.00);border-right: 1.00px solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:14px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">0.289 (0.218 to 0.369)</span></p></td>
+<td class="cl-0b8a5512"><p class="cl-0b8a1656"><span class="cl-0b89fb62">Bootstrap median HR (95% percentile CI)</span></p></td>
+<td class="cl-0b8a5530"><p class="cl-0b8a167e"><span class="cl-0b89fb62">0.289 (0.218 to 0.369)</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td style="width:285px;background-color:transparent;vertical-align: middle;border-bottom: 1.00px solid rgba(0, 0, 0, 1.00);border-top: 1.00px solid rgba(0, 0, 0, 1.00);border-left: 1.00px solid rgba(0, 0, 0, 1.00);border-right: 1.00px solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:14px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">Bootstrap median HR (95% BCa CI)</span></p></td>
-<td style="width:168px;background-color:transparent;vertical-align: middle;border-bottom: 1.00px solid rgba(0, 0, 0, 1.00);border-top: 1.00px solid rgba(0, 0, 0, 1.00);border-left: 1.00px solid rgba(0, 0, 0, 1.00);border-right: 1.00px solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:14px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">0.289 (0.215 to 0.367)</span></p></td>
+<td class="cl-0b8a5512"><p class="cl-0b8a1656"><span class="cl-0b89fb62">Bootstrap median HR (95% BCa CI)</span></p></td>
+<td class="cl-0b8a5530"><p class="cl-0b8a167e"><span class="cl-0b89fb62">0.289 (0.215 to 0.367)</span></p></td>
 </tr>
 </tbody>
-</table></div>
+</table>
+</div></template><div id="a581c262-4276-45f0-9177-f285e1addabf"></div>
+<script>
+var dest = document.getElementById("a581c262-4276-45f0-9177-f285e1addabf");
+var template = document.getElementById("56eb261c-dc4a-4f5a-9c7a-ce0e2bbc1998");
+var caption = template.content.querySelector("caption");
+if(caption) {
+  caption.style.cssText = "display:block;text-align:center;";
+  var newcapt = document.createElement("p");
+  newcapt.appendChild(caption)
+  dest.parentNode.insertBefore(newcapt, dest.previousSibling);
+}
+var fantome = dest.attachShadow({mode: 'open'});
+var templateContent = template.content;
+fantome.appendChild(templateContent);
+</script>
 </div>
 <div id="bshr" class="section level3">
 <h3 class="hasAnchor">
@@ -847,30 +899,82 @@ x_{i,ild}.\exp{(x_{i,ild}.\beta)}\qquad (2)  \]</span> This estimator is equival
   <span class="fu"><a href="https://rdrr.io/pkg/flextable/man/border_inner_v.html">border_inner_v</a></span>(<span class="kw">border</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/officer/man/fp_border.html">fp_border</a></span>()) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/pkg/flextable/man/autofit.html">autofit</a></span>(<span class="kw">add_w</span> <span class="kw">=</span> <span class="fl">0.2</span>)
 <span class="no">OR_table</span></pre></body></html></div>
-<div class="tabwid"><table class="table">
+<template id="6d343111-1bc4-4951-863b-21040ac2b428"><style>
+.tabwid table{
+  border-collapse:collapse;
+  line-height:1;
+  margin-left:auto;
+  margin-right:auto;
+  border-width: 0;
+  display: table;
+  margin-top: 1.275em;
+  margin-bottom: 1.275em;
+  border-spacing: 0;
+  border-color: transparent;
+}
+.tabwid_left table{
+  margin-left:0;
+}
+.tabwid_right table{
+  margin-right:0;
+}
+.tabwid td {
+    padding: 0;
+}
+.tabwid a {
+  text-decoration: none;
+}
+.tabwid thead {
+    background-color: transparent;
+}
+.tabwid tfoot {
+    background-color: transparent;
+}
+.tabwid table tr {
+background-color: transparent;
+}
+</style>
+<div class="tabwid">
+<style>.cl-14ebdf0e{border-collapse:collapse;}.cl-14e5c8a8{font-family:'Arial';font-size:14pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-14e5c8d0{font-family:'Arial';font-size:14pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-14e5db7c{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-14e5db9a{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-14e6136c{width:165.5pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 1pt solid rgba(0, 0, 0, 1.00);border-right: 1pt solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-14e61394{width:370.1pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 1pt solid rgba(0, 0, 0, 1.00);border-right: 1pt solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-14e613a8{width:165.5pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 1pt solid rgba(0, 0, 0, 1.00);border-right: 1pt solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-14e613b2{width:370.1pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 1pt solid rgba(0, 0, 0, 1.00);border-right: 1pt solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-14e613bc{width:370.1pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 1pt solid rgba(0, 0, 0, 1.00);border-right: 1pt solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-14e613c6{width:165.5pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 1pt solid rgba(0, 0, 0, 1.00);border-right: 1pt solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}caption {color: #777;margin-top: 10px;margin-bottom: 10px;text-align: center;}</style>
+<table class="table cl-14ebdf0e">
 <thead><tr style="overflow-wrap:break-word;">
-<td style="width:370px;background-color:transparent;vertical-align: middle;border-bottom: 1.00px solid rgba(0, 0, 0, 1.00);border-top: 1.00px solid rgba(0, 0, 0, 1.00);border-left: 1.00px solid rgba(0, 0, 0, 1.00);border-right: 1.00px solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">Method</span></p></td>
-<td style="width:166px;background-color:transparent;vertical-align: middle;border-bottom: 1.00px solid rgba(0, 0, 0, 1.00);border-top: 1.00px solid rgba(0, 0, 0, 1.00);border-left: 1.00px solid rgba(0, 0, 0, 1.00);border-right: 1.00px solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">Odds ratio (95% CI)</span></p></td>
+<td class="cl-14e613bc"><p class="cl-14e5db7c"><span class="cl-14e5c8a8">Method</span></p></td>
+<td class="cl-14e613c6"><p class="cl-14e5db9a"><span class="cl-14e5c8a8">Odds ratio (95% CI)</span></p></td>
 </tr></thead>
 <tbody>
 <tr style="overflow-wrap:break-word;">
-<td style="width:370px;background-color:transparent;vertical-align: middle;border-bottom: 1.00px solid rgba(0, 0, 0, 1.00);border-top: 1.00px solid rgba(0, 0, 0, 1.00);border-left: 1.00px solid rgba(0, 0, 0, 1.00);border-right: 1.00px solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:14px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">OR (95% CI) from unadjusted logistic regression model</span></p></td>
-<td style="width:166px;background-color:transparent;vertical-align: middle;border-bottom: 1.00px solid rgba(0, 0, 0, 1.00);border-top: 1.00px solid rgba(0, 0, 0, 1.00);border-left: 1.00px solid rgba(0, 0, 0, 1.00);border-right: 1.00px solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:14px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">5.318 (3.888 to 7.275)</span></p></td>
+<td class="cl-14e61394"><p class="cl-14e5db7c"><span class="cl-14e5c8d0">OR (95% CI) from unadjusted logistic regression model</span></p></td>
+<td class="cl-14e6136c"><p class="cl-14e5db9a"><span class="cl-14e5c8d0">5.318 (3.888 to 7.275)</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td style="width:370px;background-color:transparent;vertical-align: middle;border-bottom: 1.00px solid rgba(0, 0, 0, 1.00);border-top: 1.00px solid rgba(0, 0, 0, 1.00);border-left: 1.00px solid rgba(0, 0, 0, 1.00);border-right: 1.00px solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:14px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">OR (95% CI) from weighted logistic regression model</span></p></td>
-<td style="width:166px;background-color:transparent;vertical-align: middle;border-bottom: 1.00px solid rgba(0, 0, 0, 1.00);border-top: 1.00px solid rgba(0, 0, 0, 1.00);border-left: 1.00px solid rgba(0, 0, 0, 1.00);border-right: 1.00px solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:14px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">3.787 (2.558 to 5.605)</span></p></td>
+<td class="cl-14e613b2"><p class="cl-14e5db7c"><span class="cl-14e5c8d0">OR (95% CI) from weighted logistic regression model</span></p></td>
+<td class="cl-14e613a8"><p class="cl-14e5db9a"><span class="cl-14e5c8d0">3.787 (2.558 to 5.605)</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td style="width:370px;background-color:transparent;vertical-align: middle;border-bottom: 1.00px solid rgba(0, 0, 0, 1.00);border-top: 1.00px solid rgba(0, 0, 0, 1.00);border-left: 1.00px solid rgba(0, 0, 0, 1.00);border-right: 1.00px solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:14px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">Bootstrap median HR (95% percentile CI)</span></p></td>
-<td style="width:166px;background-color:transparent;vertical-align: middle;border-bottom: 1.00px solid rgba(0, 0, 0, 1.00);border-top: 1.00px solid rgba(0, 0, 0, 1.00);border-left: 1.00px solid rgba(0, 0, 0, 1.00);border-right: 1.00px solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:14px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">3.784 (2.693 to 5.448)</span></p></td>
+<td class="cl-14e613b2"><p class="cl-14e5db7c"><span class="cl-14e5c8d0">Bootstrap median HR (95% percentile CI)</span></p></td>
+<td class="cl-14e613a8"><p class="cl-14e5db9a"><span class="cl-14e5c8d0">3.784 (2.693 to 5.448)</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td style="width:370px;background-color:transparent;vertical-align: middle;border-bottom: 1.00px solid rgba(0, 0, 0, 1.00);border-top: 1.00px solid rgba(0, 0, 0, 1.00);border-left: 1.00px solid rgba(0, 0, 0, 1.00);border-right: 1.00px solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:14px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">Bootstrap median HR (95% BCa CI)</span></p></td>
-<td style="width:166px;background-color:transparent;vertical-align: middle;border-bottom: 1.00px solid rgba(0, 0, 0, 1.00);border-top: 1.00px solid rgba(0, 0, 0, 1.00);border-left: 1.00px solid rgba(0, 0, 0, 1.00);border-right: 1.00px solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:14px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">3.784 (2.669 to 5.402)</span></p></td>
+<td class="cl-14e613b2"><p class="cl-14e5db7c"><span class="cl-14e5c8d0">Bootstrap median HR (95% BCa CI)</span></p></td>
+<td class="cl-14e613a8"><p class="cl-14e5db9a"><span class="cl-14e5c8d0">3.784 (2.669 to 5.402)</span></p></td>
 </tr>
 </tbody>
-</table></div>
+</table>
+</div></template><div id="c5d71ed6-cebb-4c87-86f4-6e14a2545d5c"></div>
+<script>
+var dest = document.getElementById("c5d71ed6-cebb-4c87-86f4-6e14a2545d5c");
+var template = document.getElementById("6d343111-1bc4-4951-863b-21040ac2b428");
+var caption = template.content.querySelector("caption");
+if(caption) {
+  caption.style.cssText = "display:block;text-align:center;";
+  var newcapt = document.createElement("p");
+  newcapt.appendChild(caption)
+  dest.parentNode.insertBefore(newcapt, dest.previousSibling);
+}
+var fantome = dest.attachShadow({mode: 'open'});
+var templateContent = template.content;
+fantome.appendChild(templateContent);
+</script>
 </div>
 <div id="bsor" class="section level3">
 <h3 class="hasAnchor">

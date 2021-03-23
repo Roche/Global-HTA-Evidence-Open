@@ -90,7 +90,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home"></span>
+    <span class="fas fa-home"></span>
      
   </a>
 </li>
@@ -122,7 +122,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/Roche/Global-HTA-Evidence-Open/tree/master/Rpackages/MAIC">
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -307,7 +307,7 @@ This value (default 0.0001) will replace weights estimated at 0 in a sample.</p>
 <span class='co'>#Produce the Kaplan-Meier plot</span>
 <span class='no'>KM_plot</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/survminer/man/ggsurvplot.html'>ggsurvplot</a></span>(<span class='no'>KM_list</span>,
                       <span class='kw'>combine</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-                      <span class='kw'>risk.table</span><span class='kw'>=</span><span class='no'>T</span>, <span class='co'># numbers at risk displayed on the plot</span>
+                      <span class='kw'>risk.table</span><span class='kw'>=</span><span class='fl'>TRUE</span>, <span class='co'># numbers at risk displayed on the plot</span>
                       <span class='kw'>break.x.by</span><span class='kw'>=</span><span class='fl'>50</span>,
                       <span class='kw'>xlab</span><span class='kw'>=</span><span class='st'>"Time (days)"</span>,
                       <span class='kw'>censor</span><span class='kw'>=</span><span class='fl'>FALSE</span>,
@@ -317,15 +317,8 @@ This value (default 0.0001) will replace weights estimated at 0 in a sample.</p>
                                     <span class='st'>"Intervention weighted"</span>,
                                     <span class='st'>"Comparator"</span>),
                       <span class='kw'>font.legend</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>10</span>)) +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/guides.html'>guides</a></span>(<span class='kw'>colour</span><span class='kw'>=</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/guide_legend.html'>guide_legend</a></span>(<span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fl'>2</span>))</div><div class='output co'>#&gt; <span class='warning'>Warning: Problem with `mutate()` input `survtable`.</span>
-#&gt; <span class='warning'><span style='color: #0000BB;'>ℹ</span><span> `select_()` is deprecated as of dplyr 0.7.0.</span>
-#&gt; <span class='warning'>Please use `select()` instead.</span>
-#&gt; <span class='warning'></span><span style='color: #555555;'>This warning is displayed once every 8 hours.</span><span></span>
-#&gt; <span class='warning'></span><span style='color: #555555;'>Call `lifecycle::last_warnings()` to see where this warning was generated.</span><span></span>
-#&gt; <span class='warning'></span><span style='color: #0000BB;'>ℹ</span><span> Input `survtable` is `purrr::map2(...)`.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: `select_()` is deprecated as of dplyr 0.7.0.</span>
-#&gt; <span class='warning'>Please use `select()` instead.</span>
-#&gt; <span class='warning'></span><span style='color: #555555;'>This warning is displayed once every 8 hours.</span><span></span>
-#&gt; <span class='warning'></span><span style='color: #555555;'>Call `lifecycle::last_warnings()` to see where this warning was generated.</span><span></span></div><div class='output co'>#&gt; <span class='warning'>Warning: Vectorized input to `element_text()` is not officially supported.</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/guides.html'>guides</a></span>(<span class='kw'>colour</span><span class='kw'>=</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/guide_legend.html'>guide_legend</a></span>(<span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fl'>2</span>))</div><div class='output co'>#&gt; <span class='warning'>Warning: `select_()` was deprecated in dplyr 0.7.0.</span>
+#&gt; <span class='warning'>Please use `select()` instead.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Vectorized input to `element_text()` is not officially supported.</span>
 #&gt; <span class='warning'>Results may be unexpected or may change in future versions of ggplot2.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Vectorized input to `element_text()` is not officially supported.</span>
 #&gt; <span class='warning'>Results may be unexpected or may change in future versions of ggplot2.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Vectorized input to `element_text()` is not officially supported.</span>
 #&gt; <span class='warning'>Results may be unexpected or may change in future versions of ggplot2.</span></div><div class='input'>
@@ -501,7 +494,7 @@ This value (default 0.0001) will replace weights estimated at 0 in a sample.</p>
             <span class='fu'><a href='https://rdrr.io/pkg/flextable/man/border_outer.html'>border_outer</a></span>(<span class='kw'>border</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/officer/man/fp_border.html'>fp_border</a></span>()) <span class='kw'>%&gt;%</span>
             <span class='fu'><a href='https://rdrr.io/pkg/flextable/man/border_inner_h.html'>border_inner_h</a></span>(<span class='kw'>border</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/officer/man/fp_border.html'>fp_border</a></span>()) <span class='kw'>%&gt;%</span>
             <span class='fu'><a href='https://rdrr.io/pkg/flextable/man/border_inner_v.html'>border_inner_v</a></span>(<span class='kw'>border</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/officer/man/fp_border.html'>fp_border</a></span>()) <span class='kw'>%&gt;%</span>
-            <span class='fu'><a href='https://rdrr.io/pkg/flextable/man/autofit.html'>autofit</a></span>(<span class='kw'>add_w</span> <span class='kw'>=</span> <span class='fl'>0.2</span>)</div></span></pre>
+            <span class='fu'><a href='https://rdrr.io/pkg/flextable/man/autofit.html'>autofit</a></span>(<span class='kw'>add_w</span> <span class='kw'>=</span> <span class='fl'>0.2</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
