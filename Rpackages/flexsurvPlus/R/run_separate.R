@@ -120,13 +120,13 @@ run_separate <- function(data,
 
   
   # rename for output
-  names(models.int) <- paste0("sep.int.", names(models.int))
-  names(models.ref) <- paste0("sep.ref.", names(models.ref))
+  names(models.int) <- paste0("sep.", names(models.int), ".int")
+  names(models.ref) <- paste0("sep.", names(models.ref), ".ref")
   
   models <- c(models.int, models.ref)
   
-  model_summary.int$Dist <-  paste0("sep.int.", model_summary.int$Dist)
-  model_summary.ref$Dist <-  paste0("ref.int.", model_summary.ref$Dist)
+  model_summary.int$Dist <-  paste0("sep.", model_summary.int$Dist, ".int")
+  model_summary.ref$Dist <-  paste0("sep.", model_summary.ref$Dist, ".ref")
   
   model_summary <- dplyr::bind_rows(model_summary.int, model_summary.ref)
   
@@ -151,8 +151,8 @@ run_separate <- function(data,
   params_all <- param_final 
   
   if('exp' %in% distr){
-    params_all$exp.rate.int <- ifelse("exp.rate.int" %in% names(params_all), params_all$exp.rate.int, NA) 
-    params_all$exp.rate.ref <- ifelse("exp.rate.ref" %in% names(params_all), params_all$exp.rate.ref, NA) 
+    params_all$exp.rate.int <- ifelse("exp.int" %in% names(params_all), params_all$exp.int, NA) 
+    params_all$exp.rate.ref <- ifelse("exp.ref" %in% names(params_all), params_all$exp.ref, NA) 
       }
   
   if('weibull' %in% distr){
