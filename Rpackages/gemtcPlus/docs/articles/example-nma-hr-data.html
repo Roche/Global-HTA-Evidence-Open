@@ -45,7 +45,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fa fa-home"></span>
+    <span class="fas fa-home"></span>
      
   </a>
 </li>
@@ -63,10 +63,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/MAIC/docs/index.html">MAIC</a>
+      <a href="https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/flexsurvPlus/docs/index.html">flexsurvPlus</a>
     </li>
     <li>
       <a href="https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/gemtcPlus/docs/index.html">gemtcPlus</a>
+    </li>
+    <li>
+      <a href="https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/MAIC/docs/index.html">MAIC</a>
     </li>
     <li>
       <a href="https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/rpsftmPlus/docs/index.html">rpsftmPlus</a>
@@ -77,7 +80,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/Roche/Global-HTA-Evidence-Open/tree/master/Rpackages/gemtcPlus">
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -91,14 +94,13 @@
 
       
 
-      </header><link href="example-nma-hr-data_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
-<script src="example-nma-hr-data_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
+      </header><script src="example-nma-hr-data_files/header-attrs-2.6/header-attrs.js"></script><script src="example-nma-hr-data_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Bayesian FE &amp; RE NMA for HR data (via gemtc package) - Result Generation</h1>
                         <h4 class="author">Sandro Gsteiger, Nick Howlett</h4>
             
-            <h4 class="date">2020-10-22</h4>
+            <h4 class="date">2021-05-12</h4>
       
       
       <div class="hidden name"><code>example-nma-hr-data.rmd</code></div>
@@ -443,9 +445,9 @@
 ## F 0.05644444 0.046000000 0.05983333 0.10994444 0.160222222 0.5675555556</code></pre>
 </div>
 </div>
-<div id="extract-model-code-e-g-for-appendix" class="section level1">
+<div id="extract-model-code-e-g--for-appendix" class="section level1">
 <h1 class="hasAnchor">
-<a href="#extract-model-code-e-g-for-appendix" class="anchor"></a>Extract model code (e.g. for Appendix)</h1>
+<a href="#extract-model-code-e-g--for-appendix" class="anchor"></a>Extract model code (e.g. for Appendix)</h1>
 <div class="sourceCode" id="cb39"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="no">model</span>$<span class="no">model</span>$<span class="no">code</span>)</pre></body></html></div>
 <pre><code>## model {
 ##  # Likelihood for arm-based data
@@ -503,7 +505,7 @@
 <a href="#session-info" class="anchor"></a>Session info</h1>
 <p>BEE repository: /home/bceuser/benneti1/Global-HTA-Evidence-Open/Rpackages/gemtcPlus/vignettes</p>
 <div class="sourceCode" id="cb41"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/date.html">date</a></span>()</pre></body></html></div>
-<pre><code>## [1] "Thu Oct 22 18:32:24 2020"</code></pre>
+<pre><code>## [1] "Wed May 12 11:05:31 2021"</code></pre>
 <div class="sourceCode" id="cb43"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span>()</pre></body></html></div>
 <pre><code>## R version 3.6.3 (2020-02-29)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
@@ -524,29 +526,29 @@
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] ggmcmc_1.5.0    ggplot2_3.3.2   tidyr_1.1.2     gemtcPlus_1.0.0
-## [5] R2jags_0.6-1    rjags_4-10      gemtc_0.8-7     coda_0.19-4    
-## [9] dplyr_1.0.2    
+## [1] ggmcmc_1.5.0    ggplot2_3.3.3   tidyr_1.1.2     gemtcPlus_1.0.0
+## [5] R2jags_0.6-1    rjags_4-10      gemtc_0.8-8     coda_0.19-4    
+## [9] dplyr_1.0.6    
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.5         lattice_0.20-41    assertthat_0.2.1   rprojroot_1.3-2   
-##  [5] digest_0.6.26      truncnorm_1.0-8    R6_2.4.1           plyr_1.8.6        
-##  [9] backports_1.1.10   evaluate_0.14      pillar_1.4.6       rlang_0.4.8       
-## [13] rstudioapi_0.11    minqa_1.2.4        nloptr_1.2.2.2     Matrix_1.2-18     
-## [17] rmarkdown_2.5      pkgdown_1.5.1      desc_1.2.0         labeling_0.4.2    
-## [21] splines_3.6.3      lme4_1.1-23        statmod_1.4.35     stringr_1.4.0     
-## [25] pander_0.6.3       igraph_1.2.6       munsell_0.5.0      compiler_3.6.3    
-## [29] xfun_0.18          pkgconfig_2.0.3    htmltools_0.5.0    tidyselect_1.1.0  
-## [33] tibble_3.0.4       R2WinBUGS_2.1-21   reshape_0.8.8      crayon_1.3.4      
-## [37] withr_2.3.0        MASS_7.3-51.6      grid_3.6.3         nlme_3.1-148      
-## [41] meta_4.15-1        GGally_2.0.0       gtable_0.3.0       lifecycle_0.2.0   
-## [45] magrittr_1.5       metafor_2.4-0      scales_1.1.1       stringi_1.5.3     
-## [49] reshape2_1.4.4     farver_2.0.3       fs_1.5.0           xml2_1.3.2        
-## [53] ellipsis_0.3.1     generics_0.0.2     vctrs_0.3.4        boot_1.3-25       
-## [57] RColorBrewer_1.1-2 tools_3.6.3        forcats_0.5.0      CompQuadForm_1.4.3
-## [61] glue_1.4.2         purrr_0.3.4        network_1.16.1     abind_1.4-5       
-## [65] parallel_3.6.3     yaml_2.2.1         colorspace_1.4-1   memoise_1.1.0     
-## [69] knitr_1.30</code></pre>
+##  [1] Rcpp_1.0.6         lattice_0.20-41    assertthat_0.2.1   rprojroot_2.0.2   
+##  [5] digest_0.6.27      utf8_1.2.1         truncnorm_1.0-8    R6_2.5.0          
+##  [9] plyr_1.8.6         evaluate_0.14      pillar_1.6.0       rlang_0.4.11      
+## [13] minqa_1.2.4        nloptr_1.2.2.2     Matrix_1.2-18      rmarkdown_2.6     
+## [17] pkgdown_1.5.1      labeling_0.4.2     desc_1.2.0         splines_3.6.3     
+## [21] lme4_1.1-23        statmod_1.4.36     pander_0.6.3       stringr_1.4.0     
+## [25] igraph_1.2.6       munsell_0.5.0      compiler_3.6.3     xfun_0.22         
+## [29] pkgconfig_2.0.3    htmltools_0.5.0    tidyselect_1.1.1   tibble_3.1.1      
+## [33] R2WinBUGS_2.1-21   reshape_0.8.8      fansi_0.4.2        crayon_1.4.1      
+## [37] withr_2.4.2        MASS_7.3-51.6      grid_3.6.3         nlme_3.1-148      
+## [41] meta_4.15-1        GGally_2.0.0       gtable_0.3.0       lifecycle_1.0.0   
+## [45] DBI_1.1.0          magrittr_2.0.1     metafor_2.4-0      scales_1.1.1      
+## [49] stringi_1.5.3      reshape2_1.4.4     farver_2.1.0       fs_1.5.0          
+## [53] xml2_1.3.2         ellipsis_0.3.2     generics_0.1.0     vctrs_0.3.8       
+## [57] boot_1.3-25        RColorBrewer_1.1-2 tools_3.6.3        forcats_0.5.1     
+## [61] CompQuadForm_1.4.3 glue_1.4.2         purrr_0.3.4        network_1.16.1    
+## [65] abind_1.4-5        parallel_3.6.3     yaml_2.2.1         colorspace_2.0-1  
+## [69] memoise_1.1.0      knitr_1.30</code></pre>
 </div>
   </div>
 

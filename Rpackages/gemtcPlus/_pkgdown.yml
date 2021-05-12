@@ -13,17 +13,18 @@ navbar:
       href: reference/index.html
     - text: "Other Packages"
       menu:
-        - text: "MAIC"
-          href: https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/MAIC/docs/index.html
+        - text: "flexsurvPlus"
+          href: https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/flexsurvPlus/docs/index.html          
         - text: "gemtcPlus"
           href: https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/gemtcPlus/docs/index.html
+        - text: "MAIC"
+          href: https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/MAIC/docs/index.html          
         - text: "rpsftmPlus"
           href: https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/rpsftmPlus/docs/index.html
    right:
     - icon: fa-github
       href: https://github.com/Roche/Global-HTA-Evidence-Open/tree/master/Rpackages/gemtcPlus
        
-
 articles:
 - title: "Examples of reporting standard NMA"
   desc: >

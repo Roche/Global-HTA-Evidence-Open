@@ -79,3 +79,24 @@ file.copy(from = "Rpackages/gemtcPlus/docs",
           to = "docs/Rpackages/gemtcPlus", 
           overwrite = TRUE, 
           recursive = TRUE)
+
+
+##############################################
+# flexsurvPlus
+##############################################
+# 1) make any updates to the package 
+# 2) update documentation using devtools
+devtools::document(pkg = "Rpackages/flexsurvPlus")
+
+# 3) reinstall the updated package
+devtools::install(pkg = "Rpackages/flexsurvPlus")
+
+# 4) update the file Rpackages/flexsurvPlus/_pkgdown.yml
+# 5) rebuild documentation using pkgdown
+pkgdown::build_site(pkg = "Rpackages/flexsurvPlus")
+
+# 6) copy site to correct location in repo for github sites hosting
+file.copy(from = "Rpackages/flexsurvPlus/docs", 
+          to = "docs/Rpackages/flexsurvPlus", 
+          overwrite = TRUE, 
+          recursive = TRUE)

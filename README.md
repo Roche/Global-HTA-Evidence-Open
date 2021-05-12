@@ -5,21 +5,21 @@ This repository contains code and analysis made open source from Global HTA Evid
 
 # Rpackages
 
-## MAIC
+## flexsurvPlus
 
-This package facilitates performing matching-adjusted indirect comparison (MAIC) anaylsis for a disconnected treatment network where the endpoint of interest is either time-to-event (e.g. overall survival) or binary (e.g. objective tumor response).
+This package facilitates performing survival analysis to support the creation of Excel based economic models by providing helper functions to use alongside the [flexsurv package](https://cran.r-project.org/web/packages/flexsurv/).
 
-### Documentation
-
-https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/MAIC/docs/index.html
-
-### Installation code
+### installation code
 ```
 devtools::install_github(
   "roche/Global-HTA-Evidence-Open", 
-  subdir = "Rpackages/MAIC"
+  subdir = "/Rpackages/flexsurvPlus"
   )
 ```
+
+### documentation
+
+https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/flexsurvPlus/docs/index.html
 
 ## gemtcPlus
 
@@ -35,6 +35,22 @@ First ensure you have installed from CRAN [gemtc package](https://cran.r-project
 devtools::install_github(
   "roche/Global-HTA-Evidence-Open", 
   subdir = "Rpackages/gemtcPlus"
+  )
+```
+
+## MAIC
+
+This package facilitates performing matching-adjusted indirect comparison (MAIC) anaylsis for a disconnected treatment network where the endpoint of interest is either time-to-event (e.g. overall survival) or binary (e.g. objective tumor response).
+
+### Documentation
+
+https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/MAIC/docs/index.html
+
+### Installation code
+```
+devtools::install_github(
+  "roche/Global-HTA-Evidence-Open", 
+  subdir = "Rpackages/MAIC"
   )
 ```
 

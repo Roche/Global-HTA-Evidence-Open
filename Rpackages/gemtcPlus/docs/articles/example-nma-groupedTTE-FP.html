@@ -45,7 +45,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fa fa-home"></span>
+    <span class="fas fa-home"></span>
      
   </a>
 </li>
@@ -63,10 +63,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/MAIC/docs/index.html">MAIC</a>
+      <a href="https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/flexsurvPlus/docs/index.html">flexsurvPlus</a>
     </li>
     <li>
       <a href="https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/gemtcPlus/docs/index.html">gemtcPlus</a>
+    </li>
+    <li>
+      <a href="https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/MAIC/docs/index.html">MAIC</a>
     </li>
     <li>
       <a href="https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/rpsftmPlus/docs/index.html">rpsftmPlus</a>
@@ -77,7 +80,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/Roche/Global-HTA-Evidence-Open/tree/master/Rpackages/gemtcPlus">
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -91,14 +94,13 @@
 
       
 
-      </header><link href="example-nma-groupedTTE-FP_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
-<script src="example-nma-groupedTTE-FP_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
+      </header><script src="example-nma-groupedTTE-FP_files/header-attrs-2.6/header-attrs.js"></script><script src="example-nma-groupedTTE-FP_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Bayesian FE fractional polynomial NMA for grouped survival data</h1>
                         <h4 class="author">Sandro Gsteiger</h4>
             
-            <h4 class="date">2020-10-22</h4>
+            <h4 class="date">2021-05-12</h4>
       
       
       <div class="hidden name"><code>example-nma-groupedTTE-FP.Rmd</code></div>
@@ -1878,7 +1880,7 @@ for (k in 2:Ntrt){
 <h1 class="hasAnchor">
 <a href="#session-info" class="anchor"></a>Session info</h1>
 <div class="sourceCode" id="cb33"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/date.html">date</a></span>()</pre></body></html></div>
-<pre><code>## [1] "Thu Oct 22 18:30:37 2020"</code></pre>
+<pre><code>## [1] "Wed May 12 11:03:42 2021"</code></pre>
 <div class="sourceCode" id="cb35"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span>()</pre></body></html></div>
 <pre><code>## R version 3.6.3 (2020-02-29)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
@@ -1899,25 +1901,25 @@ for (k in 2:Ntrt){
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] ggmcmc_1.5.0    ggplot2_3.3.2   tidyr_1.1.2     gemtcPlus_1.0.0
-## [5] R2jags_0.6-1    rjags_4-10      gemtc_0.8-7     coda_0.19-4    
-## [9] dplyr_1.0.2    
+## [1] ggmcmc_1.5.0    ggplot2_3.3.3   tidyr_1.1.2     gemtcPlus_1.0.0
+## [5] R2jags_0.6-1    rjags_4-10      gemtc_0.8-8     coda_0.19-4    
+## [9] dplyr_1.0.6    
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.5         RColorBrewer_1.1-2 compiler_3.6.3     pillar_1.4.6      
-##  [5] plyr_1.8.6         tools_3.6.3        boot_1.3-25        digest_0.6.26     
-##  [9] gtable_0.3.0       evaluate_0.14      memoise_1.1.0      lifecycle_0.2.0   
-## [13] tibble_3.0.4       lattice_0.20-41    pkgconfig_2.0.3    rlang_0.4.8       
-## [17] igraph_1.2.6       GGally_2.0.0       rstudioapi_0.11    yaml_2.2.1        
-## [21] parallel_3.6.3     pkgdown_1.5.1      xfun_0.18          withr_2.3.0       
-## [25] stringr_1.4.0      knitr_1.30         generics_0.0.2     desc_1.2.0        
-## [29] fs_1.5.0           vctrs_0.3.4        rprojroot_1.3-2    grid_3.6.3        
-## [33] tidyselect_1.1.0   reshape_0.8.8      glue_1.4.2         R6_2.4.1          
-## [37] rmarkdown_2.5      pander_0.6.3       farver_2.0.3       purrr_0.3.4       
-## [41] magrittr_1.5       scales_1.1.1       backports_1.1.10   htmltools_0.5.0   
-## [45] ellipsis_0.3.1     R2WinBUGS_2.1-21   MASS_7.3-51.6      assertthat_0.2.1  
-## [49] abind_1.4-5        colorspace_1.4-1   labeling_0.4.2     stringi_1.5.3     
-## [53] network_1.16.1     munsell_0.5.0      crayon_1.3.4</code></pre>
+##  [1] network_1.16.1     tidyselect_1.1.1   xfun_0.22          pander_0.6.3      
+##  [5] purrr_0.3.4        lattice_0.20-41    colorspace_2.0-1   vctrs_0.3.8       
+##  [9] generics_0.1.0     htmltools_0.5.0    yaml_2.2.1         utf8_1.2.1        
+## [13] rlang_0.4.11       pkgdown_1.5.1      pillar_1.6.0       glue_1.4.2        
+## [17] withr_2.4.2        DBI_1.1.0          RColorBrewer_1.1-2 lifecycle_1.0.0   
+## [21] plyr_1.8.6         stringr_1.4.0      munsell_0.5.0      gtable_0.3.0      
+## [25] memoise_1.1.0      evaluate_0.14      labeling_0.4.2     knitr_1.30        
+## [29] GGally_2.0.0       parallel_3.6.3     fansi_0.4.2        Rcpp_1.0.6        
+## [33] scales_1.1.1       desc_1.2.0         abind_1.4-5        farver_2.1.0      
+## [37] fs_1.5.0           digest_0.6.27      stringi_1.5.3      grid_3.6.3        
+## [41] rprojroot_2.0.2    tools_3.6.3        magrittr_2.0.1     tibble_3.1.1      
+## [45] crayon_1.4.1       pkgconfig_2.0.3    MASS_7.3-51.6      ellipsis_0.3.2    
+## [49] assertthat_0.2.1   rmarkdown_2.6      reshape_0.8.8      R6_2.5.0          
+## [53] boot_1.3-25        R2WinBUGS_2.1-21   igraph_1.2.6       compiler_3.6.3</code></pre>
 </div>
   </div>
 

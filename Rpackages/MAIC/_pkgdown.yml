@@ -13,10 +13,12 @@ navbar:
       href: reference/index.html
     - text: "Other Packages"
       menu:
-        - text: "MAIC"
-          href: https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/MAIC/docs/index.html
+        - text: "flexsurvPlus"
+          href: https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/flexsurvPlus/docs/index.html          
         - text: "gemtcPlus"
           href: https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/gemtcPlus/docs/index.html
+        - text: "MAIC"
+          href: https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/MAIC/docs/index.html          
         - text: "rpsftmPlus"
           href: https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/rpsftmPlus/docs/index.html
    right:
@@ -45,4 +47,3 @@ reference:
 - contents:
   - est_weights
   - target_pop_standard
-  
