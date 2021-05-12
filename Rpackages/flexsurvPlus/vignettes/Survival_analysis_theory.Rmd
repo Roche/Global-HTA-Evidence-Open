@@ -1,0 +1,1298 @@
+---
+title: "Parametric survival analysis using the flexsurvPlus package: understanding the theory"
+author: "Roche"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette:
+    number_sections: yes
+  html_document:
+    df_print: paged
+bibliography: references.bib
+csl: biomedicine.csl
+vignette: >
+  %\VignetteIndexEntry{Parametric survival analysis using the flexsurvPlus package: understanding the theory}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 6
+)
+```
+
+
+<style type="text/css">
+
+body{ /* Normal  */
+      font-size: 14px;
+  }
+td {  /* Table  */
+  font-size: 12px;
+}
+h1.title {
+  font-size: 38px;
+}
+h1 { /* Header 1 */
+  font-size: 28px;
+  }
+h2 { /* Header 2 */
+    font-size: 22px;
+}
+h3 { /* Header 3 */
+  font-size: 18px;
+}
+code.r{ /* Code block */
+    font-size: 12px;
+}
+pre { /* Code block - determines code spacing between lines */
+    font-size: 14px;
+}
+</style>
+
+
+
+# Introduction
+
+Parametric survival models are often the preferred method of extrapolating
+survival data for use in economic models. The National Institute for Health and
+Care Excellence (NICE) Decision Support Unit (DSU) technical support document
+(TSD) 14 recommends that the Exponential, Weibull, Gompertz, log-logistic, log
+normal and Generalized Gamma parametric models should all be
+considered.[@latimer2011nice] More recently, NICE also discusses more flexible
+models in NICE DSU TSD 21, however, more these models are not in the scope of
+this package.[@rutherford2020nice] The Canadian Agency for Drugs and
+Technologies in Health (CADTH) additionally specifies that the Gamma
+distribution must also be considered. This document therefore details the
+characteristics of each of these distributions and demonstrates how the
+parameters from each distribution, outputted using the flexsurvPlus package, can be
+implemented within an economic model.[@cadth2020]
+The Generalized F distribution is not commonly used, however it has been included in 
+this package in case more flexible modeling is required.
+
+The flexsurvPlus package allows the inclusion of a treatment effect in the following
+three ways:
+
+* Separate models - Models fitted to each treatment arm separately
+  * Similarly, a separate model can be fitted to data from a single treatment arm
+  
+*  Independent shape models - Models fitted to both/all treatment arms including
+a treatment covariate to model the effect of treatment on both the scale and
+shape parameter(s) of the distribution.
+    
+*  Common shape models - Models fitted to both/all treatment arms including a
+treatment covariate to model the effect of treatment on the scale parameter of
+the distribution. The shape parameter(s) of the distribution is common across
+treatments which reflects an assumption of proportional hazards or accelerated
+failure time between treatments depending on the distribution
+    
+This document details the parameters for each of these three model
+types. A separate vignette; "Fitting parametric survival models in R" details 
+how to perform the analyses in R using the <tt>flexsurvPlus</tt> package.
+
+
+
+# Properties of the distributions
+
+The properties of each parametric distribution are summarized in the Table below. 
+
+By default, covariates are placed on the “location” parameter of the
+distribution, typically the "scale" or "rate" parameter, through a linear model,
+or a log-linear model if this parameter must be positive. This gives an
+accelerated failure time model or a proportional hazards model (see Table below)
+depending on how the distribution is parametrized.The other parameters are
+ancillary parameters that determine the shape, variance, or higher moments of
+the distribution. These parameters impact the hazard function, which can take a
+variety of shapes depending on the distribution:[@RbloggersPSM; @cox2008]
+
+*  the exponential distribution only supports a constant hazard; 
+*  the Weibull, Gompertz, and gamma distributions support monotonically increasing and
+decreasing hazards; 
+*  the log-logistic and log-normal distributions support arc-shaped and
+monotonically decreasing hazards; 
+*  and the generalized gamma distribution supports an arc-shaped,
+bathtub-shaped, monotonically increasing, and monotonically decreasing hazards.
+
+The log-hazard function of the Weibull model is linear with respect to the log
+of time. The log-hazard function of the Gompertz model is linear with respect to
+time.
+
+## Special cases
+*  The Weibull distribution reduces to an exponential distribution when the
+Weibull shape parameter equals 1 ($a=1$) and the exponential rate parameter is 1
+divided by the the Weibull scale parameter ($\frac{1}{b}$).
+*  The Gompertz distribution reduces to an exponential distribution when the
+Gompertz shape parameter equals 0 ($a=0$).
+*  The Generalized Gamma distribution reduces to an exponential model
+($Q=\sigma=1$), Weibull model ($Q=1$), gamma model ($Q=\sigma$) and log-normal
+model ($Q=0$).
+*  The Generalized F distribution reduces to the Generalized Gamma distribution ($P=1$)
+
+
+## Initial diagnostics
+Before fitting any models, the following initial diagnostic plots are helpful to
+understand which distribution might be the best fit to the data being modeled:
+
+*  Kaplan–Meier plot
+    *  To display the survival function for each treatment
+    
+*  Log-cumulative hazard plot
+    *  Visual inspection of a log-cumulative hazard plot allows assessment of
+    the proportional hazards assumption. In addition, they provide an
+    alternative way to assess changes in hazards over time.
+
+*  Smoothed hazard plot
+    *  Does the shape of the hazard plot indicate that a certain distribution is
+    more appropriate than another? Possible shapes of the hazard function for
+    each of the distributions that can be fitted with the flexsurvPlus package are
+    described in Table X below. For example, if the hazard is constant, an
+    exponential distribution might be the most appropriate fit to the data.
+    
+
+```{r distribution_properties, echo=FALSE}
+suppressWarnings(suppressMessages(library(kableExtra)))
+
+exponential <- c("Exponential",
+                 "$1: \\ b$",
+                 "rate (b)",
+                 "NA",
+                 "$e^{-b t}$",
+                 "$b$",
+                 "Constant",
+                 "PH and AFT"#, 
+                 #"NA"
+                 )
+weibull <- c("Weibull",
+             "$2:\\ a, b$",
+             "scale (b)",
+             "shape (a)",
+             "$e^{(\\frac{-t}{b})^{a}}$",
+             "$a\\frac{t}{b}^{a -1}$",
+             "Constant, monotonically increasing, monotonically decreasing",
+             "AFT"#, 
+             #"Reduces to an exponential model when $\\gamma = 1$, log-hazard function is linear with respect to the log of time"
+             )
+gompertz <- c("Gompertz",
+              "$2:\\ a, b$",
+              "rate (b)",
+              "shape (a)",
+              "$e^{\\frac{-b}{a} (e^{a t}-1)}$",
+              "$b e^{a t}$",
+              "Constant, monotonically increasing, monotonically decreasing",
+              "PH"#, 
+              #"Reduces to an exponential model when $\\sigma = 1$, log-hazard function is linear with respect to time"
+              )
+
+llogistic <- c("Log-logistic",
+              "$2:\\ a, b$",
+              "scale (b)",
+              "shape (a)",
+              "$\\frac{1}{1 + (\\frac{t}{b})^a}$",
+              "$\\frac{\\frac{a}{b}(\\frac{t}{b})^{a - 1}}{1 + (\\frac{t}{b})^a}$",
+              "Monotonically decreasing, initial increase the decrease",
+              "AFT"#, 
+              #"May have long tails"
+              )
+
+lnormal <- c("Log-normal",
+              "$2: \\ \\mu, \\sigma$",
+              "meanlog ($\\mu$)",
+              "sdlog ($\\sigma$)",
+              "$1 - \\Phi \\frac{log t - \\mu}{\\sigma}$",
+              "$\\frac{\\frac{1}{\\sigma \\sqrt{2 \\pi}}t^{-1}e[-\\frac{(log t - \\mu)^2}{2 \\sigma^2}]}{S(t)}$",
+              "Initially increases then decreases",
+              "AFT"#, 
+              #"May have long tails"
+             )
+
+gamma <- c("Gamma", 
+           "$2: \\ a, b$", 
+           "rate (b)",
+           "shape (a)",
+           "$1 - \\frac{\\gamma(a, bt)}{\\Gamma(a)}$",
+           "$\\frac{b^at^{a -1}e^{-bt}}{\\Gamma(a) S(t)}$",
+           "Constant, monotonically increasing, monotonically decreasing",
+           "AFT"#,
+           #" "
+           )
+
+gengamma <- c("Generalized gamma", 
+              "$3: \\ \\mu, \\sigma, Q$", 
+              "mu ($\\mu$)",
+              "sigma ($\\sigma$), Q",
+              "$1 - \\frac{\\gamma(Q^{-2}, Q^{-2}e^{Q \\frac{log(t) – \\mu}{\\sigma}})}{\\Gamma(Q^{-2})}; \\  if \\ Q \\neq 0$ \\ $1 - \\Phi(\\frac{logt – \\mu}{\\sigma}); \\ if \\ Q = 0$",
+              "$\\frac{|Q|(Q^{-2})^{Q^{-2}}}{\\sigma t \\Gamma(Q^{-2}) S(t)} \\exp\\left[Q^{-2}\\left(Q\\frac{logt – \\mu}{\\sigma}-e^{Q\\frac{logt – \\mu}{\\sigma}}\\right)\\right]$",
+              "Constant, monotonically increasing, monotonically decreasing, bathtub, arc-shaped",
+              "AFT"#, 
+              #"Reduces to an exponential model, Weibull model (Q=1) and log-normal model (Q=0)"
+              )
+
+ genf <- c("Generalized F", 
+               "$4: \\ \\mu, \\sigma, Q, P$", 
+               "mu ($\\mu$)",
+               "sigma ($\\sigma$), Q, P",
+               "$$ \\int_{0}^{s_{1}(s_{2}+s_{1}e^{w})^{-1}} \\frac{x^{s_{2}-1}(1-x)^{s_{1}-1}}{B(s_{2}, s_{1})} \\ dx $$",
+               "$$ \\frac{\\delta (s_{1}/s_{2})^{s_{1}}e^{s_{1}w}}{\\sigma x (1 + s_{1} e^{w}/s_{2})^{(s_{1} + s_{2})}B(s_{1}, s_{2})S(t)}$$",
+               "Decreasing, arc-shaped",
+               "AFT")
+
+all.dists <- rbind.data.frame(exponential, 
+                              weibull,
+                              gompertz,
+                              llogistic,
+                              lnormal,
+                              gamma,
+                              gengamma,
+                              genf)
+knitr::kable(all.dists, 
+             col.names = c("Distribution",
+                           "Number of parameters",
+                           "Location parameter",
+                           "Ancillary parameter",
+                           "Survival function: S(t)", 
+                           "Hazard function: h(t)", 
+                           "Possible shapes of the hazard function", 
+                           "Treatment effect model assumption"#, 
+                           #"Other properties"
+                           ),
+             escape = FALSE,
+             caption = "Properties of common parametric survival distributions",
+             format = "html") 
+
+```
+
+
+# Exponential
+
+## Separate models
+The _run_PSM_ function in the _flexsurvPlus_ package with the following arguments:
+
+*  model.type = "Separate"
+*  distr = "exp" 
+
+uses the flexsurv package to fit two exponential models (one to data for the
+intervention treatment and one to data for the reference treatment). The R code
+for the fitted models is as follows:
+
+
+`flexsurvreg(formula = Surv(Time, Event)~1, data =` _data for intervention treatment _`, dist = "exp")`
+`flexsurvreg(formula = Surv(Time, Event)~1, data =` _data for reference treatment _`, dist = "exp")`
+
+The estimated rate parameter from each of these models can be then used
+within the following Excel formula to estimate survival at different time points:
+
+`EXP(-rate*time)`
+
+This is equivalent to running the following code in R:
+
+`summary(` _flexsurvreg exponential model _`, type="survival", B=0, t=time)`
+
+
+
+## Common shape models
+
+The _run_PSM_ function in the _flexsurvPlus_ package with the following arguments:
+
+*  model.type = "Common shape"
+*  distr = "exp" 
+
+uses the flexsurv package to fit one exponential model with a covariate for
+treatment. The R code for the fitted model is as follows:
+
+`flexsurvreg(formula = Surv(Time, Event)~ARM, data =` _data with a treatment variable named "ARM" _`, dist = "exp")`
+
+This model outputs a rate parameter and treatment coefficient. Rate parameters for
+each treatment are estimated in _run_PSM_ as follows:
+
+```{r exp_common_shape_rate_calc, echo=FALSE}
+
+rate_calc <- c("Rate parameter + treatment coefficient",
+               "Rate parameter"
+                 )
+
+all.params <- rbind.data.frame(rate_calc)
+knitr::kable(all.params, 
+             col.names = c("Rate (intervention treatment)",
+                           "Rate (reference treatment)"
+                           ),
+             escape = FALSE,
+             caption = "Rate parameter for intervention and reference treatments from a common shape model",
+             format = "html") 
+
+```
+
+
+Survival can then be estimated in Excel using these two rate parameters, as for
+the separate models, with formula:
+
+`EXP(-rate*time)`
+
+This is equivalent to running the following code in R:
+
+`summary(` _flexsurvreg exponential model _`, type="survival", B=0, t=time)`
+
+
+
+# Weibull
+The Weibull model may be parametrized as either a proportional hazards model or
+as an accelerated failure time model; however, the _flexsurv_ package
+parametrizes the Weibull as an accelerated failure time model.
+
+
+## Separate models
+
+The _run_PSM_ function in the _flexsurvPlus_ package with the following arguments:
+
+*  model.type = "Separate"
+*  distr = "weibull" 
+
+uses the flexsurv package to fit two weibull models (one to data for the
+intervention treatment and one to data for the reference treatment). The R code
+for the fitted models is as follows:
+
+`flexsurvreg(formula = Surv(Time, Event)~1, data =` _data for intervention treatment _`, dist = "weibull")`
+`flexsurvreg(formula = Surv(Time, Event)~1, data =` _data for reference treatment _`, dist = "weibull")`
+
+Estimated shape and scale parameters from each of these models can be then used
+within the following Excel formula to estimate survival at different time points:
+
+`1-WEIBULL(time,shape,scale,TRUE)`
+
+This is equivalent to running the following code in R:
+
+`summary(` _flexsurvreg weibull model _`, type="survival", B=0, t=time)`
+
+
+## Common shape models
+
+The _run_PSM_ function in the _flexsurvPlus_ package with the following arguments:
+
+*  model.type = "Common shape"
+*  distr = "weibull" 
+
+uses the flexsurv package to fit one weibull model with a covariate for
+treatment. The R code for the fitted model is as follows:
+
+`flexsurvreg(formula = Surv(Time, Event)~ARM, data =` _data with a treatment variable named "ARM" _`, dist = "weibull")`
+
+This model outputs shape and scale parameters and a treatment coefficient on the
+scale parameter. Shape and scale parameters for each treatment are estimated in
+_run_PSM_ as follows:
+
+```{r weibull_common_shape_params, echo=FALSE}
+
+shape_calc <- c("Shape",
+               "Shape parameter",
+               "Shape parameter"
+                 )
+
+scale_calc <- c("Scale",
+               "Scale parameter + treatment coefficient",
+               "Scale parameter"
+                 )
+
+all.params <- rbind.data.frame(shape_calc, scale_calc)
+knitr::kable(all.params, 
+             col.names = c("Parameter",
+                           "Intervention",
+                           "Reference"
+                           ),
+             escape = FALSE,
+             caption = "Shape and scale parameters for intervention and reference treatments from a common shape model",
+             format = "html") 
+
+```
+
+
+Survival can then be estimated in Excel using the shape and scale parameters
+specific to each treatment with formula:
+
+`1-WEIBULL(time,shape,scale,TRUE)`
+
+This is equivalent to running the following code in R:
+
+`summary(` _flexsurvreg weibull model _`, type="survival", B=0, t=time)`
+
+
+## Independent shape models
+
+The _run_PSM_ function in the _flexsurvPlus_ package with the following arguments:
+
+*  model.type = "Independent shape"
+*  distr = "weibull" 
+
+uses the flexsurv package to fit one weibull model with a covariate for
+treatment on both the scale and shape parameters. The R code for the fitted
+model is as follows:
+
+`flexsurvreg(formula = Surv(Time, Event) ~ ARM + shape(ARM), data =` _data with a treatment variable named "ARM" _`, dist = "weibull")`
+
+This model outputs shape and scale parameters and a treatment coefficient for
+both shape and scale. Shape and scale parameters for each treatment are
+estimated in _run_PSM_ as follows:
+
+```{r weibull_independent_shape_params, echo=FALSE}
+
+shape_calc <- c("Shape",
+               "Shape parameter + treatment coefficient for shape",
+               "Shape parameter"
+                 )
+
+scale_calc <- c("Scale",
+               "Scale parameter + treatment coefficient for scale",
+               "Scale parameter"
+                 )
+
+all.params <- rbind.data.frame(shape_calc, scale_calc)
+knitr::kable(all.params, 
+             col.names = c("Parameter",
+                           "Intervention",
+                           "Reference"
+                           ),
+             escape = FALSE,
+             caption = "Shape and scale parameters for intervention and reference treatments from an independent shape model",
+             format = "html") 
+
+```
+
+
+Survival can then be estimated in Excel using the shape and scale parameters
+specific to each treatment with formula:
+
+`1-WEIBULL(time,shape,scale,TRUE)`
+
+This is equivalent to running the following code in R:
+
+`summary(` _flexsurvreg weibull model _`, type="survival", B=0, t=time)`
+
+
+# Gompertz
+
+## Separate models
+
+The _run_PSM_ function in the _flexsurvPlus_ package with the following arguments:
+
+*  model.type = "Separate"
+*  distr = "gompertz" 
+
+uses the flexsurv package to fit two gompertz models (one to data for the
+intervention treatment and one to data for the reference treatment). The R code
+for the fitted models is as follows:
+
+`flexsurvreg(formula = Surv(Time, Event)~1, data =` _data for intervention treatment _`, dist = "gompertz")`
+`flexsurvreg(formula = Surv(Time, Event)~1, data =` _data for reference treatment _`, dist = "gompertz")`
+
+Estimation of the rate and shape parameters from each of these models can be then used
+within the following Excel formula to estimate survival at different time points:
+
+`EXP((-1/shape) * rate * (EXP(shape*time)-1))`
+
+This is equivalent to running the following code in R:
+
+`summary(` _flexsurvreg gompertz model _`, type="survival", B=0, t=time)`
+
+
+## Common shape models
+
+The _run_PSM_ function in the _flexsurvPlus_ package with the following arguments:
+
+*  model.type = "Common shape"
+*  distr = "gompertz" 
+
+uses the flexsurv package to fit one gompertz model with a covariate for
+treatment on the rate parameter. The R code for the fitted model is as follows:
+
+`flexsurvreg(formula = Surv(Time, Event)~ARM, data =` _data with a treatment variable named "ARM" _`, dist = "gompertz")`
+
+This model outputs rate and shape parameters and a treatment coefficient. Rate 
+and shape parameters for each treatment are estimated in _run_PSM_ as follows:
+
+```{r gompertz_common_shape_params, echo=FALSE}
+
+rate_calc <- c("Rate",
+               "Rate parameter + treatment coefficient",
+               "Rate parameter"
+                 )
+
+shape_calc <- c("Shape",
+               "Shape parameter",
+               "Shape parameter"
+                 )
+
+
+all.params <- rbind.data.frame(rate_calc, shape_calc)
+knitr::kable(all.params, 
+             col.names = c("Parameter",
+                           "Intervention",
+                           "Reference"
+                           ),
+             escape = FALSE,
+             caption = "Rate and shape parameters for intervention and reference treatments from a common shape model",
+             format = "html") 
+
+```
+
+
+Survival can then be estimated in Excel using the rate and shape parameters
+specific to each treatment with formula:
+
+`EXP((-1/shape) * rate * (EXP(shape*time)-1))`
+
+This is equivalent to running the following code in R:
+
+`summary(` _flexsurvreg gompertz model _`, type="survival", B=0, t=time)`
+
+
+## Independent shape models
+
+The _run_PSM_ function in the _flexsurvPlus_ package with the following arguments:
+
+*  model.type = "Independent shape"
+*  distr = "gompertz" 
+
+uses the flexsurv package to fit one gompertz model with a covariate for
+treatment on both the rate and shape parameters. The R code for the fitted
+model is as follows:
+
+`flexsurvreg(formula = Surv(Time, Event) ~ ARM + shape(ARM), data =` _data with a treatment variable named "ARM" _`, dist = "gompertz")`
+
+This model outputs rate and shape parameters and a treatment coefficient for
+both rate and shape. Rate and shape parameters for each treatment are
+estimated in _run_PSM_ as follows:
+
+```{r gompertz_independent_shape_params, echo=FALSE}
+
+rate_calc <- c("Rate",
+               "Rate parameter + treatment coefficient on rate",
+               "Rate parameter"
+                 )
+
+shape_calc <- c("Shape",
+               "Shape parameter + treatment coeffecient on shape",
+               "Shape parameter"
+                 )
+
+all.params <- rbind.data.frame(rate_calc, shape_calc)
+knitr::kable(all.params, 
+             col.names = c("Parameter",
+                           "Intervention",
+                           "Reference"
+                           ),
+             escape = FALSE,
+             caption = "Rate and shape parameters for intervention and reference treatments from an independent shape model",
+             format = "html") 
+
+```
+
+
+Survival can then be estimated in Excel using the rate and shape parameters
+specific to each treatment with formula:
+
+`EXP((-1/shape) * rate * (EXP(shape*time)-1))`
+
+This is equivalent to running the following code in R:
+
+`summary(` _flexsurvreg gompertz model _`, type="survival", B=0, t=time)`
+
+
+# Log-logistic
+
+## Separate models
+
+The _run_PSM_ function in the _flexsurvPlus_ package with the following arguments:
+
+*  model.type = "Separate"
+*  distr = "llogis" 
+
+uses the flexsurv package to fit two log-logistic models (one to data for the
+intervention treatment and one to data for the reference treatment). The R code
+for the fitted models is as follows:
+
+`flexsurvreg(formula = Surv(Time, Event)~1, data =` _data for intervention treatment _`, dist = "llogis")`
+`flexsurvreg(formula = Surv(Time, Event)~1, data =` _data for reference treatment _`, dist = "llogis")`
+
+Estimation of the shape and scale parameters from each of these models can be then used
+within the following Excel formula to estimate survival at different time points:
+
+`1 /(1+((time / scale)^shape))`
+
+This is equivalent to running the following code in R:
+
+`summary(` _flexsurvreg log-logistic model _`, type="survival", B=0, t=time)`
+
+
+## Common shape models
+
+The _run_PSM_ function in the _flexsurvPlus_ package with the following arguments:
+
+*  model.type = "Common shape"
+*  distr = "llogis" 
+
+uses the flexsurv package to fit one log-logistic model with a covariate for
+treatment. The R code for the fitted model is as follows:
+
+`flexsurvreg(formula = Surv(Time, Event)~ARM, data =` _data with a treatment variable named "ARM" _`, dist = "llogis")`
+
+This model outputs shape and scale parameters and a treatment coefficient. Shape
+and scale parameters for each treatment are estimated in _run_PSM_ as follows:
+
+```{r llogis_common_shape_params, echo=FALSE}
+
+shape_calc <- c("Shape",
+               "Shape parameter",
+               "Shape parameter"
+                 )
+
+scale_calc <- c("Scale",
+               "Scale parameter + treatment coefficient",
+               "Scale parameter"
+                 )
+
+
+all.params <- rbind.data.frame(shape_calc, scale_calc)
+knitr::kable(all.params, 
+             col.names = c("Parameter",
+                           "Intervention",
+                           "Reference"
+                           ),
+             escape = FALSE,
+             caption = "Shape and scale parameters for intervention and reference treatments from a common shape model",
+             format = "html") 
+
+```
+
+
+Survival can then be estimated in Excel using the rate and shape parameters
+specific to each treatment with formula:
+
+`1 /(1+((time / scale)^shape))`
+
+This is equivalent to running the following code in R:
+
+`summary(` _flexsurvreg log-logistic model _`, type="survival", B=0, t=time)`
+
+
+## Independent shape models
+
+The _run_PSM_ function in the _flexsurvPlus_ package with the following arguments:
+
+*  model.type = "Independent shape"
+*  distr = "llogis" 
+
+uses the flexsurv package to fit one log-logistic model with a covariate for
+treatment on both the shape and scale parameters. The R code for the fitted
+model is as follows:
+
+`flexsurvreg(formula = Surv(Time, Event) ~ ARM + shape(ARM), data =` _data with a treatment variable named "ARM" _`, dist = "llogis")`
+
+This model outputs shape and scale parameters and a treatment coefficient for
+both shape and scale. Shape and scale parameters for each treatment are
+estimated in _run_PSM_ as follows:
+
+```{r llogis_independent_shape_params, echo=FALSE}
+
+shape_calc <- c("Shape",
+               "Shape parameter + treatment coefficient on shape",
+               "Shape parameter"
+                 )
+
+scale_calc <- c("Scale",
+               "Scale parameter + treatment coefficient on scale",
+               "Scale parameter"
+                 )
+
+
+all.params <- rbind.data.frame(shape_calc, scale_calc)
+knitr::kable(all.params, 
+             col.names = c("Parameter",
+                           "Intervention",
+                           "Reference"
+                           ),
+             escape = FALSE,
+             caption = "Shape and scale parameters for intervention and reference treatments from an independent shape model",
+             format = "html") 
+
+```
+
+
+Survival can then be estimated in Excel using the rate and shape parameters
+specific to each treatment with formula:
+
+`1 /(1+((time / scale)^shape))`
+
+This is equivalent to running the following code in R:
+
+`summary(` _flexsurvreg log-logistic model _`, type="survival", B=0, t=time)`
+
+
+# Log-normal
+
+## Separate models
+
+The _run_PSM_ function in the _flexsurvPlus_ package with the following arguments:
+
+*  model.type = "Separate"
+*  distr = "lnorm" 
+
+uses the flexsurv package to fit two log-normal models (one to data for the
+intervention treatment and one to data for the reference treatment). The R code
+for the fitted models is as follows:
+
+`flexsurvreg(formula = Surv(Time, Event)~1, data =` _data for intervention treatment _`, dist = "lnorm")`
+`flexsurvreg(formula = Surv(Time, Event)~1, data =` _data for reference treatment _`, dist = "lnorm")`
+
+Estimation of the meanlog and sdlog parameters from each of these models can be
+then used within the following Excel formula to estimate survival at different
+time points:
+
+`1-LOGNORMDIST(time, meanlog, sdlog))`
+
+This is equivalent to running the following code in R:
+
+`summary(` _flexsurvreg log-normal model _`, type="survival", B=0, t=time)`
+
+
+## Common shape models
+
+The _run_PSM_ function in the _flexsurvPlus_ package with the following arguments:
+
+*  model.type = "Common shape"
+*  distr = "lnorm" 
+
+uses the flexsurv package to fit one log-normal model with a covariate for
+treatment. The R code for the fitted model is as follows:
+
+`flexsurvreg(formula = Surv(Time, Event)~ARM, data =` _data with a treatment variable named "ARM" _`, dist = "lnorm")`
+
+This model outputs meanlog and sdlog parameters and a treatment coefficient. Shape
+and scale parameters for each treatment are estimated in _run_PSM_ as follows:
+
+```{r lnorm_common_shape_params, echo=FALSE}
+
+meanlog_calc <- c("Meanlog",
+               "Meanlog parameter + treatment coefficient",
+               "Meanlog parameter"
+                 )
+
+sdlog_calc <- c("Sdlog",
+               "Sdlog parameter",
+               "Sdlog parameter"
+                 )
+
+
+all.params <- rbind.data.frame(meanlog_calc, sdlog_calc)
+knitr::kable(all.params, 
+             col.names = c("Parameter",
+                           "Intervention",
+                           "Reference"
+                           ),
+             escape = FALSE,
+             caption = "Meanlog and sdlog parameters for intervention and reference treatments from a common shape model",
+             format = "html") 
+
+```
+
+
+Survival can then be estimated in Excel using the meanlog and sdlog parameters
+specific to each treatment with formula:
+
+`1-LOGNORMDIST(time, meanlog, sdlog))`
+
+This is equivalent to running the following code in R:
+
+`summary(` _flexsurvreg log-normal model _`, type="survival", B=0, t=time)`
+
+
+## Independent shape models
+
+The _run_PSM_ function in the _flexsurvPlus_ package with the following arguments:
+
+*  model.type = "Independent shape"
+*  distr = "lnorm" 
+
+uses the flexsurv package to fit one log-normal model with a covariate for
+treatment on both the meanlog and sdlog parameters. The R code for the fitted
+model is as follows:
+
+`flexsurvreg(formula = Surv(Time, Event==1) ~ ARM + sdlog(ARM), data =` _data with a treatment variable named "ARM" _`, dist = "lnorm")`
+
+This model outputs meanlog and sdlog parameters and a treatment coefficient for
+both meanlog and sdlog. Shape and scale parameters for each treatment are
+estimated in _run_PSM_ as follows:
+
+
+```{r lnorm_independent_shape_params, echo=FALSE}
+
+meanlog_calc <- c("Meanlog",
+               "Meanlog parameter + treatment coefficient on meanlog",
+               "Meanlog parameter"
+                 )
+
+sdlog_calc <- c("Sdlog",
+               "Sdlog parameter + treatment coefficient on sdlog",
+               "Sdlog parameter"
+                 )
+
+
+all.params <- rbind.data.frame(meanlog_calc, sdlog_calc)
+knitr::kable(all.params, 
+             col.names = c("Parameter",
+                           "Intervention",
+                           "Reference"
+                           ),
+             escape = FALSE,
+             caption = "Meanlog and sdlog parameters for intervention and reference treatments from an independent shape model",
+             format = "html") 
+
+```
+
+
+Survival can then be estimated in Excel using the meanlog and sdlog parameters
+specific to each treatment with formula:
+
+`1-LOGNORMDIST(time, meanlog, sdlog))`
+
+This is equivalent to running the following code in R:
+
+`summary(` _flexsurvreg log-normal model _`, type="survival", B=0, t=time)`
+
+
+# Gamma
+
+## Separate models
+
+The _run_PSM_ function in the _flexsurvPlus_ package with the following arguments:
+
+*  model.type = "Separate"
+*  distr = "gamma" 
+
+uses the flexsurv package to fit two gamma models (one to data for the
+intervention treatment and one to data for the reference treatment). The R code
+for the fitted models is as follows:
+
+`flexsurvreg(formula = Surv(Time, Event)~1, data =` _data for intervention treatment _`, dist = "gamma")`
+`flexsurvreg(formula = Surv(Time, Event)~1, data =` _data for reference treatment _`, dist = "gamma")`
+
+Estimation of the rate and shape parameters from each of these models can be then used
+within the following Excel formula to estimate survival at different time points:
+
+`1-((EXP(GAMMALN(rate)) * GAMMA.DIST(shape * time,rate,1,TRUE))/GAMMA(rate)`
+
+This is equivalent to running the following code in R:
+
+`summary(` _flexsurvreg gamma model _`, type="survival", B=0, t=time)`
+
+
+## Common shape models
+
+The _run_PSM_ function in the _flexsurvPlus_ package with the following arguments:
+
+*  model.type = "Common shape"
+*  distr = "gamma" 
+
+uses the flexsurv package to fit one gamma model with a covariate for
+treatment. The R code for the fitted model is as follows:
+
+`flexsurvreg(formula = Surv(Time, Event)~ARM, data =` _data with a treatment variable named "ARM" _`, dist = "gamma")`
+
+This model outputs rate and shape parameters and a treatment coefficient. Rate 
+and shape parameters for each treatment are estimated in _run_PSM_ as follows:
+
+```{r gamma_common_shape_params, echo=FALSE}
+
+rate_calc <- c("Rate",
+               "Rate parameter + treatment coefficient",
+               "Rate parameter"
+                 )
+
+shape_calc <- c("Shape",
+               "Shape parameter",
+               "Shape parameter"
+                 )
+
+
+all.params <- rbind.data.frame(rate_calc, shape_calc)
+knitr::kable(all.params, 
+             col.names = c("Parameter",
+                           "Intervention",
+                           "Reference"
+                           ),
+             escape = FALSE,
+             caption = "Rate and shape parameters for intervention and reference treatments from a common shape model",
+             format = "html") 
+
+```
+
+
+Survival can then be estimated in Excel using the rate and shape parameters
+specific to each treatment with formula:
+
+`1-((EXP(GAMMALN(rate)) * GAMMA.DIST(shape * time,rate,1,TRUE))/GAMMA(rate)`
+
+This is equivalent to running the following code in R:
+
+`summary(` _flexsurvreg gamma model _`, type="survival", B=0, t=time)`
+
+
+## Independent shape models
+
+The _run_PSM_ function in the _flexsurvPlus_ package with the following arguments:
+
+*  model.type = "Independent shape"
+*  distr = "gamma" 
+
+uses the flexsurv package to fit one gamma model with a covariate for
+treatment on both the rate and shape parameters. The R code for the fitted
+model is as follows:
+
+`flexsurvreg(formula = Surv(Time, Event) ~ ARM + shape(ARM), data =` _data with a treatment variable named "ARM" _`, dist = "gamma")`
+
+This model outputs rate and shape parameters and a treatment coefficient for
+both rate and shape. Rate and shape parameters for each treatment are
+estimated in _run_PSM_ as follows:
+
+```{r gamma_independent_shape_params, echo=FALSE}
+
+rate_calc <- c("Rate",
+               "Rate parameter + treatment coefficient on rate",
+               "Rate parameter"
+                 )
+
+shape_calc <- c("Shape",
+               "Shape parameter + treatment coeffecient on shape",
+               "Shape parameter"
+                 )
+
+all.params <- rbind.data.frame(rate_calc, shape_calc)
+knitr::kable(all.params, 
+             col.names = c("Parameter",
+                           "Intervention",
+                           "Reference"
+                           ),
+             escape = FALSE,
+             caption = "Rate and shape parameters for intervention and reference treatments from an independent shape model",
+             format = "html") 
+
+```
+
+
+Survival can then be estimated in Excel using the rate and shape parameters
+specific to each treatment with formula:
+
+`1-((EXP(GAMMALN(rate)) * GAMMA.DIST(shape * time,rate,1,TRUE))/GAMMA(rate)`
+
+This is equivalent to running the following code in R:
+
+`summary(` _flexsurvreg gamma model _`, type="survival", B=0, t=time)`
+
+
+# Generalized gamma
+
+## Separate models
+
+The _run_PSM_ function in the _flexsurvPlus_ package with the following arguments:
+
+*  model.type = "Separate"
+*  distr = "gengamma" 
+
+uses the flexsurv package to fit two generalized gamma models (one to data for the
+intervention treatment and one to data for the reference treatment). The R code
+for the fitted models is as follows:
+
+`flexsurvreg(formula = Surv(Time, Event)~1, data =` _data for intervention treatment _`, dist = "gengamma")`
+`flexsurvreg(formula = Surv(Time, Event)~1, data =` _data for reference treatment _`, dist = "gengamma")`
+
+Estimation of the mu, sigma and Q parameters from each of these models can be then used
+within the following Excel formula to estimate survival at different time points:
+
+`IF(Q<0,GAMMADIST((-Q^-2) * EXP(-Q* -((LN(time)-(mu))/sigma)),-Q^-2,1,1),1-GAMMADIST((-Q^-2) * EXP(-Q * -((LN(time)-(mu))/sigma)),-Q^-2,1,1))`
+
+This is equivalent to running the following code in R:
+
+`summary(` _flexsurvreg Generalized Gamma model _`, type="survival", B=0, t=time)`
+
+
+## Common shape models
+
+The _run_PSM_ function in the _flexsurvPlus_ package with the following arguments:
+
+*  model.type = "Common shape"
+*  distr = "gengamma" 
+
+uses the flexsurv package to fit one Generalized Gamma model with a covariate for
+treatment. The R code for the fitted model is as follows:
+
+`flexsurvreg(formula = Surv(Time, Event)~ARM, data =` _data with a treatment variable named "ARM" _`, dist = "gengamma")`
+
+This model outputs mu, sigma and Q parameters and a treatment coefficient. Mu,
+sigma and Q parameters for each treatment are estimated in _run_PSM_ as follows:
+
+```{r gengamma_common_shape_params, echo=FALSE}
+
+mu_calc <- c("mu",
+             "mu coefficient + treatment coefficient",
+             "mu coefficient"
+                 )
+
+sigma_calc <- c("Scale",
+               "sigma coefficient",
+               "sigma coefficient"
+                 )
+
+Q_calc <- c("Q",
+            "Q coefficient",
+            "Q coefficient"
+                 )
+
+
+all.params <- rbind.data.frame(mu_calc, sigma_calc, Q_calc)
+knitr::kable(all.params, 
+             col.names = c("Parameter",
+                           "Intervention",
+                           "Reference"
+                           ),
+             escape = FALSE,
+             caption = "Mu, sigma and Q parameters for intervention and reference treatments from a common shape model",
+             format = "html") 
+
+```
+
+
+Survival can then be estimated in Excel using the mu, sigma and Q parameters
+specific to each treatment with formula:
+
+`IF(Q<0,GAMMADIST((-Q^-2) * EXP(-Q* -((LN(time)-(mu))/sigma)),-Q^-2,1,1),1-GAMMADIST((-Q^-2) * EXP(-Q * -((LN(time)-(mu))/sigma)),-Q^-2,1,1))`
+
+This is equivalent to running the following code in R:
+
+`summary(` _flexsurvreg Generalized Gamma model _`, type="survival", B=0, t=time)`
+
+
+## Independent shape models
+
+The _run_PSM_ function in the _flexsurvPlus_ package with the following arguments:
+
+*  model.type = "Independent shape"
+*  distr = "gengamma" 
+
+uses the flexsurv package to fit one Generalized Gamma model with a covariate for
+treatment on both the mu, sigma and Q parameters. The R code for the fitted
+model is as follows:
+
+`flexsurvreg(formula = Surv(Time, Event) ~ ARM + sigma(ARM) + Q(ARM), data =` _data with a treatment variable named "ARM" _`, dist = "gengamma")`
+
+This model outputs mu, sigma and Q parameters and a treatment coefficient for
+mu, sigma and Q. Parameters for each treatment are estimated in _run_PSM_ as
+follows:
+
+```{r gengamma_independent_shape_params, echo=FALSE}
+
+mu_calc <- c("mu",
+             "mu coefficient + treatment coefficient for mu",
+             "mu coefficient"
+                 )
+
+sigma_calc <- c("Scale",
+               "sigma coefficient + treatment coefficient for sigma",
+               "sigma coefficient"
+                 )
+
+Q_calc <- c("Q",
+            "Q coefficient + treatment coefficient for Q",
+            "Q coefficient"
+                 )
+
+
+all.params <- rbind.data.frame(mu_calc, sigma_calc, Q_calc)
+knitr::kable(all.params, 
+             col.names = c("Parameter",
+                           "Intervention",
+                           "Reference"
+                           ),
+             escape = FALSE,
+             caption = "Mu, sigma and Q parameters for intervention and reference treatments from an independent shape model",
+             format = "html") 
+
+```
+
+
+Survival can then be estimated in Excel using the mu, sigma and Q parameters
+specific to each treatment with formula:
+
+`IF(Q<0,GAMMADIST((-Q^-2) * EXP(-Q* -((LN(time)-(mu))/sigma)),-Q^-2,1,1),1-GAMMADIST((-Q^-2) * EXP(-Q * -((LN(time)-(mu))/sigma)),-Q^-2,1,1))`
+
+This is equivalent to running the following code in R:
+
+`summary(` _flexsurvreg Generalized Gamma model _`, type="survival", B=0, t=time)`
+
+
+
+
+# Generalized F
+
+## Separate models
+
+The _run_PSM_ function in the _flexsurvPlus_ package with the following arguments:
+
+*  model.type = "Separate"
+*  distr = "genf" 
+
+uses the flexsurv package to fit two generalized F models (one to data for the
+intervention treatment and one to data for the reference treatment). The R code
+for the fitted models is as follows:
+
+`flexsurvreg(formula = Surv(Time, Event)~1, data =` _data for intervention treatment _`, dist = "genf")`
+`flexsurvreg(formula = Surv(Time, Event)~1, data =` _data for reference treatment _`, dist = "genf")`
+
+Estimation of the mu, sigma, Q and P parameters from each of these models can be then used
+within the following Excel formulas to estimate survival at different time points:
+
+`BETA.DIST(h_m2/(h_m2 + h_m1*time^(h_d/sigma)/EXP(h_d/sigma*mu)),h_m2,h_m1,TRUE)`
+
+* `h_m1 = 2/(Q*Q + 2*P + Q*SQRT(Q*Q + 2*P))`
+* `h_m2 = 2/(Q*Q + 2*P - Q*SQRT(Q*Q + 2*P))`
+* `h_d = SQRT(Q*Q + 2*P)`
+
+
+This is equivalent to running the following code in R:
+
+`summary(` _flexsurvreg Generalized F model _`, type="survival", B=0, t=time)`
+
+
+## Common shape models
+
+The _run_PSM_ function in the _flexsurvPlus_ package with the following arguments:
+
+*  model.type = "Common shape"
+*  distr = "genf" 
+
+uses the flexsurv package to fit one Generalized F model with a covariate for
+treatment. The R code for the fitted model is as follows:
+
+`flexsurvreg(formula = Surv(Time, Event)~ARM, data =` _data with a treatment variable named "ARM" _`, dist = "genf")`
+
+This model outputs mu, sigma Q and P parameters and a treatment coefficient. Mu,
+sigma Q and P parameters for each treatment are estimated in _run_PSM_ as follows:
+
+```{r genf_common_shape_params, echo=FALSE}
+
+mu_calc <- c("mu",
+             "mu coefficient + treatment coefficient",
+             "mu coefficient"
+                 )
+
+sigma_calc <- c("Sigma",
+               "sigma coefficient",
+               "sigma coefficient"
+                 )
+
+Q_calc <- c("Q",
+            "Q coefficient",
+            "Q coefficient"
+                 )
+
+P_calc <- c("P",
+            "P coefficient",
+            "P coefficient"
+                 )
+
+all.params <- rbind.data.frame(mu_calc, sigma_calc, Q_calc, P_calc)
+knitr::kable(all.params, 
+             col.names = c("Parameter",
+                           "Intervention",
+                           "Reference"
+                           ),
+             escape = FALSE,
+             caption = "Mu, sigma, Q and P parameters for intervention and reference treatments from a common shape model",
+             format = "html") 
+
+```
+
+
+Survival can then be estimated in Excel using the mu, sigma, Q and P parameters
+specific to each treatment with formula:
+
+`BETA.DIST(h_m2/(h_m2 + h_m1*time^(h_d/sigma)/EXP(h_d/sigma*mu)),h_m2,h_m1,TRUE)`
+
+* `h_m1 = 2/(Q*Q + 2*P + Q*SQRT(Q*Q + 2*P))`
+* `h_m2 = 2/(Q*Q + 2*P - Q*SQRT(Q*Q + 2*P))`
+* `h_d = SQRT(Q*Q + 2*P)`
+
+This is equivalent to running the following code in R:
+
+`summary(` _flexsurvreg Generalized f model _`, type="survival", B=0, t=time)`
+
+
+## Independent shape models
+
+The _run_PSM_ function in the _flexsurvPlus_ package with the following arguments:
+
+*  model.type = "Independent shape"
+*  distr = "genf" 
+
+uses the flexsurv package to fit one Generalized F model with a covariate for
+treatment on both the mu, sigma, Q and P parameters. The R code for the fitted
+model is as follows:
+
+`flexsurvreg(formula = Surv(Time, Event) ~ ARM + sigma(ARM) + Q(ARM) + P(ARM), data =` _data with a treatment variable named "ARM" _`, dist = "genf")`
+
+This model outputs mu, sigma, Q and P parameters and a treatment coefficient for
+mu, sigma, Q and P. Parameters for each treatment are estimated in _run_PSM_ as
+follows:
+
+```{r genf_independent_shape_params, echo=FALSE}
+
+mu_calc <- c("mu",
+             "mu coefficient + treatment coefficient for mu",
+             "mu coefficient"
+                 )
+
+sigma_calc <- c("Scale",
+               "sigma coefficient + treatment coefficient for sigma",
+               "sigma coefficient"
+                 )
+
+Q_calc <- c("Q",
+            "Q coefficient + treatment coefficient for Q",
+            "Q coefficient"
+                 )
+
+P_calc <- c("P",
+            "P coefficient + treatment coefficient for P",
+            "P coefficient"
+                 )
+
+
+all.params <- rbind.data.frame(mu_calc, sigma_calc, Q_calc, P_calc)
+knitr::kable(all.params, 
+             col.names = c("Parameter",
+                           "Intervention",
+                           "Reference"
+                           ),
+             escape = FALSE,
+             caption = "Mu, sigma, Q and P parameters for intervention and reference treatments from an independent shape model",
+             format = "html") 
+
+```
+
+
+Survival can then be estimated in Excel using the mu, sigma, Q and P parameters
+specific to each treatment with formula:
+
+`BETA.DIST(h_m2/(h_m2 + h_m1*time^(h_d/sigma)/EXP(h_d/sigma*mu)),h_m2,h_m1,TRUE)`
+
+* `h_m1 = 2/(Q*Q + 2*P + Q*SQRT(Q*Q + 2*P))`
+* `h_m2 = 2/(Q*Q + 2*P - Q*SQRT(Q*Q + 2*P))`
+* `h_d = SQRT(Q*Q + 2*P)`
+
+This is equivalent to running the following code in R:
+
+`summary(` _flexsurvreg Generalized F model _`, type="survival", B=0, t=time)`
+
+
+# References
+
