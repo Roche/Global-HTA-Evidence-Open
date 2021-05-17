@@ -103,7 +103,8 @@ run_separate <- function(data,
   if(length(converged_models.int)>0){
   param_out.int <- t(unlist(coef.int)) %>% as.data.frame()
   # If this is a separate model fitted to each treatment group, rename the parameter from the
-  # exponential model to be consistent with output from Common shape models  suppressWarnings(colnames(param_out.int)[colnames(param_out.int) == 'exp'] <- "exp.rate")
+  # exponential model to be consistent with output from Common shape models  
+  suppressWarnings(colnames(param_out.int)[colnames(param_out.int) == 'exp'] <- "exp.rate")
   suppressWarnings(colnames(param_out.int) <- paste0(colnames(param_out.int),".int"))
   } else
   {param_out.int <- tibble()}
@@ -112,7 +113,8 @@ run_separate <- function(data,
   if(length(converged_models.ref)>0){
   param_out.ref <- t(unlist(coef.ref)) %>% as.data.frame()
   # If this is a separate model fitted to each treatment group, rename the parameter from the
-  # exponential model to be consistent with output from Common shape models  suppressWarnings(colnames(param_out.ref)[colnames(param_out.ref) == 'exp'] <- "exp.rate")
+  # exponential model to be consistent with output from Common shape models  
+  suppressWarnings(colnames(param_out.ref)[colnames(param_out.ref) == 'exp'] <- "exp.rate")
   suppressWarnings(colnames(param_out.ref) <- paste0(colnames(param_out.ref),".ref"))
   } else
   {param_out.ref <- tibble()}
@@ -134,7 +136,7 @@ run_separate <- function(data,
       param_out <- cbind(param_out.int, param_out.ref)  %>%
     as.data.frame() 
   } else {
-    param_out <- aram_out.ref <- tibble()
+    param_out <- param_out.ref <- tibble()
       }
   
   #######################################################
@@ -151,8 +153,8 @@ run_separate <- function(data,
   params_all <- param_final 
   
   if('exp' %in% distr){
-    params_all$exp.rate.int <- ifelse("exp.int" %in% names(params_all), params_all$exp.int, NA) 
-    params_all$exp.rate.ref <- ifelse("exp.ref" %in% names(params_all), params_all$exp.ref, NA) 
+    params_all$exp.rate.int <- ifelse("exp.rate.int" %in% names(params_all), params_all$exp.rate.int, NA) 
+    params_all$exp.rate.ref <- ifelse("exp.rate.ref" %in% names(params_all), params_all$exp.rate.ref, NA) 
       }
   
   if('weibull' %in% distr){
