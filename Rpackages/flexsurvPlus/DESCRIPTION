@@ -1,6 +1,6 @@
 Package: flexsurvPlus
 Title: Provides Functions to Perform Survival Analysis for Economic models
-Version: 1.0
+Version: 1.0.1
 Authors@R: c(
     person("Iain", "Bennett", email = "iain.bennett@roche.com", role = "cre"),
     person("Jo", "Gregory", email = "joanne.gregory@bresmed.com", role = "aut"),

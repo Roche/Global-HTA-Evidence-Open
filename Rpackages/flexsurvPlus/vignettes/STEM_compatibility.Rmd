@@ -1,0 +1,429 @@
+---
+title: "STEM compatibility"
+author: "Roche"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+csl: biomedicine.csl
+vignette: >
+  %\VignetteIndexEntry{STEM compatability}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 9,
+  fig.height = 5
+)
+```
+
+<style type="text/css">
+
+body{ /* Normal  */
+      font-size: 14px;
+  }
+td {  /* Table  */
+  font-size: 10px;
+}
+h1.title {
+  font-size: 38px;
+}
+h1 { /* Header 1 */
+  font-size: 28px;
+  }
+h2 { /* Header 2 */
+    font-size: 22px;
+}
+h3 { /* Header 3 */
+  font-size: 18px;
+}
+code.r{ /* Code block */
+    font-size: 12px;
+}
+pre { /* Code block - determines code spacing between lines */
+    font-size: 14px;
+}
+</style>
+
+# Introduction
+
+This vignette describes the use of the <tt>convSTEM</tt> function which enables backwards compatibility with STEM economic models which use an alternative formulation of parametric survival models. For most users this vignette can be safely ignored. 
+The following packages are required to run this example:
+
+```{r message=FALSE}
+library(flexsurvPlus)
+library(tibble)
+library(dplyr)
+library(survival)
+library(boot)
+```
+
+## Read in the data
+
+To perform survival analyses, patient level data is required for the survival endpoints. 
+
+This example uses a standard simulated data set
+(adtte). There is no standard naming that is
+needed for this package however, there are some set variables that are needed:
+
+* Time - a numeric variable
+* Event - a binary variable (event=1, censor=0)
+
+In this example, we use only progression-free survival (PFS).
+```{r}
+
+
+# simulate data with a medium correlation between PFS & OS on the patient level
+adtte <- sim_adtte(seed = 2020, # for reproducibility
+                   rho = 0.6 # defines a correlation on underlying survival times
+                   ) 
+
+# subset PFS data and rename
+PFS_data <- adtte %>%
+  filter(PARAMCD=="PFS") %>%
+  transmute(USUBJID, ARMCD,
+            AVAL,
+            event = 1 - CNSR #needs to be coded as 1 for event
+  )
+
+```
+
+
+# Fitting models
+
+This section uses <tt>runPSM</tt> as described in other vignettes to estimate survival models. As described in other vignettes <tt>flexsurvPlus</tt> primarily uses bootstrapping to handle uncertainty with the <tt>bootPSM</tt> function in conjunction with <tt>boot</tt>. 
+
+```{r message = FALSE}
+
+# For speed only 4 models are considered for this example but 
+# all models could be considered
+
+psm_PFS_expweib <- runPSM(data = PFS_data,
+                          time_var = "AVAL",
+                          event_var ="event",
+                          model.type = c("Common shape", 
+                                         "Separate"),
+                     distr = c('exp',
+                               'weibull'),
+                     strata_var = "ARMCD",
+                     int_name = "A",
+                     ref_name = "B")
+
+
+# Apply bootstrapping for illustration 100 samples are taken
+# In practice a larger number maybe preferable.
+
+psm_boot_PFS_expweib  <- boot(statistic = bootPSM, # bootstrap function
+                              R = 100, # number of bootstrap samples
+                              data = PFS_data, # the dataset
+                              time_var = "AVAL", # the time variable
+                              event_var = "event", # the event variable coded as 1 for event
+                              model.type = c("Common shape", 
+                                             "Separate"), 
+                              distr = c('exp', 'weibull'),
+                              int_name = "A",
+                              ref_name = "B",
+                              strata_var = "ARMCD"
+)
+
+```
+
+# Converting to a STEM format
+
+This is done using <tt>convSTEM</tt>. Depending on if a <tt>runPSM</tt> object or a <tt>bootPSM</tt> object or both are provided different quantities will be estimated.
+
+
+```{r message = FALSE}
+
+# only supplying x
+PFS_conv_x <- convSTEM(x = psm_PFS_expweib)
+
+# only supplying samples
+PFS_conv_samples <-  convSTEM(samples = psm_boot_PFS_expweib)
+
+# supplying both x and samples from the same set of models
+PFS_conv_both <-  convSTEM(x = psm_PFS_expweib, samples = psm_boot_PFS_expweib)
+
+```
+# The output of convSTEM
+
+<tt>convSTEM</tt> returns a list of four data frames containing parameters converted to match those reported by an existing SAS macro.
+
+* <tt>stem_param</tt> The parameter estimates
+* <tt>stem_cov</tt> Estimates for a covariance matrix for the parameters derived from the bootstrap samples.
+* <tt>stem_modsum</tt> A summary of the model fit statistics.
+* <tt>stem_boot</tt> A data frame of converted boot strap estimates.
+
+## stem_param 
+
+<tt>stem_param</tt> contains the parameter estimates and is calculated if either x or samples is provided.
+
+```{r message = FALSE}
+
+names(PFS_conv_x$stem_param)
+
+PFS_conv_x$stem_param %>%
+  transmute(Model, Dist, Param, Estimate) 
+
+PFS_conv_samples$stem_param %>%
+  transmute(Model, Dist, Param, Estimate) 
+```
+## stem_cov 
+
+<tt>stem_cov</tt> contains estimates for a covariance matrix for the parameters and is only derived if samples is provided.
+
+```{r message = FALSE}
+
+names(PFS_conv_x$stem_cov)
+
+# note is empty here as samples were not provided
+nrow(PFS_conv_x$stem_cov)
+
+PFS_conv_samples$stem_cov %>%
+  transmute(Model, Dist, rowParam, colParam, rowNum, colNum, CovEst) 
+```
+
+The matrix is described by row and column numbers so can be back converted to a matrix if desired.
+
+```{r message = FALSE}
+
+# select a single model from the data frame
+weibull_common_data <- PFS_conv_samples$stem_cov %>%
+  filter(Model == "Common Shape", Dist == "Weibull") %>%
+  transmute(rowParam, colParam, rowNum, colNum, CovEst)
+
+weibull_common_data
+
+# can see is ordered by row so can convert to a matrix
+
+weibull_common_matrix <- matrix(data = weibull_common_data$CovEst,
+                                nrow = 3, ncol = 3, byrow = TRUE)
+
+# applying names
+rownames(weibull_common_matrix) <- colnames(weibull_common_matrix) <- weibull_common_data$colParam[1:3]
+
+weibull_common_matrix
+```
+
+## stem_modsum 
+
+<tt>stem_modsum</tt> contains a summary of the model fit statistics and is only produced if x is provided.
+
+```{r message = FALSE}
+
+names(PFS_conv_x$stem_modsum)
+
+# note is empty here as x was not provided
+nrow(PFS_conv_samples$stem_modsum)
+
+PFS_conv_x$stem_modsum %>%
+  transmute(Model, Dist, Status, AIC, AIC_SAS, BIC, BIC_SAS) 
+```
+
+## stem_boot
+
+<tt>stem_boot</tt> contains a data frame of converted boot strap estimates and is only derived if samples is provided.
+
+```{r message = FALSE}
+
+names(PFS_conv_samples$stem_boot)
+
+# note is empty here as samples were not provided
+nrow(PFS_conv_x$stem_boot)
+
+PFS_conv_samples$stem_boot %>%
+  transmute(Model, Dist, BootSample, Param, Estimate) %>%
+  head()
+```
+
+# Details on conversions
+
+To illustrate the conversions will fit a full set of models to the data.
+
+```{r message = FALSE}
+psm_PFS_all <- runPSM(data=PFS_data,
+                     time_var="AVAL",
+                     event_var="event",
+                     model.type= c("Common shape", 
+                                   "Independent shape", 
+                                   "Separate"),
+                     distr = c('exp',
+                               'weibull',
+                               'gompertz',
+                               'lnorm',
+                               'llogis',
+                               'gengamma',
+                               'gamma',
+                               'genf'),
+                     strata_var = "ARMCD",
+                     int_name="A",
+                     ref_name = "B")
+
+# only supplying x
+PFS_conv_all <- convSTEM(x = psm_PFS_all)
+
+```
+## Conversion of parameters
+
+Note in general independent shape models were not estimated by STEM macro so are converted for backwards compatability as if if they were estimated by separate models. This has implications for how AIC and BIC should be interpreted in these cases.
+
+### Conversion of Exponential models
+
+<tt>flexsurvPlus</tt> uses the parameter rate ($b$). For common shape, independent shape and separate models these can be denoted as $b_R$ for reference and $b_I$ for intervention.
+
+The SAS STEM macro reports INTERCEPT and TX(INTERVENTION) which are converted as shown below.
+
+#### Seperate models
+
+* Reference arm 
+  * INTERCEPT = $-log(b_R)$ 
+  
+* Intervention arm 
+  * INTERCEPT = $-log(b_I)$
+
+#### Common shape models
+
+* INTERCEPT = $-log(b_R)$ 
+* TX(INTERVENTION) = $-(log(b_I) - log(b_R))$
+
+### Conversion of Weibull models
+
+<tt>flexsurvPlus</tt> uses the parameters scale ($b$) and shape ($a$). For common shape, independent shape and separate models these can be denoted as $b_R, a_R$ for reference and $b_I, a_I$ for intervention. For common shape models $a_R=a_I$.
+
+The SAS STEM macro reports INTERCEPT, TX(INTERVENTION) and SCALE which are converted as shown below.
+
+#### Seperate models
+
+* Reference arm
+  * INTERCEPT = $log(b_R)$ 
+  * SCALE = $\frac{1}{a_R}$
+* Intervention arm 
+  * INTERCEPT = $log(b_I)$ 
+  * SCALE = $\frac{1}{a_I}$
+
+#### Common shape models
+
+* INTERCEPT = $log(b_R)$ 
+* TX(INTERVENTION) = $log(b_I) - log(b_R)$
+* SCALE = $\frac{1}{a_R}$ 
+
+
+### Conversion of Gompertz models
+
+<tt>flexsurvPlus</tt> uses the parameters rate ($b$) and shape ($a$). For common shape, independent shape and separate models these can be denoted as $b_R, a_R$ for reference and $b_I, a_I$ for intervention. For common shape models $a_R=a_I$.
+
+The SAS STEM macro reports INTERCEPT, TX(INTERVENTION) and SCALE which are converted as shown below.
+
+#### Seperate models
+
+* Reference arm
+  * INTERCEPT = $-log(b_R)$ 
+  * SCALE = $a_R$
+* Intervention arm 
+  * INTERCEPT = $-log(b_I)$
+  * SCALE = $a_I$
+
+#### Common shape models
+
+* INTERCEPT = $-log(b_R)$ 
+* TX(INTERVENTION) = $-(log(b_I) - log(b_R))$
+* SCALE = $a_R$ 
+
+### Conversion of Log-logistic models
+
+<tt>flexsurvPlus</tt> uses the parameters scale ($b$) and shape ($a$). For common shape, independent shape and separate models these can be denoted as $b_R, a_R$ for reference and $b_I, a_I$ for intervention. For common shape models $a_R=a_I$.
+
+The SAS STEM macro reports INTERCEPT, TX(INTERVENTION) and SCALE which are converted as shown below.
+
+#### Seperate models
+
+* Reference arm
+  * INTERCEPT = $log(b_R)$ 
+  * SCALE = $\frac{1}{a_R}$
+* Intervention arm
+  * INTERCEPT = $log(b_I)$
+  * SCALE = $\frac{1}{a_I}$
+
+#### Common shape models
+
+* INTERCEPT = $-log(b_R)$ 
+* TX(INTERVENTION) = $log(b_I) - log(B_R)$
+* SCALE = $\frac{1}{a_R}$ 
+
+### Conversion of Log-normal models
+
+<tt>flexsurvPlus</tt> uses the parameters meanlog ($\mu$) and sdlog ($\sigma$). For common shape, independent shape and separate models these can be denoted as $\mu_R, \sigma_R$ for reference and $\mu_I, \sigma_I$ for intervention. For common shape models $\sigma_R=\sigma_I$.
+
+The SAS STEM macro reports INTERCEPT, TX(INTERVENTION) and SCALE which are converted as shown below.
+
+#### Seperate models
+
+* Reference arm 
+  * INTERCEPT = $\mu_R$ 
+  * SCALE = $\sigma_R$
+* Intervention arm
+  * INTERCEPT = $\mu_I$ 
+  * SCALE = $\sigma_I$
+
+#### Common shape models
+
+* INTERCEPT = $\mu_R$
+* TX(INTERVENTION) = $\mu_I - \mu_R$
+* SCALE = $\sigma_R$ 
+
+### Conversion of Generalized Gamma models
+
+<tt>flexsurvPlus</tt> uses the parameters mu ($\mu$), sigma ($\sigma$) and $Q$. For common shape, independent shape and separate models these can be denoted as $\mu_R, \sigma_R, Q_R$ for reference and $\mu_I, \sigma_I,  Q_I$ for intervention. For common shape models $\sigma_R=\sigma_I$ and  $Q_R=$Q_I$.
+
+The SAS STEM macro reports INTERCEPT, TX(INTERVENTION), SCALE and SHAPE which are converted as shown below.
+
+#### Seperate models
+
+* Reference arm
+  * INTERCEPT = $\mu_R$ 
+  * SCALE = $\sigma_R$
+  * SHAPE = $Q_R$
+* Intervention arm
+  * INTERCEPT = $\mu_I$ 
+  * SCALE = $\sigma_I$
+  * SHAPE = $Q_I$
+
+#### Common shape models
+
+* INTERCEPT = $\mu_R$
+* TX(INTERVENTION) = $\mu_I - \mu_R$
+* SCALE = $\sigma_R$ 
+* SHAPE = $Q_R$ 
+
+
+## Conversion of AIC and BIC
+
+As the existing SAS STEM macro estimated models with log(time) as a response variable while <tt>flexsurv</tt> and <tt>flexsurvPlus</tt> estimate models with time as the response variable there are differences in the log-likelihood between the two software packages. These differences do not affect the parameter estimates or ranking of fit but do affect the AIC and BIC reported by a constant.
+
+This constant is the sum of the events log(time). As such can convert by adding this constant to the maximum log-likelihood and by extension double the sum of the events log(time) to AIC or BIC.
+
+```{r message = FALSE}
+
+# This constant is estimated from the sum of the log of times for patients who have an event
+
+PFS_data %>%
+  filter(event == 1) %>% # select events only
+  transmute(log_event_time = log(AVAL)) %>% # difference in log time
+  summarise(2 * sum(log_event_time)) 
+
+# So for common shape models (using all data) the difference is 4274.312
+
+# Can be seen in results from convSTEM here
+modsum <- PFS_conv_all$stem_modsum %>%
+  transmute(Model, Dist, AIC, AIC_SAS, BIC, BIC_SAS) 
+
+# note as the separate and common shape models use different data these are not comparable
+modsum %>%
+  mutate(delta_AIC = AIC - AIC_SAS,
+         delta_BIC = AIC - AIC_SAS)
+
+```
+
+

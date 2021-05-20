@@ -94,6 +94,12 @@ devtools::install(pkg = "Rpackages/flexsurvPlus")
 # 4) update the file Rpackages/flexsurvPlus/_pkgdown.yml
 # 5) rebuild documentation using pkgdown
 pkgdown::build_site(pkg = "Rpackages/flexsurvPlus")
+# Note as the vignettes for flexsurvPlus can take a long time to run it is
+# also possible just to update partial sections by just running the 
+# below functions without regenerating the vignettes
+pkgdown::build_home(pkg = "Rpackages/flexsurvPlus")
+pkgdown::build_reference(pkg = "Rpackages/flexsurvPlus")
+pkgdown::build_articles_index(pkg = "Rpackages/flexsurvPlus")
 
 # 6) copy site to correct location in repo for github sites hosting
 file.copy(from = "Rpackages/flexsurvPlus/docs", 

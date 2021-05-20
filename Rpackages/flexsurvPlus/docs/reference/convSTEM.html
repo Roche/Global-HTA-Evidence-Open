@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Convert survival parameters — convSTEM • flexsurvPlus</title>
+<title>Convert survival parameters to SAS/STEM parametric forms — convSTEM • flexsurvPlus</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Convert survival parameters — convSTEM" />
-<meta property="og:description" content="Convert survival parameters" />
+<meta property="og:title" content="Convert survival parameters to SAS/STEM parametric forms — convSTEM" />
+<meta property="og:description" content="Convert survival parameters to SAS/STEM parametric forms" />
 
 
 
@@ -54,6 +54,16 @@
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-181075487-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-181075487-1');
+</script>
 
 
   </head>
@@ -72,7 +82,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">flexsurvPlus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
       </span>
     </div>
 
@@ -80,34 +90,45 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
+    <span class="fas fa-home"></span>
      
   </a>
 </li>
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../articles/index.html">Vignettes</a>
+</li>
+<li>
+  <a href="../reference/index.html">Functions</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
+    Other Packages
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/Fitting_models_in_R.html">Fitting parametric survival models in R</a>
+      <a href="https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/flexsurvPlus/docs/index.html">flexsurvPlus</a>
     </li>
     <li>
-      <a href="../articles/Fitting_models_in_R_bootstrap.html">PSA and correlated endpoints (bootstrap approch)</a>
+      <a href="https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/gemtcPlus/docs/index.html">gemtcPlus</a>
     </li>
     <li>
-      <a href="../articles/Survival_analysis_theory.html">Parametric survival analysis using the flexsurvPlus package: understanding the theory</a>
+      <a href="https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/MAIC/docs/index.html">MAIC</a>
+    </li>
+    <li>
+      <a href="https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/rpsftmPlus/docs/index.html">rpsftmPlus</a>
     </li>
   </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/Roche/Global-HTA-Evidence-Open/tree/master/Rpackages/flexsurvPlus">
+    <span class="fas fa-github"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -121,44 +142,50 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Convert survival parameters</h1>
+    <h1>Convert survival parameters to SAS/STEM parametric forms</h1>
     
     <div class="hidden name"><code>convSTEM.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Convert survival parameters</p>
+    <p>Convert survival parameters to SAS/STEM parametric forms</p>
     </div>
 
-    <pre class="usage"><span class='fu'>convSTEM</span>(<span class='no'>parameters_vector</span>)</pre>
+    <pre class="usage"><span class='fu'>convSTEM</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>samples</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>parameters</th>
-      <td><p>A vector containing parameters estimated using <code>run_PSM</code> or <code>boot_PSM</code></p></td>
+      <th>x</th>
+      <td><p>An object created by calling <code><a href='runPSM.html'>runPSM</a></code></p></td>
     </tr>
-    </table>
-
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>A vector which contains the coefficients for all of the flexsurv models specified. Converted to be similar to parameters returned by PROC LIFEREG in SAS.
-The column names are in the format 'modeltype.distribution.parameter.TreatmentName', for example, comshp.weibull.shape.Int refers to the shape parameter
-of the common shape weibull distribution for the intervention treatment and 'indshp.gengamma.mu.ref' refers to the mu parameter
-of the independent shape generalised gamma distribution for the reference treatment. Columns with 'TE' at the end are the treatment effect coefficients
-(applicable to the scale and shape parameters for independent shape models, applicable to the scale parameter only for the common shape
-model and not applicable for the separate or one-arm model).</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>Possible distributions include:</p><ul>
+    <tr>
+      <th>samples</th>
+      <td><p>An object created by calling <code>boot</code> with <code><a href='bootPSM.html'>bootPSM</a></code></p>
+<p>This function primarily exists for backward compatibility with older excel models where parametric extrapolation was
+performed with SAS and alternative parametric forms were used for distributions. As such only a subset of models are supported.
+One or both of <code>x</code> and <code>samples</code> must be specified and affect what is returned. For more details please see the
+vignette <code>vignette("STEM_compatability", package = "flexsurvPlus")</code></p>
+<p>Possible distributions include</p>
+<ul>
 <li><p>Exponential ('exp')</p></li>
 <li><p>Weibull ('weibull')</p></li>
 <li><p>Gompertz ('gompertz')</p></li>
 <li><p>Log-normal ('lnorm')</p></li>
 <li><p>Log-logistic ('llogis')</p></li>
 <li><p>Generalized gamma ('gengamma')</p></li>
-<li><p>Gamma ('gamma')</p></li>
+</ul></td>
+    </tr>
+    </table>
+
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>a list containing 4 data frames</p><ul>
+<li><p>stem_param Converted parameter estimates</p></li>
+<li><p>stem_cov Converted covariance matrix (if <code>samples</code> provided)</p></li>
+<li><p>stem_modsum Converted model summary (if <code>x</code> provided)</p></li>
+<li><p>stem_boot Converted bootstrap samples (if <code>samples</code> provided)</p></li>
 </ul>
 
 

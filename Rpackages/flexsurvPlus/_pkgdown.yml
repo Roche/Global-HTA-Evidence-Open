@@ -24,3 +24,29 @@ navbar:
    right:
     - icon: fa-github
       href: https://github.com/Roche/Global-HTA-Evidence-Open/tree/master/Rpackages/flexsurvPlus
+      
+  
+articles:
+- title: "Introduction"
+  desc: >
+    These vignettes illustrate how **flexsurvPlus** can be used to prepare inputs in R 
+    for inclusion into Excel based economic models.
+  contents: 
+  - Fitting_models_in_R
+  - Fitting_models_in_R_bootstrap
+- title: "Methods appendix"
+  desc: >
+    These vignettes provide more details on the methods used and formulas for parametric forms
+    and related surival and hazard functions.
+  contents:
+  - Survival_analysis_theory
+- title: "STEM appendix"
+  desc: >
+    These vignettes describe how to convert to parametrizations that were used in a prior SAS 
+    macro. For most users this vignette can be safely ignored.
+  contents:
+  - STEM_compatibility
+  
+
+  
+  
