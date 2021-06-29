@@ -169,7 +169,7 @@ sim_adtte <- function(
   df_pfs <- data.frame(
     USUBJID = patid,
     ARMCD = ifelse(x.trt == 1, "B", "A"),
-    ARM = ifelse(x.trt == 1, "Intervention Arm A", "Reference Arm B"),
+    ARM = ifelse(x.trt == 1, "Intervention Arm B", "Reference Arm A"),
     PARAMCD = "PFS",
     PARAM = "Progression Free Survival",
     AVAL = round(pfs.t * 365),
@@ -180,7 +180,7 @@ sim_adtte <- function(
   df_os <- data.frame(
     USUBJID = patid,
     ARMCD = ifelse(x.trt == 1, "B", "A"),
-    ARM = ifelse(x.trt == 1, "Intervention Arm A", "Reference Arm B"),
+    ARM = ifelse(x.trt == 1, "Intervention Arm B", "Reference Arm A"),
     PARAMCD = "OS",
     PARAM = "Overall Survival",
     AVAL = round(os.t * 365),
@@ -191,7 +191,7 @@ sim_adtte <- function(
   df_os_exsw <- data.frame(
     USUBJID = patid,
     ARMCD = ifelse(x.trt == 1, "B", "A"),
-    ARM = ifelse(x.trt == 1, "Intervention Arm A", "Reference Arm B"),
+    ARM = ifelse(x.trt == 1, "Intervention Arm B", "Reference Arm A"),
     PARAMCD = "OSORIG",
     PARAM = "Overall Survival Without Switching",
     AVAL = round(os.o.t * 365),
