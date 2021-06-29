@@ -68,3 +68,18 @@ devtools::install_github(
   subdir = "Rpackages/rpsftmPlus"
   )
 ```
+
+## descem
+
+This package facilitates performing discrete event simulations without resource constraints for cost-effectiveness analysis.
+
+### Documentation
+https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/descem/docs/index.html
+
+### Installation code
+```
+devtools::install_github(
+  "roche/Global-HTA-Evidence-Open", 
+  subdir = "Rpackages/descem"
+  )
+```

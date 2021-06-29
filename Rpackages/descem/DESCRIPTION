@@ -1,0 +1,39 @@
+Package: descem
+Title: Provides functions to conduct discrete event simulation for cost-effectiveness modelling
+Version: 0.1
+Authors@R: 
+    c(person(given = "Valerie",
+           family = "Aponte Ribero",
+           role = c("aut", "cre"),
+           email = "valerie.aponte_ribero@roche.com",
+           comment = ""),
+           person(given = "Javier",
+           family = "Sanchez Alvarez",
+           role = c("aut"),
+           email = "javier.sanchez_alvarez@roche.com ",
+           comment = ""))
+Description: A group of functions designed to perform discrete event simulation for cost-effectiveness modelling.
+License: Apache License 2.0
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.0
+Suggests: 
+    flexsurv,
+    dplyr,
+    ggplot2,
+    knitr,
+    rmarkdown,
+    kableExtra,
+    DiagrammeR,
+    MASS
+Imports: 
+    lazyeval,
+    purrr,
+    tidyr,
+    doParallel,
+    data.table,
+    foreach,
+    stats,
+    utils
+VignetteBuilder: knitr

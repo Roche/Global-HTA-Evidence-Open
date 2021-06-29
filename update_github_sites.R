@@ -106,3 +106,30 @@ file.copy(from = "Rpackages/flexsurvPlus/docs",
           to = "docs/Rpackages/flexsurvPlus", 
           overwrite = TRUE, 
           recursive = TRUE)
+
+##############################################
+# descem
+##############################################
+# 1) make any updates to the package 
+# 2) update documentation using devtools
+devtools::document(pkg = "Rpackages/descem")
+
+# 3) reinstall the updated package
+devtools::install(pkg = "Rpackages/descem")
+
+# 4) update the file Rpackages/descem/_pkgdown.yml
+# 5) rebuild documentation using pkgdown
+pkgdown::build_site(pkg = "Rpackages/descem")
+
+# Note as the vignettes for descem can take a long time to run it is
+# also possible just to update partial sections by just running the 
+# below functions without regenerating the vignettes
+pkgdown::build_home(pkg = "Rpackages/descems")
+pkgdown::build_reference(pkg = "Rpackages/descem")
+pkgdown::build_articles_index(pkg = "Rpackages/descem")
+
+# 6) copy site to correct location in repo for github sites hosting
+file.copy(from = "Rpackages/descem/docs", 
+          to = "docs/Rpackages/descem", 
+          overwrite = TRUE, 
+          recursive = TRUE)
