@@ -52,7 +52,7 @@ InitEventList <- function(trt_name,input_list_trt){
 GetNxtEvt <- function(evt_list){                  # This function identifies which event is to be processed next for each patient, depending on intervention
 
   if (length(evt_list)>0) {
-    output <- list(out = list(evt = names(evt_list[1]), evttime = evt_list[[1]]), evt_list = evt_list[2:length(evt_list)])
+    output <- list(out = list(evt = names(evt_list[1]), evttime = evt_list[[1]]), evt_list = evt_list[-1])
   } else {
     output <- NULL
   }

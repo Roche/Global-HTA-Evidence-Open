@@ -39,7 +39,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -75,8 +75,10 @@
 
       
 
-      </header><script src="example_eBC_files/header-attrs-2.6/header-attrs.js"></script><script src="example_eBC_files/accessible-code-block-0.0.1/empty-anchor.js"></script><script src="example_eBC_files/htmlwidgets-1.5.1/htmlwidgets.js"></script><script src="example_eBC_files/viz-1.8.2/viz.js"></script><link href="example_eBC_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet">
-<script src="example_eBC_files/grViz-binding-1.0.5/grViz.js"></script><script src="example_eBC_files/kePrint-0.0.1/kePrint.js"></script><div class="row">
+      </header><script src="example_eBC_files/header-attrs-2.5/header-attrs.js"></script><script src="example_eBC_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="example_eBC_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
+<script src="example_eBC_files/anchor-sections-1.0/anchor-sections.js"></script><script src="example_eBC_files/htmlwidgets-1.5.2/htmlwidgets.js"></script><script src="example_eBC_files/viz-1.8.2/viz.js"></script><link href="example_eBC_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet">
+<script src="example_eBC_files/grViz-binding-1.0.6.1/grViz.js"></script><script src="example_eBC_files/kePrint-0.0.1/kePrint.js"></script><link href="example_eBC_files/lightable-0.0.1/lightable.css" rel="stylesheet">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Example in Early Breast Cancer</h1>
@@ -99,8 +101,8 @@
 <div id="main-options" class="section level2">
 <h2 class="hasAnchor">
 <a href="#main-options" class="anchor"></a>Main options</h2>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">descem</span><span class="op">)</span>
+<div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">descem</span><span class="op">)</span>
 
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
 <span class="co">#&gt; </span>
@@ -115,27 +117,27 @@
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org">tidyr</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/chjackson/flexsurv-dev">flexsurv</a></span><span class="op">)</span>
 <span class="co">#&gt; Loading required package: survival</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://haozhu233.github.io/kableExtra/">kableExtra</a></span><span class="op">)</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Attaching package: 'kableExtra'</span>
 <span class="co">#&gt; The following object is masked from 'package:dplyr':</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt;     group_rows</span></code></pre></div>
+<span class="co">#&gt;     group_rows</span></pre></div>
 </div>
 <div id="model-concept" class="section level2">
 <h2 class="hasAnchor">
 <a href="#model-concept" class="anchor"></a>Model Concept</h2>
 <p>The model is represented below. Patients start in early breast cancer, and draw times to event. Patients also draw a probability of going into metastatic breast cancer or going into remission. If they go into remission, they can have a metastatic recurrence. At any point in time they can die, depending on the risk of each disease stage.</p>
-<div id="htmlwidget-c5e512ef98c36d128228" style="width:700px;height:500px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-c5e512ef98c36d128228">{"x":{"diagram":"\n  digraph graph1 {\n  \n  graph [layout = dot, rankdir = LR, nodesep=\"1\", fontsize = 12]\n  \n  # node definitions with substituted label text\n  node [shape = oval]\n  a [label = \"Early BC\"]\n  b [label = \"Remission\"]\n  c [label = \"Metastatic BC\"]\n  d [label = \"Death\"]\n  \n  a -> d\n  a -> b \n  a -> c [label=\"eBC to mBC\"];\n  c -> d;\n  b -> c [label=\"Recurrence\"];\n  b -> d; \n  \n  }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-6583fa86a54cccb5ad78" style="width:700px;height:500px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-6583fa86a54cccb5ad78">{"x":{"diagram":"\n  digraph graph1 {\n  \n  graph [layout = dot, rankdir = LR, nodesep=\"1\", fontsize = 12]\n  \n  # node definitions with substituted label text\n  node [shape = oval]\n  a [label = \"Early BC\"]\n  b [label = \"Remission\"]\n  c [label = \"Metastatic BC\"]\n  d [label = \"Death\"]\n  \n  a -> d\n  a -> b \n  a -> c [label=\"eBC to mBC\"];\n  c -> d;\n  b -> c [label=\"Recurrence\"];\n  b -> d; \n  \n  }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="load-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#load-data" class="anchor"></a>Load Data</h2>
 <p>The dummy data for costs and utility is generated below.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co">#Utilities</span>
+<div class="sourceCode" id="cb2"><pre class="downlit">
+<span class="co">#Utilities</span>
 <span class="va">util.data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span> name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"util.idfs.ontx"</span> ,<span class="st">"util.idfs.offtx"</span> ,<span class="st">"util.remission"</span> ,<span class="st">"util.recurrence"</span> ,<span class="st">"util.mbc.progression.mbc"</span> ,<span class="st">"util.mbc.pps"</span><span class="op">)</span>,
                          value <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.75</span>, <span class="fl">0.8</span>,<span class="fl">0.9</span>,<span class="fl">0.7</span>,<span class="fl">0.6</span>,<span class="fl">0.5</span><span class="op">)</span>,
                          se<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">0.02</span>,<span class="fl">6</span><span class="op">)</span>,
@@ -150,7 +152,7 @@
                                    <span class="fl">10000</span>,<span class="fl">20000</span>,<span class="fl">30000</span>,<span class="fl">20000</span>,<span class="fl">1000</span><span class="op">)</span>,
                          stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span>
 <span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>se<span class="op">=</span> <span class="va">value</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span></code></pre></div>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>se<span class="op">=</span> <span class="va">value</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span></pre></div>
 </div>
 </div>
 <div id="general-inputs-with-delayed-execution" class="section level1">
@@ -159,8 +161,8 @@
 <p>Initial inputs and flags that will be used in the model can be defined below. We can define inputs that are common to all patients (<code>common_all_inputs</code>) within a simulation, inputs that are unique to a patient independently of the treatment (e.g. natural death, defined in <code>common_pt_inputs</code>), and inputs that are unique to that patient and that treatment (<code>unique_pt_inputs</code>). Items can be included through the <code>add_item</code> function, and can be used in subsequent items (e.g. below, we define <code>sex_pt</code> and we use it in <code>nat.os.s</code> to get the background mortality for that patient). All these inputs are generated before the events and the reaction to events are executed. Furthermore, the program first executes <code>common_all_inputs</code>, then <code>common_pt_inputs</code> and then <code>unique_pt_inputs</code>. So one could use the items generated in <code>common_all_inputs</code> in <code>unique_pt_inputs</code>.</p>
 <p>The flag <code>fl.remission</code> is drawn using a Bernoulli distribution with probability 0.8. This means that 80% of the patients will have a remission, while 20% will go into early metastatic BC. Note that this could also be modeled differently by using a time to remission and time to early metastatic BC, comparing these and choosing the pathway depending on which one is smaller.</p>
 <p>We also define here the specific utilities and costs that will be used in the model. We create a named vector that identifies the costs and utilities, and then we assign them to each specific item. Note that while <code>util_v</code> or <code>cost_v</code> is a named vector, the specific items that will be used by the model (e.g. <code>util.remission</code>) are unnamed. It is strongly recommended to assign unnamed objects if they are going to be processed in the model. In this case, we’re only using <code>util_v</code> and <code>cost_v</code> as an intermediate input and these objects will not be processed (we just use them to make the code more readable), so it’s fine if we name them. However, naming the value of <code>util.remission</code> (e.g. using one bracket instead of two in <code>util_v[["util.remission"]]</code>) may cause the outputs from the model to change names, depending on use. This is because of how R works: it would correspond to a named list with a named vector/element, which R concatenates, so in this case it would end up generating <code>qaly.util.remission</code> as an output of the model instead of just <code>qaly</code>).</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co">#Each patient is identified through "i"</span>
+<div class="sourceCode" id="cb3"><pre class="downlit">
+<span class="co">#Each patient is identified through "i"</span>
 <span class="co">#Items used in the model should be unnamed numeric/vectors! otherwise if they are processed by model it can lead to strangely named outcomes</span>
 <span class="co">#In this case, util_v is a named vector, but it's not processed by the model. We extract unnamed numerics from it.</span>
 
@@ -210,7 +212,7 @@
   fl.mbcs_2ndline          <span class="op">=</span> <span class="fl">0</span>,
   fl.recurrence            <span class="op">=</span> <span class="fl">0</span>,
   fl.remission             <span class="op">=</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/rbernoulli.html">rbernoulli</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">0.8</span><span class="op">)</span> <span class="co">#80% probability of going into remission</span>
-<span class="op">)</span></code></pre></div>
+<span class="op">)</span></pre></div>
 </div>
 <div id="events" class="section level1">
 <h1 class="hasAnchor">
@@ -222,8 +224,8 @@
 <p>The <code>init_event_list</code> object is populated by using the <code>add_tte</code> function twice, one for the “int” strategy and other for the “noint” strategy. We first declare the <code>start</code> time to be <code>0</code>.</p>
 <p>We then proceed to generate the actual time to event. We use the <code><a href="../reference/draw_tte.html">draw_tte()</a></code> function to generate the time to event using a log-normal distribution for the event variables that are of interest. One should always be aware of how the competing risks interact with each other. While we have abstracted from these type of corrections here, it is recommended to have an understanding about how these affect the results and have a look at the competing risks/semi-competing risks literature.</p>
 <p>Note that in our model, the initial list of events are <code>start, ttot, ttot.beva, progression.mbc, os, idfs, ttot.early, remission, recurrence and start.early.mbc</code>. However, other, non-initial events can be defined in the reactions part seen in the section below.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">init_event_list</span> <span class="op">&lt;-</span> 
+<div class="sourceCode" id="cb4"><pre class="downlit">
+<span class="va">init_event_list</span> <span class="op">&lt;-</span> 
   <span class="fu"><a href="../reference/add_tte.html">add_tte</a></span><span class="op">(</span>trt<span class="op">=</span><span class="st">"int"</span>,
                evts <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"start"</span>,<span class="st">"ttot"</span>, <span class="st">"ttot.beva"</span>,<span class="st">"progression.mbc"</span>, <span class="st">"os"</span>,<span class="st">"idfs"</span>,<span class="st">"ttot.early"</span>,<span class="st">"remission"</span>,<span class="st">"recurrence"</span>,<span class="st">"start.early.mbc"</span><span class="op">)</span>,
                other_inp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"os.early"</span>,<span class="st">"os.mbc"</span><span class="op">)</span>,
@@ -321,7 +323,7 @@
     <span class="op">}</span>    
     <span class="va">os</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">os.mbc</span>,<span class="va">os.early</span>,<span class="va">nat.os.s</span><span class="op">)</span>
     
-  <span class="op">}</span><span class="op">)</span></code></pre></div>
+  <span class="op">}</span><span class="op">)</span></pre></div>
 </div>
 <div id="add-reaction-to-those-events" class="section level2">
 <h2 class="hasAnchor">
@@ -397,8 +399,8 @@
 </tbody>
 </table>
 <p>The model will run until <code>curtime</code> is set to <code>Inf</code>, so the event that terminates the model (in this case, <code>os</code>), should modify <code>curtime</code> and set it to <code>Inf</code>.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
+<div class="sourceCode" id="cb5"><pre class="downlit">
+
 <span class="va">evt_react_list</span> <span class="op">&lt;-</span>
   <span class="fu"><a href="../reference/add_reactevt.html">add_reactevt</a></span><span class="op">(</span>name_evt <span class="op">=</span> <span class="st">"start"</span>,
                input <span class="op">=</span> <span class="op">{</span><span class="op">}</span><span class="op">)</span> <span class="op">%&gt;%</span>
@@ -466,7 +468,7 @@
   <span class="fu"><a href="../reference/add_reactevt.html">add_reactevt</a></span><span class="op">(</span>name_evt <span class="op">=</span> <span class="st">"os"</span>,
                input <span class="op">=</span> <span class="op">{</span>
                  <span class="fu"><a href="../reference/modify_item.html">modify_item</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"fl.tx.beva"</span><span class="op">=</span><span class="fl">0</span>,<span class="st">"fl.mbcs.ontx"</span><span class="op">=</span><span class="fl">0</span>,<span class="st">"fl.idfs"</span><span class="op">=</span><span class="fl">0</span>,<span class="st">"fl.mbcs"</span><span class="op">=</span><span class="fl">0</span>,<span class="st">"curtime"</span><span class="op">=</span><span class="cn">Inf</span><span class="op">)</span><span class="op">)</span> 
-               <span class="op">}</span><span class="op">)</span> </code></pre></div>
+               <span class="op">}</span><span class="op">)</span> </pre></div>
 </div>
 </div>
 <div id="costs-and-utilities" class="section level1">
@@ -477,8 +479,8 @@
 <h2 class="hasAnchor">
 <a href="#utilities" class="anchor"></a>Utilities</h2>
 <p>Utilities are defined using pipes with the <code>add_util</code> function. The first argument says which events are affected, the second argument which treatments are affected, and the third one describe the utilities. Instant utilities (e.g. AE disutilities) and cycle utilities can be defined in a similar fashion, but for the cycle utilities the cycle length and the starting time of the cycle must also be indicated. Note that one can write expressions and objects whose execution will be delayed until the model runs.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
+<div class="sourceCode" id="cb6"><pre class="downlit">
+
 <span class="va">util_ongoing</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_util.html">add_util</a></span><span class="op">(</span>evt <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"start"</span>,<span class="st">"ttot"</span>,<span class="st">"ttot.beva"</span>,<span class="st">"progression.mbc"</span>,<span class="st">"os"</span>,<span class="st">"idfs"</span>,<span class="st">"ttot.early"</span>,<span class="st">"remission"</span>,<span class="st">"recurrence"</span>,<span class="st">"start.early.mbc"</span>,<span class="st">"2ndline_mbc"</span>,<span class="st">"ae"</span><span class="op">)</span>,
                               trt <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"int"</span>, <span class="st">"noint"</span><span class="op">)</span>,
                               util <span class="op">=</span> <span class="kw">if</span> <span class="op">(</span><span class="va">fl.idfs</span><span class="op">==</span><span class="fl">1</span><span class="op">)</span> <span class="op">{</span>
@@ -488,14 +490,14 @@
                               <span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="va">fl.mbcs</span><span class="op">==</span><span class="fl">1</span><span class="op">)</span> <span class="op">{</span>
                                 <span class="va">util.mbc.progression.mbc</span> <span class="op">*</span> <span class="va">fl.mbcs.progression.mbc</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span><span class="op">-</span><span class="va">fl.mbcs.progression.mbc</span><span class="op">)</span><span class="op">*</span><span class="va">util.mbc.pps</span>
                               <span class="op">}</span>
-<span class="op">)</span> <span class="co">#common utility across arms</span></code></pre></div>
+<span class="op">)</span> <span class="co">#common utility across arms</span></pre></div>
 </div>
 <div id="costs" class="section level2">
 <h2 class="hasAnchor">
 <a href="#costs" class="anchor"></a>Costs</h2>
 <p>Costs are defined using pipes with the <code>add_cost</code> function, in a similar fashion to the utilities. Costs by cycles can be included (even we don’t do it in this example) using the commented code. The starting time of the cycle can be initialized arbitrarily (time 9999, for example) and can be set in the reaction to the events.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
+<div class="sourceCode" id="cb7"><pre class="downlit">
+
 <span class="va">cost_ongoing</span> <span class="op">&lt;-</span>
   <span class="fu"><a href="../reference/add_cost.html">add_cost</a></span><span class="op">(</span>
     evt <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"start"</span>,<span class="st">"idfs"</span>,<span class="st">"ttot.early"</span><span class="op">)</span> ,
@@ -518,7 +520,7 @@
 <span class="va">cost_instant</span> <span class="op">&lt;-</span>  <span class="fu"><a href="../reference/add_cost.html">add_cost</a></span><span class="op">(</span>
   evt <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"ae"</span><span class="op">)</span>,
   trt <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"noint"</span>,<span class="st">"int"</span><span class="op">)</span>,
-  cost <span class="op">=</span> <span class="va">cost.ae</span><span class="op">)</span></code></pre></div>
+  cost <span class="op">=</span> <span class="va">cost.ae</span><span class="op">)</span></pre></div>
 </div>
 </div>
 <div id="model" class="section level1">
@@ -530,8 +532,8 @@
 <p>The model can be run using the function <code>RunSim</code> below. We must define the number of patients to be simulated, the number of simulations, whether we want to run a PSA or not, the strategy list, the inputs, events and reactions defined above, the number of cores to be used (by default uses 1 core), the discount rate for costs and the discount rate for qalys. It is recommended not to use all the cores in the machine.</p>
 <p>It is worth noting that the <code>psa_bool</code> argument does not run a PSA automatically, but is rather an additional input/flag of the model that we use as a reference to determine whether we want to use a deterministic or stochastic input. As such, it could also be defined in <code>common_all_inputs</code> as the first item to be defined, and the result would be the same. However, we recommend it to be defined in <code>RunSim</code>.</p>
 <p>Note that the distribution chosen, the number of events and the interaction between events can have a substantial impact on the running time of the model.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co">#Logic is: per patient, per intervention, per event, react to that event.</span>
+<div class="sourceCode" id="cb8"><pre class="downlit">
+<span class="co">#Logic is: per patient, per intervention, per event, react to that event.</span>
 <span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/RunSim.html">RunSim</a></span><span class="op">(</span>  
   npats<span class="op">=</span><span class="fl">2000</span>,                              <span class="co"># number of patients to be simulated</span>
   n_sim<span class="op">=</span><span class="fl">1</span>,                                  <span class="co"># number of simulations to run</span>
@@ -564,8 +566,8 @@
 <span class="co">#&gt; c("int", : Item cost_v is named. It is strongly advised to assign unnamed</span>
 <span class="co">#&gt; objects if they are going to be processed in the model, as they can create</span>
 <span class="co">#&gt; errors depending on how they are used within the model</span>
-<span class="co">#&gt; [1] "Time to run iteration 1: 7.58s"</span>
-<span class="co">#&gt; [1] "Total time to run: 7.58s"</span></code></pre></div>
+<span class="co">#&gt; [1] "Time to run iteration 1: 7.99s"</span>
+<span class="co">#&gt; [1] "Total time to run: 7.99s"</span></pre></div>
 </div>
 </div>
 <div id="post-processing-of-model-outputs" class="section level1">
@@ -575,30 +577,30 @@
 <h2 class="hasAnchor">
 <a href="#summary-of-results" class="anchor"></a>Summary of Results</h2>
 <p>Once the model has been run, we can use the results and summarize them using the <code>summary_results_det</code> to print the results of the last simulation (if nsim=1, it’s the deterministic case), and <code>summary_results_psa</code> to show the PSA results (with the confidence intervals). We can also use the individual patient data generated by the simulation, which we collect here to plot in the <code>psa_ipd</code> object.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
+<div class="sourceCode" id="cb9"><pre class="downlit">
+
 
 <span class="fu"><a href="../reference/summary_results_det.html">summary_results_det</a></span><span class="op">(</span><span class="va">results</span><span class="op">$</span><span class="va">final_output</span><span class="op">)</span> <span class="co">#will print the last simulation!</span>
 <span class="co">#&gt;             int     noint</span>
-<span class="co">#&gt; costs 369896.78 268290.98</span>
-<span class="co">#&gt; lys       12.99     11.82</span>
-<span class="co">#&gt; qalys      9.81      8.94</span>
-<span class="co">#&gt; ICER         NA  86979.63</span>
-<span class="co">#&gt; ICUR         NA 116965.60</span>
+<span class="co">#&gt; costs 369109.07 268190.29</span>
+<span class="co">#&gt; lys       12.96     11.81</span>
+<span class="co">#&gt; qalys      9.83      8.93</span>
+<span class="co">#&gt; ICER         NA  87864.23</span>
+<span class="co">#&gt; ICUR         NA 111851.46</span>
 
 <span class="fu"><a href="../reference/summary_results_psa.html">summary_results_psa</a></span><span class="op">(</span><span class="va">results</span><span class="op">$</span><span class="va">output_psa</span><span class="op">)</span>
 <span class="co">#&gt;                          int                  noint</span>
-<span class="co">#&gt; costs 369897(369897, 369897) 268291(268291, 268291)</span>
-<span class="co">#&gt; lys      12.99(12.99, 12.99)    11.82(11.82, 11.82)</span>
-<span class="co">#&gt; qalys       9.81(9.81, 9.81)       8.94(8.94, 8.94)</span>
-<span class="co">#&gt; ICER             NaN(NA, NA)    86980(86980, 86980)</span>
-<span class="co">#&gt; ICUR             NaN(NA, NA) 116966(116966, 116966)</span>
+<span class="co">#&gt; costs 369109(369109, 369109) 268190(268190, 268190)</span>
+<span class="co">#&gt; lys      12.96(12.96, 12.96)    11.81(11.81, 11.81)</span>
+<span class="co">#&gt; qalys       9.83(9.83, 9.83)       8.93(8.93, 8.93)</span>
+<span class="co">#&gt; ICER             NaN(NA, NA)    87864(87864, 87864)</span>
+<span class="co">#&gt; ICUR             NaN(NA, NA) 111851(111851, 111851)</span>
 
 <span class="va">psa_ipd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_rows</a></span><span class="op">(</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span><span class="op">(</span><span class="va">results</span><span class="op">$</span><span class="va">output_psa</span>, <span class="st">"merged_df"</span><span class="op">)</span><span class="op">)</span> 
 
 <span class="va">psa_ipd</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,<span class="op">]</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html">kable_styling</a></span><span class="op">(</span>bootstrap_options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"striped"</span>, <span class="st">"hover"</span>, <span class="st">"condensed"</span>, <span class="st">"responsive"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+  <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html">kable_styling</a></span><span class="op">(</span>bootstrap_options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"striped"</span>, <span class="st">"hover"</span>, <span class="st">"condensed"</span>, <span class="st">"responsive"</span><span class="op">)</span><span class="op">)</span></pre></div>
 <table class="table table table-striped table-hover table-condensed table-responsive">
 <thead><tr>
 <th style="text-align:left;">
@@ -659,57 +661,10 @@ start
 0.0000
 </td>
 <td style="text-align:right;">
-0.0000000
+0.000000
 </td>
 <td style="text-align:right;">
-0.0000000
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-female
-</td>
-<td style="text-align:right;">
-41.28488
-</td>
-<td style="text-align:right;">
-18.26473
-</td>
-<td style="text-align:right;">
-22.94739
-</td>
-<td style="text-align:right;">
-215860.8
-</td>
-<td style="text-align:right;">
-10.62333
-</td>
-<td style="text-align:right;">
-13.56105
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ttot.beva
-</td>
-<td style="text-align:right;">
-4.848433
-</td>
-<td style="text-align:right;">
-102710.2760
-</td>
-<td style="text-align:right;">
-3.3492481
-</td>
-<td style="text-align:right;">
-4.4656642
+0.000000
 </td>
 <td style="text-align:right;">
 1
@@ -721,22 +676,22 @@ int
 female
 </td>
 <td style="text-align:right;">
-41.28488
+42.92011
 </td>
 <td style="text-align:right;">
-18.26473
+22.20092
 </td>
 <td style="text-align:right;">
-22.94739
+31.29869
 </td>
 <td style="text-align:right;">
-215860.8
+514935.6
 </td>
 <td style="text-align:right;">
-10.62333
+12.62654
 </td>
 <td style="text-align:right;">
-13.56105
+15.4666
 </td>
 <td style="text-align:right;">
 1
@@ -747,16 +702,16 @@ female
 ttot.early
 </td>
 <td style="text-align:right;">
-5.660660
+7.985663
 </td>
 <td style="text-align:right;">
-33896.6679
+418960.2015
 </td>
 <td style="text-align:right;">
-0.5084500
+5.237003
 </td>
 <td style="text-align:right;">
-0.6779334
+6.982670
 </td>
 <td style="text-align:right;">
 1
@@ -768,22 +723,69 @@ int
 female
 </td>
 <td style="text-align:right;">
-41.28488
+42.92011
 </td>
 <td style="text-align:right;">
-18.26473
+22.20092
 </td>
 <td style="text-align:right;">
-22.94739
+31.29869
 </td>
 <td style="text-align:right;">
-215860.8
+514935.6
 </td>
 <td style="text-align:right;">
-10.62333
+12.62654
 </td>
 <td style="text-align:right;">
-13.56105
+15.4666
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ae
+</td>
+<td style="text-align:right;">
+7.985763
+</td>
+<td style="text-align:right;">
+759.7836
+</td>
+<td style="text-align:right;">
+0.000076
+</td>
+<td style="text-align:right;">
+0.000076
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:left;">
+female
+</td>
+<td style="text-align:right;">
+42.92011
+</td>
+<td style="text-align:right;">
+22.20092
+</td>
+<td style="text-align:right;">
+31.29869
+</td>
+<td style="text-align:right;">
+514935.6
+</td>
+<td style="text-align:right;">
+12.62654
+</td>
+<td style="text-align:right;">
+15.4666
 </td>
 <td style="text-align:right;">
 1
@@ -794,16 +796,16 @@ female
 idfs
 </td>
 <td style="text-align:right;">
-6.864589
+9.695181
 </td>
 <td style="text-align:right;">
-9706.5756
+12613.3654
 </td>
 <td style="text-align:right;">
-0.9706576
+1.261337
 </td>
 <td style="text-align:right;">
-0.9706576
+1.261337
 </td>
 <td style="text-align:right;">
 1
@@ -815,22 +817,22 @@ int
 female
 </td>
 <td style="text-align:right;">
-41.28488
+42.92011
 </td>
 <td style="text-align:right;">
-18.26473
+22.20092
 </td>
 <td style="text-align:right;">
-22.94739
+31.29869
 </td>
 <td style="text-align:right;">
-215860.8
+514935.6
 </td>
 <td style="text-align:right;">
-10.62333
+12.62654
 </td>
 <td style="text-align:right;">
-13.56105
+15.4666
 </td>
 <td style="text-align:right;">
 1
@@ -841,16 +843,16 @@ female
 remission
 </td>
 <td style="text-align:right;">
-6.864589
+9.695181
 </td>
 <td style="text-align:right;">
 0.0000
 </td>
 <td style="text-align:right;">
-0.0000000
+0.000000
 </td>
 <td style="text-align:right;">
-0.0000000
+0.000000
 </td>
 <td style="text-align:right;">
 1
@@ -862,22 +864,69 @@ int
 female
 </td>
 <td style="text-align:right;">
-41.28488
+42.92011
 </td>
 <td style="text-align:right;">
-18.26473
+22.20092
 </td>
 <td style="text-align:right;">
-22.94739
+31.29869
 </td>
 <td style="text-align:right;">
-215860.8
+514935.6
 </td>
 <td style="text-align:right;">
-10.62333
+12.62654
 </td>
 <td style="text-align:right;">
-13.56105
+15.4666
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ttot.beva
+</td>
+<td style="text-align:right;">
+13.177304
+</td>
+<td style="text-align:right;">
+54071.7067
+</td>
+<td style="text-align:right;">
+2.115849
+</td>
+<td style="text-align:right;">
+2.350944
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:left;">
+female
+</td>
+<td style="text-align:right;">
+42.92011
+</td>
+<td style="text-align:right;">
+22.20092
+</td>
+<td style="text-align:right;">
+31.29869
+</td>
+<td style="text-align:right;">
+514935.6
+</td>
+<td style="text-align:right;">
+12.62654
+</td>
+<td style="text-align:right;">
+15.4666
 </td>
 <td style="text-align:right;">
 1
@@ -888,16 +937,16 @@ female
 recurrence
 </td>
 <td style="text-align:right;">
-13.086537
+19.538961
 </td>
 <td style="text-align:right;">
 0.0000
 </td>
 <td style="text-align:right;">
-3.9806975
+3.268006
 </td>
 <td style="text-align:right;">
-4.4229972
+3.631118
 </td>
 <td style="text-align:right;">
 1
@@ -909,22 +958,22 @@ int
 female
 </td>
 <td style="text-align:right;">
-41.28488
+42.92011
 </td>
 <td style="text-align:right;">
-18.26473
+22.20092
 </td>
 <td style="text-align:right;">
-22.94739
+31.29869
 </td>
 <td style="text-align:right;">
-215860.8
+514935.6
 </td>
 <td style="text-align:right;">
-10.62333
+12.62654
 </td>
 <td style="text-align:right;">
-13.56105
+15.4666
 </td>
 <td style="text-align:right;">
 1
@@ -935,16 +984,16 @@ female
 os
 </td>
 <td style="text-align:right;">
-18.264726
+22.075924
 </td>
 <td style="text-align:right;">
-69547.3237
+28530.5028
 </td>
 <td style="text-align:right;">
-1.8142780
+0.744274
 </td>
 <td style="text-align:right;">
-3.0237967
+1.240457
 </td>
 <td style="text-align:right;">
 1
@@ -956,22 +1005,22 @@ int
 female
 </td>
 <td style="text-align:right;">
-41.28488
+42.92011
 </td>
 <td style="text-align:right;">
-18.26473
+22.20092
 </td>
 <td style="text-align:right;">
-22.94739
+31.29869
 </td>
 <td style="text-align:right;">
-215860.8
+514935.6
 </td>
 <td style="text-align:right;">
-10.62333
+12.62654
 </td>
 <td style="text-align:right;">
-13.56105
+15.4666
 </td>
 <td style="text-align:right;">
 1
@@ -988,10 +1037,10 @@ start
 0.0000
 </td>
 <td style="text-align:right;">
-0.0000000
+0.000000
 </td>
 <td style="text-align:right;">
-0.0000000
+0.000000
 </td>
 <td style="text-align:right;">
 2
@@ -1003,22 +1052,22 @@ int
 female
 </td>
 <td style="text-align:right;">
-42.35411
+39.98671
 </td>
 <td style="text-align:right;">
-17.86118
+22.73220
 </td>
 <td style="text-align:right;">
-22.77232
+18.60288
 </td>
 <td style="text-align:right;">
-455570.4
+424203.4
 </td>
 <td style="text-align:right;">
-10.18579
+10.41542
 </td>
 <td style="text-align:right;">
-13.34426
+13.7404
 </td>
 <td style="text-align:right;">
 1
@@ -1026,66 +1075,19 @@ female
 </tr>
 <tr>
 <td style="text-align:left;">
-ttot.early
+idfs
 </td>
 <td style="text-align:right;">
-7.299966
+4.987590
 </td>
 <td style="text-align:right;">
-387329.5749
+274989.6798
 </td>
 <td style="text-align:right;">
-4.8416197
+3.437371
 </td>
 <td style="text-align:right;">
-6.4554929
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-female
-</td>
-<td style="text-align:right;">
-42.35411
-</td>
-<td style="text-align:right;">
-17.86118
-</td>
-<td style="text-align:right;">
-22.77232
-</td>
-<td style="text-align:right;">
-455570.4
-</td>
-<td style="text-align:right;">
-10.18579
-</td>
-<td style="text-align:right;">
-13.34426
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ttot.beva
-</td>
-<td style="text-align:right;">
-7.306660
-</td>
-<td style="text-align:right;">
-119.7736
-</td>
-<td style="text-align:right;">
-0.0052075
-</td>
-<td style="text-align:right;">
-0.0052075
+4.583161
 </td>
 <td style="text-align:right;">
 2
@@ -1097,22 +1099,22 @@ int
 female
 </td>
 <td style="text-align:right;">
-42.35411
+39.98671
 </td>
 <td style="text-align:right;">
-17.86118
+22.73220
 </td>
 <td style="text-align:right;">
-22.77232
+18.60288
 </td>
 <td style="text-align:right;">
-455570.4
+424203.4
 </td>
 <td style="text-align:right;">
-10.18579
+10.41542
 </td>
 <td style="text-align:right;">
-13.34426
+13.7404
 </td>
 <td style="text-align:right;">
 1
@@ -1164,7 +1166,7 @@ int
 ttot.early
 </td>
 <td style="text-align:right;">
-1974
+1968
 </td>
 </tr>
 <tr>
@@ -1175,7 +1177,7 @@ int
 idfs
 </td>
 <td style="text-align:right;">
-1966
+1958
 </td>
 </tr>
 <tr>
@@ -1186,7 +1188,7 @@ int
 ttot.beva
 </td>
 <td style="text-align:right;">
-1952
+1942
 </td>
 </tr>
 <tr>
@@ -1197,7 +1199,7 @@ int
 remission
 </td>
 <td style="text-align:right;">
-1550
+1575
 </td>
 </tr>
 <tr>
@@ -1208,7 +1210,7 @@ int
 recurrence
 </td>
 <td style="text-align:right;">
-1324
+1319
 </td>
 </tr>
 <tr>
@@ -1219,7 +1221,7 @@ int
 ae
 </td>
 <td style="text-align:right;">
-1132
+1149
 </td>
 </tr>
 <tr>
@@ -1230,7 +1232,7 @@ int
 ttot
 </td>
 <td style="text-align:right;">
-613
+554
 </td>
 </tr>
 <tr>
@@ -1241,7 +1243,7 @@ int
 progression.mbc
 </td>
 <td style="text-align:right;">
-608
+553
 </td>
 </tr>
 <tr>
@@ -1252,7 +1254,7 @@ int
 start.early.mbc
 </td>
 <td style="text-align:right;">
-409
+378
 </td>
 </tr>
 <tr>
@@ -1263,7 +1265,7 @@ int
 2ndline_mbc
 </td>
 <td style="text-align:right;">
-264
+234
 </td>
 </tr>
 <tr>
@@ -1296,7 +1298,7 @@ noint
 ttot.early
 </td>
 <td style="text-align:right;">
-1977
+1975
 </td>
 </tr>
 <tr>
@@ -1307,7 +1309,7 @@ noint
 idfs
 </td>
 <td style="text-align:right;">
-1975
+1968
 </td>
 </tr>
 <tr>
@@ -1318,7 +1320,7 @@ noint
 remission
 </td>
 <td style="text-align:right;">
-1591
+1595
 </td>
 </tr>
 <tr>
@@ -1329,7 +1331,7 @@ noint
 ae
 </td>
 <td style="text-align:right;">
-1333
+1444
 </td>
 </tr>
 <tr>
@@ -1340,7 +1342,7 @@ noint
 recurrence
 </td>
 <td style="text-align:right;">
-1206
+1198
 </td>
 </tr>
 <tr>
@@ -1351,7 +1353,7 @@ noint
 ttot
 </td>
 <td style="text-align:right;">
-466
+447
 </td>
 </tr>
 <tr>
@@ -1362,7 +1364,7 @@ noint
 progression.mbc
 </td>
 <td style="text-align:right;">
-464
+439
 </td>
 </tr>
 <tr>
@@ -1373,7 +1375,7 @@ noint
 start.early.mbc
 </td>
 <td style="text-align:right;">
-361
+356
 </td>
 </tr>
 <tr>
@@ -1384,7 +1386,7 @@ noint
 2ndline_mbc
 </td>
 <td style="text-align:right;">
-204
+209
 </td>
 </tr>
 </tbody>
@@ -1394,8 +1396,8 @@ noint
 <h2 class="hasAnchor">
 <a href="#plots" class="anchor"></a>Plots</h2>
 <p>We now use the data output to plot the histograms/densities of the simulation.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
+<div class="sourceCode" id="cb10"><pre class="downlit">
+
 <span class="va">data_plot</span> <span class="op">&lt;-</span> <span class="va">results</span><span class="op">$</span><span class="va">final_output</span><span class="op">$</span><span class="va">merged_df</span> <span class="op">%&gt;%</span>
   <span class="co"># mutate(evttime = ifelse(evttime &gt; 99, NA, evttime)) %&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">evtname</span> <span class="op">!=</span> <span class="st">"start"</span><span class="op">)</span> <span class="op">%&gt;%</span>
@@ -1411,11 +1413,11 @@ noint
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span><span class="op">(</span> <span class="op">~</span> <span class="va">evtname</span>, scales <span class="op">=</span> <span class="st">"free_y"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_continuous</a></span><span class="op">(</span>expand <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_continuous</a></span><span class="op">(</span>expand <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span></pre></div>
 <p><img src="example_eBC_files/figure-html/post-processing_plots1-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>We can also plot the patient level QALY/costs. Note that there are several clusters in the distribution of patients according to their QALY/costs based on the pathway they took (early metastatic vs. remission and cure or recurrence).</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
+<div class="sourceCode" id="cb11"><pre class="downlit">
+
 <span class="va">data_qaly_cost</span><span class="op">&lt;-</span> <span class="va">psa_ipd</span><span class="op">[</span>,<span class="va">.SD</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,by<span class="op">=</span><span class="fu">.</span><span class="op">(</span><span class="va">pat_id</span>,<span class="va">trt</span>,<span class="va">simulation</span><span class="op">)</span><span class="op">]</span><span class="op">[</span>,<span class="fu">.</span><span class="op">(</span><span class="va">trt</span>,qaly<span class="op">=</span><span class="va">total_qalys</span>,cost<span class="op">=</span><span class="va">total_costs</span>,<span class="va">pat_id</span>,<span class="va">simulation</span><span class="op">)</span><span class="op">]</span>
 <span class="va">data_qaly_cost</span><span class="op">[</span>,<span class="va">ps_id</span><span class="op">:=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">pat_id</span>,<span class="va">simulation</span>,sep<span class="op">=</span><span class="st">"_"</span><span class="op">)</span><span class="op">]</span>
 
@@ -1428,7 +1430,7 @@ noint
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_continuous</a></span><span class="op">(</span>expand <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_continuous</a></span><span class="op">(</span>expand <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span><span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">90</span>, vjust <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">90</span>, vjust <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span><span class="op">)</span></pre></div>
 <p><img src="example_eBC_files/figure-html/post-processing_plots-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 </div>

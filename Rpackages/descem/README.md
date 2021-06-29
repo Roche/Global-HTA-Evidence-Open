@@ -1,19 +1,13 @@
 
-# Discrete Event Simulation for Cost-Effectiveness Modeling
-
-<!-- badges: start -->
-
-[![R build
-status](https://github.com/hesim-dev/hesim/workflows/R-CMD-check/badge.svg)](https://github.roche.com/MORSE/DESforCEM)
-<!-- badges: end -->
+# descem: Discrete Event Simulation for Cost-Effectiveness Modeling
 
 ## Introduction
 
-`DESforCEM` is a user-friendly package that facilitates the use of
-discrete event simulations without resource constraints for
-cost-effectiveness analysis. The package supports a flexible, practical
-approach to discrete event simulation while keeping an acceptable
-performance through the use of parallel computing.
+`descem` is a user-friendly package that facilitates the use of discrete
+event simulations without resource constraints for cost-effectiveness
+analysis. The package supports a flexible, practical approach to
+discrete event simulation while keeping an acceptable performance
+through the use of parallel computing.
 
 The current version supports:
 
@@ -31,18 +25,24 @@ The current version supports:
 
 It is recommended that the user checks the vignettes, first the simple
 Sick-Sicker-Dead model [Sick-Sicker-Dead
-model](https://r.roche.com/s/a05ab15d44940de03bbbf/files/DESforCEM/docs/articles/example_ssd.html)
+model](https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/descem/docs/articles/example_ssd.html)
 and then the more complex model for [early breast
-cancer](https://r.roche.com/s/a05ab15d44940de03bbbf/files/DESforCEM/docs/articles/example_eBC.html).
+cancer](https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/descem/docs/articles/example_eBC.html).
 The
-[markov](https://r.roche.com/s/a05ab15d44940de03bbbf/files/DESforCEM/docs/articles/example_markov.html)
+[markov](https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/descem/docs/articles/example_markov.html)
 example shows how to run a cohort Markov model while using the same
 modeling framework. Similarly, a simulation based Markov model could be
 run.
 
+## Documentation
+
+Have a look at the [package home
+site](https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/descem/docs/index.html)
+for more details on documentation and specific tutorials.
+
 ## Installation
 
-descem can the be installed directly from this repo via
+`descem` can the be installed directly from this repo via
 
 ``` r
 # install.packages("devtools")
