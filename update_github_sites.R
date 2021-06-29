@@ -124,7 +124,7 @@ pkgdown::build_site(pkg = "Rpackages/descem")
 # Note as the vignettes for descem can take a long time to run it is
 # also possible just to update partial sections by just running the 
 # below functions without regenerating the vignettes
-pkgdown::build_home(pkg = "Rpackages/descems")
+pkgdown::build_home(pkg = "Rpackages/descem")
 pkgdown::build_reference(pkg = "Rpackages/descem")
 pkgdown::build_articles_index(pkg = "Rpackages/descem")
 

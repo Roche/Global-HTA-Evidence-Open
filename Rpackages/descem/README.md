@@ -40,6 +40,9 @@ Have a look at the [package home
 site](https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/descem/docs/index.html)
 for more details on documentation and specific tutorials.
 
+For more details on the code, check our [Github
+repository](https://github.com/Roche/Global-HTA-Evidence-Open/tree/master/Rpackages/descem).
+
 ## Installation
 
 `descem` can the be installed directly from this repo via
