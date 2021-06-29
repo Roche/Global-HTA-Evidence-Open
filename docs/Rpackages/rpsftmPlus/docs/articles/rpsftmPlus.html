@@ -45,7 +45,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fa fa-home"></span>
+    <span class="fas fa-home"></span>
      
   </a>
 </li>
@@ -63,10 +63,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/MAIC/docs/index.html">MAIC</a>
+      <a href="https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/flexsurvPlus/docs/index.html">flexsurvPlus</a>
     </li>
     <li>
       <a href="https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/gemtcPlus/docs/index.html">gemtcPlus</a>
+    </li>
+    <li>
+      <a href="https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/MAIC/docs/index.html">MAIC</a>
     </li>
     <li>
       <a href="https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/rpsftmPlus/docs/index.html">rpsftmPlus</a>
@@ -77,7 +80,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/Roche/Global-HTA-Evidence-Open/tree/master/Rpackages/rpsftmPlus">
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -91,8 +94,7 @@
 
       
 
-      </header><link href="rpsftmPlus_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
-<script src="rpsftmPlus_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
+      </header><script src="rpsftmPlus_files/header-attrs-2.6/header-attrs.js"></script><script src="rpsftmPlus_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>rpsftmPlus-vignette</h1>
@@ -249,11 +251,9 @@
 <a href="#exposure-plot-patient-profile" class="anchor"></a>Exposure Plot (patient profile)</h2>
 <p>The first plot to review shows the exposure to experimental treatment in control arm prior to event or censoring. This assumes only a single switch per patient (either control -&gt; experimental or experimental -&gt; control respectively. Each line represents a single patîent.</p>
 <div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="fu"><a href="../reference/ggexposure.html">ggexposure</a></span>(<span class="no">imm.fit</span>)
-<span class="co">#&gt; Warning: `transmute_()` is deprecated as of dplyr 0.7.0.</span>
+<span class="co">#&gt; Warning: `transmute_()` was deprecated in dplyr 0.7.0.</span>
 <span class="co">#&gt; Please use `transmute()` instead.</span>
-<span class="co">#&gt; See vignette('programming') for more help</span>
-<span class="co">#&gt; This warning is displayed once every 8 hours.</span>
-<span class="co">#&gt; Call `lifecycle::last_warnings()` to see where this warning was generated.</span></pre></body></html></div>
+<span class="co">#&gt; See vignette('programming') for more help</span></pre></body></html></div>
 <p><img src="rpsftmPlus_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
 </div>
 <div id="at-risk-plot-and-table" class="section level2">
@@ -356,10 +356,8 @@
 <a href="#discount-plot" class="anchor"></a>Discount Plot</h2>
 <p>This plot allows an assessment of the impact of switching. It shows hypothetical results for different levels of discount. A flat line indicates no impact of switching on results while a sloping line indicates that the switch does affect the results.</p>
 <div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="fu"><a href="../reference/ggdiscount.html">ggdiscount</a></span>(<span class="no">imm.fit</span>)
-<span class="co">#&gt; Warning: `data_frame()` is deprecated as of tibble 1.1.0.</span>
-<span class="co">#&gt; Please use `tibble()` instead.</span>
-<span class="co">#&gt; This warning is displayed once every 8 hours.</span>
-<span class="co">#&gt; Call `lifecycle::last_warnings()` to see where this warning was generated.</span></pre></body></html></div>
+<span class="co">#&gt; Warning: `data_frame()` was deprecated in tibble 1.1.0.</span>
+<span class="co">#&gt; Please use `tibble()` instead.</span></pre></body></html></div>
 <p><img src="rpsftmPlus_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 </div>
 </div>

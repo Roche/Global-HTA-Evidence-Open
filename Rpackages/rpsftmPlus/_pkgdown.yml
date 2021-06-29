@@ -21,6 +21,8 @@ navbar:
           href: https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/MAIC/docs/index.html          
         - text: "rpsftmPlus"
           href: https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/rpsftmPlus/docs/index.html
+        - text: "descem"
+          href: https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/descem/docs/index.html
    right:
     - icon: fa-github
       href: https://github.com/Roche/Global-HTA-Evidence-Open/tree/master/Rpackages/rpsftmPlus

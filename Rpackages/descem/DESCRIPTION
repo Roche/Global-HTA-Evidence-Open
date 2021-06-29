@@ -1,5 +1,5 @@
 Package: descem
-Title: Provides functions to conduct discrete event simulation for cost-effectiveness modelling
+Title: Discrete Event Simulation for Cost-Effectiveness Modelling
 Version: 0.1
 Authors@R: 
     c(person(given = "Valerie",
@@ -12,7 +12,7 @@ Authors@R:
            role = c("aut"),
            email = "javier.sanchez_alvarez@roche.com ",
            comment = ""))
-Description: A group of functions designed to perform discrete event simulation for cost-effectiveness modelling.
+Description: A package designed to perform discrete event simulation for cost-effectiveness modelling.
 License: Apache License 2.0
 Encoding: UTF-8
 LazyData: true
