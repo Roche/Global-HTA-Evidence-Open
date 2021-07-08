@@ -45,7 +45,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa-home"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
@@ -74,13 +74,16 @@
     <li>
       <a href="https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/rpsftmPlus/docs/index.html">rpsftmPlus</a>
     </li>
+    <li>
+      <a href="https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/descem/docs/index.html">descem</a>
+    </li>
   </ul>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/Roche/Global-HTA-Evidence-Open/tree/master/Rpackages/flexsurvPlus">
-    <span class="fas fa-github"></span>
+    <span class="fa fa-github"></span>
      
   </a>
 </li>
@@ -94,13 +97,14 @@
 
       
 
-      </header><script src="Survival_analysis_theory_files/header-attrs-2.6/header-attrs.js"></script><script src="Survival_analysis_theory_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><script src="Survival_analysis_theory_files/header-attrs-2.5/header-attrs.js"></script><script src="Survival_analysis_theory_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="Survival_analysis_theory_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
+<script src="Survival_analysis_theory_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Parametric survival analysis using the flexsurvPlus package: understanding the theory</h1>
                         <h4 class="author">Roche</h4>
             
-            <h4 class="date">2021-05-20</h4>
+            <h4 class="date">2021-07-08</h4>
       
       
       <div class="hidden name"><code>Survival_analysis_theory.Rmd</code></div>
@@ -1034,7 +1038,7 @@ Sdlog parameter
 <p>uses the flexsurv package to fit two gamma models (one to data for the intervention treatment and one to data for the reference treatment). The R code for the fitted models is as follows:</p>
 <p><code>flexsurvreg(formula = Surv(Time, Event)~1, data =</code> <em>data for intervention treatment </em><code>, dist = "gamma")</code> <code>flexsurvreg(formula = Surv(Time, Event)~1, data =</code> <em>data for reference treatment </em><code>, dist = "gamma")</code></p>
 <p>Estimation of the rate and shape parameters from each of these models can be then used within the following Excel formula to estimate survival at different time points:</p>
-<p><code>1-((EXP(GAMMALN(rate)) * GAMMA.DIST(shape * time,rate,1,TRUE))/GAMMA(rate)</code></p>
+<p><code>1-GAMMA.DIST(time, shape, 1/(rate),TRUE)</code></p>
 <p>This is equivalent to running the following code in R:</p>
 <p><code>summary(</code> <em>flexsurvreg gamma model </em><code>, type="survival", B=0, t=time)</code></p>
 </div>
@@ -1090,7 +1094,7 @@ Shape parameter
 </tbody>
 </table>
 <p>Survival can then be estimated in Excel using the rate and shape parameters specific to each treatment with formula:</p>
-<p><code>1-((EXP(GAMMALN(rate)) * GAMMA.DIST(shape * time,rate,1,TRUE))/GAMMA(rate)</code></p>
+<p><code>1-GAMMA.DIST(time, shape, 1/(rate),TRUE)</code></p>
 <p>This is equivalent to running the following code in R:</p>
 <p><code>summary(</code> <em>flexsurvreg gamma model </em><code>, type="survival", B=0, t=time)</code></p>
 </div>
@@ -1146,7 +1150,7 @@ Shape parameter
 </tbody>
 </table>
 <p>Survival can then be estimated in Excel using the rate and shape parameters specific to each treatment with formula:</p>
-<p><code>1-((EXP(GAMMALN(rate)) * GAMMA.DIST(shape * time,rate,1,TRUE))/GAMMA(rate)</code></p>
+<p><code>1-GAMMA.DIST(time, shape, 1/(rate),TRUE)</code></p>
 <p>This is equivalent to running the following code in R:</p>
 <p><code>summary(</code> <em>flexsurvreg gamma model </em><code>, type="survival", B=0, t=time)</code></p>
 </div>
@@ -1532,7 +1536,7 @@ P coefficient
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

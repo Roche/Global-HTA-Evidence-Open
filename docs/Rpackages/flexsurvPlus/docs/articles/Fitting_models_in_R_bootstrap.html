@@ -45,7 +45,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa-home"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
@@ -74,13 +74,16 @@
     <li>
       <a href="https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/rpsftmPlus/docs/index.html">rpsftmPlus</a>
     </li>
+    <li>
+      <a href="https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/descem/docs/index.html">descem</a>
+    </li>
   </ul>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/Roche/Global-HTA-Evidence-Open/tree/master/Rpackages/flexsurvPlus">
-    <span class="fas fa-github"></span>
+    <span class="fa fa-github"></span>
      
   </a>
 </li>
@@ -94,13 +97,14 @@
 
       
 
-      </header><script src="Fitting_models_in_R_bootstrap_files/header-attrs-2.6/header-attrs.js"></script><script src="Fitting_models_in_R_bootstrap_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><script src="Fitting_models_in_R_bootstrap_files/header-attrs-2.5/header-attrs.js"></script><script src="Fitting_models_in_R_bootstrap_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="Fitting_models_in_R_bootstrap_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
+<script src="Fitting_models_in_R_bootstrap_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>PSA and correlated endpoints (bootstrap approach)</h1>
                         <h4 class="author">Roche</h4>
             
-            <h4 class="date">2021-05-20</h4>
+            <h4 class="date">2021-07-08</h4>
       
       
       <div class="hidden name"><code>Fitting_models_in_R_bootstrap.Rmd</code></div>
@@ -147,13 +151,14 @@ pre { /* Code block - determines code spacing between lines */
 <h2 class="hasAnchor">
 <a href="#install-packages" class="anchor"></a>Install packages</h2>
 <p>The following packages are required to run this example:</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">flexsurvPlus</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tibble</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">survival</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidyr</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">boot</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggplot2</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">flexsurvPlus</span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tibble.tidyverse.org/">tibble</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/therneau/survival">survival</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org">tidyr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">boot</span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></pre></div>
 </div>
 <div id="read-in-the-data" class="section level2">
 <h2 class="hasAnchor">
@@ -165,51 +170,54 @@ pre { /* Code block - determines code spacing between lines */
 <li>Event - a binary variable (event=1, censor=0)</li>
 </ul>
 <p>In this example, we use overall survival (OS) and progression-free survival (PFS). For the purposes of this example we will look at only a single arm trial.</p>
-<div class="sourceCode" id="cb2"><html><body><pre class="r">
+<div class="sourceCode" id="cb2"><pre class="downlit">
+
 
 <span class="co"># simulate data with a medium correlation between PFS &amp; OS on the patient level</span>
-<span class="no">adtte</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/sim_adtte.html">sim_adtte</a></span>(<span class="kw">seed</span> <span class="kw">=</span> <span class="fl">2020</span>, <span class="co"># for reproducibility</span>
-                   <span class="kw">rho</span> <span class="kw">=</span> <span class="fl">0.6</span> <span class="co"># defines a correlation on underlying survival times</span>
-                   )
+<span class="va">adtte</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sim_adtte.html">sim_adtte</a></span><span class="op">(</span>seed <span class="op">=</span> <span class="fl">2020</span>, <span class="co"># for reproducibility</span>
+                   rho <span class="op">=</span> <span class="fl">0.6</span> <span class="co"># defines a correlation on underlying survival times</span>
+                   <span class="op">)</span> 
 
 <span class="co"># subset OS data for reference arm and rename</span>
-<span class="no">OS_data</span> <span class="kw">&lt;-</span> <span class="no">adtte</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">PARAMCD</span><span class="kw">==</span><span class="st">"OS"</span>, <span class="no">ARMCD</span> <span class="kw">==</span> <span class="st">"A"</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">transmute</a></span>(<span class="no">USUBJID</span>,
-            <span class="kw">OS_days</span> <span class="kw">=</span> <span class="no">AVAL</span>,
-            <span class="kw">OS_event</span> <span class="kw">=</span> <span class="fl">1</span>- <span class="no">CNSR</span>
-  )
+<span class="va">OS_data</span> <span class="op">&lt;-</span> <span class="va">adtte</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">PARAMCD</span><span class="op">==</span><span class="st">"OS"</span>, <span class="va">ARMCD</span> <span class="op">==</span> <span class="st">"A"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">transmute</a></span><span class="op">(</span><span class="va">USUBJID</span>,
+            OS_days <span class="op">=</span> <span class="va">AVAL</span>,
+            OS_event <span class="op">=</span> <span class="fl">1</span><span class="op">-</span> <span class="va">CNSR</span>
+  <span class="op">)</span>
 
 <span class="co"># subset PFS data for reference arm and rename</span>
-<span class="no">PFS_data</span> <span class="kw">&lt;-</span> <span class="no">adtte</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">PARAMCD</span><span class="kw">==</span><span class="st">"PFS"</span>, <span class="no">ARMCD</span> <span class="kw">==</span> <span class="st">"A"</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">transmute</a></span>(<span class="no">USUBJID</span>,
-            <span class="kw">PFS_days</span> <span class="kw">=</span> <span class="no">AVAL</span>,
-            <span class="kw">PFS_event</span> <span class="kw">=</span> <span class="fl">1</span>- <span class="no">CNSR</span>
-  )
+<span class="va">PFS_data</span> <span class="op">&lt;-</span> <span class="va">adtte</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">PARAMCD</span><span class="op">==</span><span class="st">"PFS"</span>, <span class="va">ARMCD</span> <span class="op">==</span> <span class="st">"A"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">transmute</a></span><span class="op">(</span><span class="va">USUBJID</span>,
+            PFS_days <span class="op">=</span> <span class="va">AVAL</span>,
+            PFS_event <span class="op">=</span> <span class="fl">1</span><span class="op">-</span> <span class="va">CNSR</span>
+  <span class="op">)</span>
 
-<span class="no">analysis_data</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span>(<span class="no">OS_data</span>, <span class="no">PFS_data</span>, <span class="kw">by</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"USUBJID"</span>))</pre></body></html></div>
+<span class="va">analysis_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span><span class="va">OS_data</span>, <span class="va">PFS_data</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"USUBJID"</span><span class="op">)</span><span class="op">)</span></pre></div>
 <p>The Kaplan-Meier curves are plotted below.</p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="no">km.est.PFS</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/survival/man/survfit.html">survfit</a></span>(<span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html">Surv</a></span>(<span class="no">PFS_days</span>, <span class="no">PFS_event</span>) ~ <span class="fl">1</span>,
-                      <span class="kw">data</span> <span class="kw">=</span> <span class="no">analysis_data</span>)
+<div class="sourceCode" id="cb3"><pre class="downlit">
+<span class="va">km.est.PFS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/survival/man/survfit.html">survfit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html">Surv</a></span><span class="op">(</span><span class="va">PFS_days</span>, <span class="va">PFS_event</span><span class="op">)</span> <span class="op">~</span> <span class="fl">1</span>, 
+                      data <span class="op">=</span> <span class="va">analysis_data</span><span class="op">)</span>
 
-<span class="no">km.est.OS</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/survival/man/survfit.html">survfit</a></span>(<span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html">Surv</a></span>(<span class="no">OS_days</span>, <span class="no">OS_event</span>) ~ <span class="fl">1</span>,
-                      <span class="kw">data</span> <span class="kw">=</span> <span class="no">analysis_data</span>)
-<span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span>(<span class="kw">mfrow</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>,<span class="fl">2</span>))
+<span class="va">km.est.OS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/survival/man/survfit.html">survfit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html">Surv</a></span><span class="op">(</span><span class="va">OS_days</span>, <span class="va">OS_event</span><span class="op">)</span> <span class="op">~</span> <span class="fl">1</span>, 
+                      data <span class="op">=</span> <span class="va">analysis_data</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>mfrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># Plot Kaplan-Meier</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="no">km.est.PFS</span>,
-     <span class="kw">xlab</span> <span class="kw">=</span> <span class="st">"Time (Days)"</span>, <span class="co"># x-axis label</span>
-     <span class="kw">ylab</span> <span class="kw">=</span> <span class="st">"Progression-free survival"</span>, <span class="co"># y-axis label</span>
-     <span class="kw">xlim</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0</span>, <span class="fl">800</span>))
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">km.est.PFS</span>,
+     xlab <span class="op">=</span> <span class="st">"Time (Days)"</span>, <span class="co"># x-axis label</span>
+     ylab <span class="op">=</span> <span class="st">"Progression-free survival"</span>, <span class="co"># y-axis label</span>
+     xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">800</span><span class="op">)</span><span class="op">)</span> 
 
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="no">km.est.OS</span>,
-     <span class="kw">xlab</span> <span class="kw">=</span> <span class="st">"Time (Days)"</span>, <span class="co"># x-axis label</span>
-     <span class="kw">ylab</span> <span class="kw">=</span> <span class="st">"Overall survival"</span>, <span class="co"># y-axis label</span>
-     <span class="kw">xlim</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0</span>, <span class="fl">800</span>))</pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">km.est.OS</span>,
+     xlab <span class="op">=</span> <span class="st">"Time (Days)"</span>, <span class="co"># x-axis label</span>
+     ylab <span class="op">=</span> <span class="st">"Overall survival"</span>, <span class="co"># y-axis label</span>
+     xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">800</span><span class="op">)</span><span class="op">)</span> </pre></div>
 <p><img src="Fitting_models_in_R_bootstrap_files/figure-html/unnamed-chunk-4-1.png" width="864"></p>
-<div class="sourceCode" id="cb4"><html><body><pre class="r">
-<span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span>(<span class="kw">mfrow</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>,<span class="fl">1</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb4"><pre class="downlit">
+
+<span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>mfrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span></pre></div>
 </div>
 </div>
 <div id="bootstrapping-the-endpoints" class="section level1">
@@ -220,121 +228,126 @@ pre { /* Code block - determines code spacing between lines */
 <h2 class="hasAnchor">
 <a href="#ignoring-correlation-between-endpoints" class="anchor"></a>Ignoring correlation between endpoints</h2>
 <p>If we are not concerned about correlations between endpoints we can generate independent samples for OS and PFS as shown below.</p>
-<div class="sourceCode" id="cb5"><html><body><pre class="r">
+<div class="sourceCode" id="cb5"><pre class="downlit">
+
 <span class="co"># fix a seed for the sampling</span>
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">2358</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">2358</span><span class="op">)</span>
 
 <span class="co"># define a number of samples to generate. For illustration 100 are taken</span>
 <span class="co"># In practice a larger number is preferable.</span>
-<span class="no">n.sim</span> <span class="kw">&lt;-</span> <span class="fl">100</span>
+<span class="va">n.sim</span> <span class="op">&lt;-</span> <span class="fl">100</span>
 
-<span class="no">PSM_bootstraps_PFS</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/boot/man/boot.html">boot</a></span>(
-  <span class="kw">statistic</span> <span class="kw">=</span> <span class="no">bootPSM</span>, <span class="co"># bootstrap function</span>
-  <span class="kw">R</span><span class="kw">=</span><span class="no">n.sim</span>, <span class="co"># number of bootstrap samples</span>
-  <span class="kw">data</span><span class="kw">=</span><span class="no">analysis_data</span>, <span class="co"># the dataset</span>
-  <span class="kw">time_var</span><span class="kw">=</span><span class="st">"PFS_days"</span>, <span class="co"># the time variable</span>
-  <span class="kw">event_var</span><span class="kw">=</span><span class="st">"PFS_event"</span>, <span class="co"># the event variable coded as 1 for event</span>
-  <span class="kw">model.type</span><span class="kw">=</span> <span class="st">"One arm"</span>,
-  <span class="kw">distr</span> <span class="kw">=</span> <span class="st">"weibull"</span>, <span class="co"># for speed we only fit a single model but multiple could be specified,</span>
-  <span class="kw">int_name</span> <span class="kw">=</span> <span class="st">"A"</span>  <span class="co"># needed for one arm even as essential meta data</span>
-)
+<span class="va">PSM_bootstraps_PFS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/boot/man/boot.html">boot</a></span><span class="op">(</span>
+  statistic <span class="op">=</span> <span class="va">bootPSM</span>, <span class="co"># bootstrap function</span>
+  R<span class="op">=</span><span class="va">n.sim</span>, <span class="co"># number of bootstrap samples</span>
+  data<span class="op">=</span><span class="va">analysis_data</span>, <span class="co"># the dataset</span>
+  time_var<span class="op">=</span><span class="st">"PFS_days"</span>, <span class="co"># the time variable</span>
+  event_var<span class="op">=</span><span class="st">"PFS_event"</span>, <span class="co"># the event variable coded as 1 for event</span>
+  model.type<span class="op">=</span> <span class="st">"One arm"</span>, 
+  distr <span class="op">=</span> <span class="st">"weibull"</span>, <span class="co"># for speed we only fit a single model but multiple could be specified,</span>
+  int_name <span class="op">=</span> <span class="st">"A"</span>  <span class="co"># needed for one arm even as essential meta data</span>
+<span class="op">)</span>
 
-<span class="no">PSM_bootstraps_OS</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/boot/man/boot.html">boot</a></span>(
-  <span class="kw">statistic</span> <span class="kw">=</span> <span class="no">bootPSM</span>, <span class="co"># bootstrap function</span>
-  <span class="kw">R</span><span class="kw">=</span><span class="no">n.sim</span>, <span class="co"># number of bootstrap samples</span>
-  <span class="kw">data</span><span class="kw">=</span><span class="no">analysis_data</span>, <span class="co"># the dataset</span>
-  <span class="kw">time_var</span><span class="kw">=</span><span class="st">"OS_days"</span>,  <span class="co"># the time variable</span>
-  <span class="kw">event_var</span><span class="kw">=</span><span class="st">"OS_event"</span>, <span class="co"># the event variable coded as 1 for event</span>
-  <span class="kw">model.type</span><span class="kw">=</span><span class="st">"One arm"</span>, <span class="co"># again for speed only a single model is specified</span>
-  <span class="kw">distr</span> <span class="kw">=</span> <span class="st">"gamma"</span>,
-  <span class="kw">int_name</span> <span class="kw">=</span> <span class="st">"A"</span>  <span class="co"># needed for one arm even as essential meta data</span>
-)</pre></body></html></div>
+<span class="va">PSM_bootstraps_OS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/boot/man/boot.html">boot</a></span><span class="op">(</span>
+  statistic <span class="op">=</span> <span class="va">bootPSM</span>, <span class="co"># bootstrap function</span>
+  R<span class="op">=</span><span class="va">n.sim</span>, <span class="co"># number of bootstrap samples</span>
+  data<span class="op">=</span><span class="va">analysis_data</span>, <span class="co"># the dataset</span>
+  time_var<span class="op">=</span><span class="st">"OS_days"</span>,  <span class="co"># the time variable</span>
+  event_var<span class="op">=</span><span class="st">"OS_event"</span>, <span class="co"># the event variable coded as 1 for event</span>
+  model.type<span class="op">=</span><span class="st">"One arm"</span>, <span class="co"># again for speed only a single model is specified</span>
+  distr <span class="op">=</span> <span class="st">"gamma"</span>, 
+  int_name <span class="op">=</span> <span class="st">"A"</span>  <span class="co"># needed for one arm even as essential meta data</span>
+<span class="op">)</span></pre></div>
 <p>We can see these are using different bootstrap samples by looking at the bootstrap indexes. This is equivalent to performing PSA for OS and PFS independently in an Excel based model using two independent covariance matrices.</p>
-<div class="sourceCode" id="cb6"><html><body><pre class="r">
-<span class="no">index_PFS</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/boot/man/boot.array.html">boot.array</a></span>(<span class="no">PSM_bootstraps_PFS</span>, <span class="kw">indices</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
-<span class="no">index_OS</span>  <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/boot/man/boot.array.html">boot.array</a></span>(<span class="no">PSM_bootstraps_OS</span>, <span class="kw">indices</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
+<div class="sourceCode" id="cb6"><pre class="downlit">
 
-<span class="fu"><a href="https://rdrr.io/r/base/all.html">all</a></span>(<span class="no">index_OS</span> <span class="kw">==</span> <span class="no">index_PFS</span>)
-<span class="co">#&gt; [1] FALSE</span></pre></body></html></div>
+<span class="va">index_PFS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/boot/man/boot.array.html">boot.array</a></span><span class="op">(</span><span class="va">PSM_bootstraps_PFS</span>, indices <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="va">index_OS</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/boot/man/boot.array.html">boot.array</a></span><span class="op">(</span><span class="va">PSM_bootstraps_OS</span>, indices <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+
+<span class="fu"><a href="https://rdrr.io/r/base/all.html">all</a></span><span class="op">(</span><span class="va">index_OS</span> <span class="op">==</span> <span class="va">index_PFS</span><span class="op">)</span>
+<span class="co">#&gt; [1] FALSE</span></pre></div>
 </div>
 <div id="considering-correlation-between-endpoints" class="section level2">
 <h2 class="hasAnchor">
 <a href="#considering-correlation-between-endpoints" class="anchor"></a>Considering correlation between endpoints</h2>
 <p>If we want to maintain correlations between PFS and OS we need to use the same bootstrap samples for both the PFS and OS analysis. The easiest way to do this is to reuse the same seed before calling the boot function for the second endpoint. This use of a common seed means the same underlying random sampling process will be performed leading to a matching bootstrap sample.</p>
-<div class="sourceCode" id="cb7"><html><body><pre class="r">
+<div class="sourceCode" id="cb7"><pre class="downlit">
+
 <span class="co"># for illustration and speed only 100 samples used</span>
-<span class="no">n.sim</span> <span class="kw">&lt;-</span> <span class="fl">100</span>
+<span class="va">n.sim</span> <span class="op">&lt;-</span> <span class="fl">100</span>
 
 <span class="co"># define a seed that will affect the random numbers used by boot for sampling </span>
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">2020</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">2020</span><span class="op">)</span>
 
-<span class="no">PSM_bootstraps_PFScor</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/boot/man/boot.html">boot</a></span>(
-  <span class="kw">statistic</span> <span class="kw">=</span> <span class="no">bootPSM</span>, <span class="co"># bootstrap function</span>
-  <span class="kw">R</span><span class="kw">=</span><span class="no">n.sim</span>, <span class="co"># number of bootstrap samples</span>
-  <span class="kw">data</span><span class="kw">=</span><span class="no">analysis_data</span>, <span class="co"># the dataset</span>
-  <span class="kw">time_var</span><span class="kw">=</span><span class="st">"PFS_days"</span>, <span class="co"># the time variable</span>
-  <span class="kw">event_var</span><span class="kw">=</span><span class="st">"PFS_event"</span>, <span class="co"># the event variable coded as 1 for event</span>
-  <span class="kw">model.type</span><span class="kw">=</span> <span class="st">"One arm"</span>,
-  <span class="kw">distr</span> <span class="kw">=</span> <span class="st">"weibull"</span>, <span class="co"># for speed we only fit a single model but multiple could be specified,</span>
-  <span class="kw">int_name</span> <span class="kw">=</span> <span class="st">"A"</span>  <span class="co"># needed for one arm even as essential meta data</span>
-)
+<span class="va">PSM_bootstraps_PFScor</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/boot/man/boot.html">boot</a></span><span class="op">(</span>
+  statistic <span class="op">=</span> <span class="va">bootPSM</span>, <span class="co"># bootstrap function</span>
+  R<span class="op">=</span><span class="va">n.sim</span>, <span class="co"># number of bootstrap samples</span>
+  data<span class="op">=</span><span class="va">analysis_data</span>, <span class="co"># the dataset</span>
+  time_var<span class="op">=</span><span class="st">"PFS_days"</span>, <span class="co"># the time variable</span>
+  event_var<span class="op">=</span><span class="st">"PFS_event"</span>, <span class="co"># the event variable coded as 1 for event</span>
+  model.type<span class="op">=</span> <span class="st">"One arm"</span>, 
+  distr <span class="op">=</span> <span class="st">"weibull"</span>, <span class="co"># for speed we only fit a single model but multiple could be specified,</span>
+  int_name <span class="op">=</span> <span class="st">"A"</span>  <span class="co"># needed for one arm even as essential meta data</span>
+<span class="op">)</span>
 
 <span class="co"># reuse the same seed that will affect the random numbers used by boot for sampling </span>
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">2020</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">2020</span><span class="op">)</span>
 
-<span class="no">PSM_bootstraps_OScor</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/boot/man/boot.html">boot</a></span>(
-  <span class="kw">statistic</span> <span class="kw">=</span> <span class="no">bootPSM</span>, <span class="co"># bootstrap function</span>
-  <span class="kw">R</span><span class="kw">=</span><span class="no">n.sim</span>, <span class="co"># number of bootstrap samples</span>
-  <span class="kw">data</span><span class="kw">=</span><span class="no">analysis_data</span>, <span class="co"># the dataset</span>
-  <span class="kw">time_var</span><span class="kw">=</span><span class="st">"OS_days"</span>,  <span class="co"># the time variable</span>
-  <span class="kw">event_var</span><span class="kw">=</span><span class="st">"OS_event"</span>, <span class="co"># the event variable coded as 1 for event</span>
-  <span class="kw">model.type</span><span class="kw">=</span><span class="st">"One arm"</span>, <span class="co"># again for speed only a single model is specified</span>
-  <span class="kw">distr</span> <span class="kw">=</span> <span class="st">"gamma"</span>,
-  <span class="kw">int_name</span> <span class="kw">=</span> <span class="st">"A"</span>  <span class="co"># needed for one arm even as essential meta data</span>
-)</pre></body></html></div>
+<span class="va">PSM_bootstraps_OScor</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/boot/man/boot.html">boot</a></span><span class="op">(</span>
+  statistic <span class="op">=</span> <span class="va">bootPSM</span>, <span class="co"># bootstrap function</span>
+  R<span class="op">=</span><span class="va">n.sim</span>, <span class="co"># number of bootstrap samples</span>
+  data<span class="op">=</span><span class="va">analysis_data</span>, <span class="co"># the dataset</span>
+  time_var<span class="op">=</span><span class="st">"OS_days"</span>,  <span class="co"># the time variable</span>
+  event_var<span class="op">=</span><span class="st">"OS_event"</span>, <span class="co"># the event variable coded as 1 for event</span>
+  model.type<span class="op">=</span><span class="st">"One arm"</span>, <span class="co"># again for speed only a single model is specified</span>
+  distr <span class="op">=</span> <span class="st">"gamma"</span>, 
+  int_name <span class="op">=</span> <span class="st">"A"</span>  <span class="co"># needed for one arm even as essential meta data</span>
+<span class="op">)</span></pre></div>
 <p>We can check these are indeed using the same bootstrap samples by comparing the indexes selected. This means the associated bootstrap distributions for PFS and OS should remain correlated.</p>
-<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="co"># this returns the indexes selected in each sample</span>
-<span class="no">index_PFScor</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/boot/man/boot.array.html">boot.array</a></span>(<span class="no">PSM_bootstraps_PFScor</span>, <span class="kw">indices</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
-<span class="no">index_OScor</span>  <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/boot/man/boot.array.html">boot.array</a></span>(<span class="no">PSM_bootstraps_OScor</span>, <span class="kw">indices</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
+<div class="sourceCode" id="cb8"><pre class="downlit">
+<span class="co"># this returns the indexes selected in each sample</span>
+<span class="va">index_PFScor</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/boot/man/boot.array.html">boot.array</a></span><span class="op">(</span><span class="va">PSM_bootstraps_PFScor</span>, indices <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="va">index_OScor</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/boot/man/boot.array.html">boot.array</a></span><span class="op">(</span><span class="va">PSM_bootstraps_OScor</span>, indices <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 
 <span class="co"># as desired all match between the two sampled sets</span>
-<span class="fu"><a href="https://rdrr.io/r/base/all.html">all</a></span>(<span class="no">index_OScor</span> <span class="kw">==</span> <span class="no">index_PFScor</span>)
-<span class="co">#&gt; [1] TRUE</span></pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/r/base/all.html">all</a></span><span class="op">(</span><span class="va">index_OScor</span> <span class="op">==</span> <span class="va">index_PFScor</span><span class="op">)</span>
+<span class="co">#&gt; [1] TRUE</span></pre></div>
 </div>
 <div id="plotting-impact-of-accounting-for-correlations-between-endpoints" class="section level2">
 <h2 class="hasAnchor">
 <a href="#plotting-impact-of-accounting-for-correlations-between-endpoints" class="anchor"></a>Plotting impact of accounting for correlations between endpoints</h2>
 <p>To illustrate the impact of accounting for correlations between each endpoint in such PSA we will look at plotting the extrapolated mean PFS and mean OS for the reference arm. To do this we need to calculate the mean PFS and mean OS for the reference for each sample.</p>
-<div class="sourceCode" id="cb9"><html><body><pre class="r">
+<div class="sourceCode" id="cb9"><pre class="downlit">
+
 <span class="co"># first we need to preprocess the data a little bit</span>
 <span class="co"># first extract the bootstrapped parameters into tibbles</span>
-<span class="no">bootsamples_PFS</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span>(<span class="no">PSM_bootstraps_PFS</span>$<span class="no">t</span>)
+<span class="va">bootsamples_PFS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span><span class="op">(</span><span class="va">PSM_bootstraps_PFS</span><span class="op">$</span><span class="va">t</span><span class="op">)</span>
 <span class="co">#&gt; Warning: The `x` argument of `as_tibble.matrix()` must have unique column names if `.name_repair` is omitted as of tibble 2.0.0.</span>
 <span class="co">#&gt; Using compatibility `.name_repair`.</span>
-<span class="no">bootsamples_OS</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span>(<span class="no">PSM_bootstraps_OS</span>$<span class="no">t</span>)
-<span class="no">bootsamples_PFScor</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span>(<span class="no">PSM_bootstraps_PFScor</span>$<span class="no">t</span>)
-<span class="no">bootsamples_OScor</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span>(<span class="no">PSM_bootstraps_OScor</span>$<span class="no">t</span>)
+<span class="va">bootsamples_OS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span><span class="op">(</span><span class="va">PSM_bootstraps_OS</span><span class="op">$</span><span class="va">t</span><span class="op">)</span>
+<span class="va">bootsamples_PFScor</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span><span class="op">(</span><span class="va">PSM_bootstraps_PFScor</span><span class="op">$</span><span class="va">t</span><span class="op">)</span>
+<span class="va">bootsamples_OScor</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span><span class="op">(</span><span class="va">PSM_bootstraps_OScor</span><span class="op">$</span><span class="va">t</span><span class="op">)</span>
 
 <span class="co"># then add column names so can identify model and parameter more easily</span>
-<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span>(<span class="no">bootsamples_PFS</span>) <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="no">PSM_bootstraps_PFS</span>$<span class="no">t0</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span>(<span class="no">bootsamples_OS</span>) <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="no">PSM_bootstraps_OS</span>$<span class="no">t0</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span>(<span class="no">bootsamples_PFScor</span>) <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="no">PSM_bootstraps_PFScor</span>$<span class="no">t0</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span>(<span class="no">bootsamples_OScor</span>) <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="no">PSM_bootstraps_OScor</span>$<span class="no">t0</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">bootsamples_PFS</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">PSM_bootstraps_PFS</span><span class="op">$</span><span class="va">t0</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">bootsamples_OS</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">PSM_bootstraps_OS</span><span class="op">$</span><span class="va">t0</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">bootsamples_PFScor</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">PSM_bootstraps_PFScor</span><span class="op">$</span><span class="va">t0</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">bootsamples_OScor</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">PSM_bootstraps_OScor</span><span class="op">$</span><span class="va">t0</span><span class="op">)</span>
 
 <span class="co"># we can then calculate extrapolated means for each sample</span>
 
-<span class="no">mean_PFS</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html">with</a></span>(<span class="no">bootsamples_PFS</span>, <span class="kw pkg">flexsurv</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/flexsurv/man/means.html">mean_weibull</a></span>(<span class="kw">scale</span> <span class="kw">=</span> <span class="no">onearm.weibull.scale.int</span>, <span class="kw">shape</span> <span class="kw">=</span> <span class="no">onearm.weibull.shape.int</span>))
-<span class="no">mean_OS</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html">with</a></span>(<span class="no">bootsamples_OS</span>, <span class="kw pkg">flexsurv</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/flexsurv/man/means.html">mean_gamma</a></span>(<span class="kw">shape</span> <span class="kw">=</span> <span class="no">onearm.gamma.shape.int</span>, <span class="kw">rate</span> <span class="kw">=</span> <span class="no">onearm.gamma.rate.int</span>))
-<span class="no">mean_PFScor</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html">with</a></span>(<span class="no">bootsamples_PFScor</span>, <span class="kw pkg">flexsurv</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/flexsurv/man/means.html">mean_weibull</a></span>(<span class="kw">scale</span> <span class="kw">=</span> <span class="no">onearm.weibull.scale.int</span>, <span class="kw">shape</span> <span class="kw">=</span> <span class="no">onearm.weibull.shape.int</span>))
-<span class="no">mean_OScor</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html">with</a></span>(<span class="no">bootsamples_OScor</span>, <span class="kw pkg">flexsurv</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/flexsurv/man/means.html">mean_gamma</a></span>(<span class="kw">shape</span> <span class="kw">=</span> <span class="no">onearm.gamma.shape.int</span>, <span class="kw">rate</span> <span class="kw">=</span> <span class="no">onearm.gamma.rate.int</span>))
+<span class="va">mean_PFS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html">with</a></span><span class="op">(</span><span class="va">bootsamples_PFS</span>, <span class="fu">flexsurv</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/flexsurv/man/means.html">mean_weibull</a></span><span class="op">(</span>scale <span class="op">=</span> <span class="va">onearm.weibull.scale.int</span>, shape <span class="op">=</span> <span class="va">onearm.weibull.shape.int</span><span class="op">)</span><span class="op">)</span>
+<span class="va">mean_OS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html">with</a></span><span class="op">(</span><span class="va">bootsamples_OS</span>, <span class="fu">flexsurv</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/flexsurv/man/means.html">mean_gamma</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">onearm.gamma.shape.int</span>, rate <span class="op">=</span> <span class="va">onearm.gamma.rate.int</span><span class="op">)</span><span class="op">)</span>
+<span class="va">mean_PFScor</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html">with</a></span><span class="op">(</span><span class="va">bootsamples_PFScor</span>, <span class="fu">flexsurv</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/flexsurv/man/means.html">mean_weibull</a></span><span class="op">(</span>scale <span class="op">=</span> <span class="va">onearm.weibull.scale.int</span>, shape <span class="op">=</span> <span class="va">onearm.weibull.shape.int</span><span class="op">)</span><span class="op">)</span>
+<span class="va">mean_OScor</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html">with</a></span><span class="op">(</span><span class="va">bootsamples_OScor</span>, <span class="fu">flexsurv</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/flexsurv/man/means.html">mean_gamma</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">onearm.gamma.shape.int</span>, rate <span class="op">=</span> <span class="va">onearm.gamma.rate.int</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># we can now combine in a tibble for plotting</span>
 
-<span class="no">means_both</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span>(<span class="kw">PFS</span> <span class="kw">=</span> <span class="no">mean_PFS</span>, <span class="kw">OS</span> <span class="kw">=</span> <span class="no">mean_OS</span>, <span class="kw">sample_id</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="no">n.sim</span>, <span class="kw">Bootstrap</span> <span class="kw">=</span> <span class="st">"uncorrelated"</span>)
-<span class="no">means_bothcor</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span>(<span class="kw">PFS</span> <span class="kw">=</span> <span class="no">mean_PFScor</span>, <span class="kw">OS</span> <span class="kw">=</span> <span class="no">mean_OScor</span>, <span class="kw">sample_id</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="no">n.sim</span>, <span class="kw">Bootstrap</span> <span class="kw">=</span> <span class="st">"correlated"</span>)
+<span class="va">means_both</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>PFS <span class="op">=</span> <span class="va">mean_PFS</span>, OS <span class="op">=</span> <span class="va">mean_OS</span>, sample_id <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">n.sim</span>, Bootstrap <span class="op">=</span> <span class="st">"uncorrelated"</span><span class="op">)</span>
+<span class="va">means_bothcor</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>PFS <span class="op">=</span> <span class="va">mean_PFScor</span>, OS <span class="op">=</span> <span class="va">mean_OScor</span>, sample_id <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">n.sim</span>, Bootstrap <span class="op">=</span> <span class="st">"correlated"</span><span class="op">)</span>
 
-<span class="no">plot_data</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span>(<span class="no">means_both</span>, <span class="no">means_bothcor</span>)
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">plot_data</span>)
+<span class="va">plot_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span><span class="va">means_both</span>, <span class="va">means_bothcor</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">plot_data</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 6 x 4</span>
 <span class="co">#&gt;     PFS    OS sample_id Bootstrap   </span>
 <span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt;     &lt;int&gt; &lt;chr&gt;       </span>
@@ -343,18 +356,19 @@ pre { /* Code block - determines code spacing between lines */
 <span class="co">#&gt; 3  215. 1268.         3 uncorrelated</span>
 <span class="co">#&gt; 4  199. 1069.         4 uncorrelated</span>
 <span class="co">#&gt; 5  216. 1077.         5 uncorrelated</span>
-<span class="co">#&gt; 6  204. 1094.         6 uncorrelated</span></pre></body></html></div>
+<span class="co">#&gt; 6  204. 1094.         6 uncorrelated</span></pre></div>
 <p>We can now plot this dataset and as expected the correlated bootstrap approach leads to mean estimates for PFS and OS that preserve the correlations in the underlying data. Here we use all bootstrap samples but in the context of an excel economic model we would perform PSA by randomly sampling sample_ID and using the same sample_ID for both PFS and OS in a single PSA run.</p>
-<div class="sourceCode" id="cb10"><html><body><pre class="r">
-<span class="no">plot_data</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">PFS</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">OS</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="no">Bootstrap</span>)) +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>() +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>() +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/stat_ellipse.html">stat_ellipse</a></span>() +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html">coord_cartesian</a></span>(<span class="kw">xlim</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">150</span>, <span class="fl">250</span>), <span class="kw">ylim</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">750</span>, <span class="fl">1750</span>)) +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">xlab</a></span>(<span class="st">"Mean (weibull) PFS days"</span>) +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ylab</a></span>(<span class="st">"Mean (gamma) OS days"</span>) +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"Each point is a bootstrap sample"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb10"><pre class="downlit">
+
+<span class="va">plot_data</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">PFS</span>, y <span class="op">=</span> <span class="va">OS</span>, color <span class="op">=</span> <span class="va">Bootstrap</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/stat_ellipse.html">stat_ellipse</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html">coord_cartesian</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">150</span>, <span class="fl">250</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">750</span>, <span class="fl">1750</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">xlab</a></span><span class="op">(</span><span class="st">"Mean (weibull) PFS days"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ylab</a></span><span class="op">(</span><span class="st">"Mean (gamma) OS days"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="st">"Each point is a bootstrap sample"</span><span class="op">)</span></pre></div>
 <p><img src="Fitting_models_in_R_bootstrap_files/figure-html/unnamed-chunk-10-1.png" width="864"></p>
 </div>
 </div>
@@ -375,7 +389,7 @@ pre { /* Code block - determines code spacing between lines */
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

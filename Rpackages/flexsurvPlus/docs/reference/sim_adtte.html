@@ -91,7 +91,7 @@ overall survival times. Optionally crossover from treatment arms can be simulate
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa-home"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
@@ -120,13 +120,16 @@ overall survival times. Optionally crossover from treatment arms can be simulate
     <li>
       <a href="https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/rpsftmPlus/docs/index.html">rpsftmPlus</a>
     </li>
+    <li>
+      <a href="https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/descem/docs/index.html">descem</a>
+    </li>
   </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/Roche/Global-HTA-Evidence-Open/tree/master/Rpackages/flexsurvPlus">
-    <span class="fas fa-github"></span>
+    <span class="fa fa-github"></span>
      
   </a>
 </li>
@@ -153,28 +156,28 @@ overall survival times. Optionally crossover from treatment arms can be simulate
 overall survival times. Optionally crossover from treatment arms can be simulated.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>sim_adtte</span>(
-  <span class='kw'>rc_siminfo</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>rc_origos</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>id</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>seed</span> <span class='kw'>=</span> <span class='fl'>1234</span>,
-  <span class='kw'>rho</span> <span class='kw'>=</span> <span class='fl'>0</span>,
-  <span class='kw'>pswitch</span> <span class='kw'>=</span> <span class='fl'>0</span>,
-  <span class='kw'>proppd</span> <span class='kw'>=</span> <span class='fl'>0</span>,
-  <span class='kw'>beta_1a</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span>(<span class='fl'>0.7</span>),
-  <span class='kw'>beta_1b</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span>(<span class='fl'>0.7</span>),
-  <span class='kw'>beta_2a</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span>(<span class='fl'>0.7</span>),
-  <span class='kw'>beta_2b</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span>(<span class='fl'>0.7</span>),
-  <span class='kw'>beta_pd</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span>(<span class='fl'>0.4</span>),
-  <span class='kw'>arm_n</span> <span class='kw'>=</span> <span class='fl'>250</span>,
-  <span class='kw'>enroll_start</span> <span class='kw'>=</span> <span class='fl'>0</span>,
-  <span class='kw'>enroll_end</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>admin_censor</span> <span class='kw'>=</span> <span class='fl'>2</span>,
-  <span class='kw'>os_gamma</span> <span class='kw'>=</span> <span class='fl'>1.2</span>,
-  <span class='kw'>os_lambda</span> <span class='kw'>=</span> <span class='fl'>0.3</span>,
-  <span class='kw'>ttp_gamma</span> <span class='kw'>=</span> <span class='fl'>1.5</span>,
-  <span class='kw'>ttp_lambda</span> <span class='kw'>=</span> <span class='fl'>2</span>
-)</pre>
+    <pre class="usage"><span class='fu'>sim_adtte</span><span class='op'>(</span>
+  rc_siminfo <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  rc_origos <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  id <span class='op'>=</span> <span class='fl'>1</span>,
+  seed <span class='op'>=</span> <span class='fl'>1234</span>,
+  rho <span class='op'>=</span> <span class='fl'>0</span>,
+  pswitch <span class='op'>=</span> <span class='fl'>0</span>,
+  proppd <span class='op'>=</span> <span class='fl'>0</span>,
+  beta_1a <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='fl'>0.7</span><span class='op'>)</span>,
+  beta_1b <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='fl'>0.7</span><span class='op'>)</span>,
+  beta_2a <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='fl'>0.7</span><span class='op'>)</span>,
+  beta_2b <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='fl'>0.7</span><span class='op'>)</span>,
+  beta_pd <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='fl'>0.4</span><span class='op'>)</span>,
+  arm_n <span class='op'>=</span> <span class='fl'>250</span>,
+  enroll_start <span class='op'>=</span> <span class='fl'>0</span>,
+  enroll_end <span class='op'>=</span> <span class='fl'>1</span>,
+  admin_censor <span class='op'>=</span> <span class='fl'>2</span>,
+  os_gamma <span class='op'>=</span> <span class='fl'>1.2</span>,
+  os_lambda <span class='op'>=</span> <span class='fl'>0.3</span>,
+  ttp_gamma <span class='op'>=</span> <span class='fl'>1.5</span>,
+  ttp_lambda <span class='op'>=</span> <span class='fl'>2</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -267,17 +270,21 @@ overall survival times. Optionally crossover from treatment arms can be simulate
 Austin, P.C. (2012), Generating survival times to simulate Cox proportional hazards models with time‐varying covariates. Statist. Med., 31: 3946-3958. https://doi.org/10.1002/sim.5452</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>require</a></span>(<span class='no'>survival</span>)</div><div class='output co'>#&gt; <span class='message'>Loading required package: survival</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>require</a></span>(<span class='no'>dplyr</span>)</div><div class='output co'>#&gt; <span class='message'>Loading required package: dplyr</span></div><div class='output co'>#&gt; <span class='message'></span>
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>require</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/therneau/survival'>survival</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>require</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Loading required package: dplyr</span></div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Attaching package: ‘dplyr’</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:stats’:</span>
 #&gt; <span class='message'></span>
 #&gt; <span class='message'>    filter, lag</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:base’:</span>
 #&gt; <span class='message'></span>
 #&gt; <span class='message'>    intersect, setdiff, setequal, union</span></div><div class='input'>
-<span class='no'>ADTTE</span> <span class='kw'>&lt;-</span> <span class='fu'>sim_adtte</span>()
-<span class='fu'><a href='https://rdrr.io/pkg/survival/man/survfit.html'>survfit</a></span>(<span class='fu'><a href='https://rdrr.io/pkg/survival/man/Surv.html'>Surv</a></span>(<span class='no'>AVAL</span>, <span class='kw'>event</span> <span class='kw'>=</span> <span class='no'>CNSR</span> <span class='kw'>==</span>  <span class='fl'>0</span>) ~ <span class='no'>ARM</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>ADTTE</span>, <span class='no'>PARAMCD</span> <span class='kw'>==</span> <span class='st'>"PFS"</span>)) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>()</div><div class='img'><img src='sim_adtte-1.png' alt='' width='700' height='433' /></div><div class='input'>
-<span class='fu'><a href='https://rdrr.io/pkg/survival/man/survfit.html'>survfit</a></span>(<span class='fu'><a href='https://rdrr.io/pkg/survival/man/Surv.html'>Surv</a></span>(<span class='no'>AVAL</span>, <span class='kw'>event</span> <span class='kw'>=</span> <span class='no'>CNSR</span> <span class='kw'>==</span>  <span class='fl'>0</span>) ~ <span class='no'>ARM</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>ADTTE</span>, <span class='no'>PARAMCD</span> <span class='kw'>==</span> <span class='st'>"OS"</span>)) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>()</div><div class='img'><img src='sim_adtte-2.png' alt='' width='700' height='433' /></div></pre>
+<span class='va'>ADTTE</span> <span class='op'>&lt;-</span> <span class='fu'>sim_adtte</span><span class='op'>(</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/pkg/survival/man/survfit.html'>survfit</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/pkg/survival/man/Surv.html'>Surv</a></span><span class='op'>(</span><span class='va'>AVAL</span>, event <span class='op'>=</span> <span class='va'>CNSR</span> <span class='op'>==</span>  <span class='fl'>0</span><span class='op'>)</span> <span class='op'>~</span> <span class='va'>ARM</span>, data <span class='op'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>ADTTE</span>, <span class='va'>PARAMCD</span> <span class='op'>==</span> <span class='st'>"PFS"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='img'><img src='sim_adtte-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/pkg/survival/man/survfit.html'>survfit</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/pkg/survival/man/Surv.html'>Surv</a></span><span class='op'>(</span><span class='va'>AVAL</span>, event <span class='op'>=</span> <span class='va'>CNSR</span> <span class='op'>==</span>  <span class='fl'>0</span><span class='op'>)</span> <span class='op'>~</span> <span class='va'>ARM</span>, data <span class='op'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>ADTTE</span>, <span class='va'>PARAMCD</span> <span class='op'>==</span> <span class='st'>"OS"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='img'><img src='sim_adtte-2.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -293,7 +300,7 @@ Austin, P.C. (2012), Generating survival times to simulate Cox proportional haza
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

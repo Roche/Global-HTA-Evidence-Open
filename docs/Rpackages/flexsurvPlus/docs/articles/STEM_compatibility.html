@@ -45,7 +45,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa-home"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
@@ -74,13 +74,16 @@
     <li>
       <a href="https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/rpsftmPlus/docs/index.html">rpsftmPlus</a>
     </li>
+    <li>
+      <a href="https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/descem/docs/index.html">descem</a>
+    </li>
   </ul>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/Roche/Global-HTA-Evidence-Open/tree/master/Rpackages/flexsurvPlus">
-    <span class="fas fa-github"></span>
+    <span class="fa fa-github"></span>
      
   </a>
 </li>
@@ -94,13 +97,14 @@
 
       
 
-      </header><script src="STEM_compatibility_files/header-attrs-2.6/header-attrs.js"></script><script src="STEM_compatibility_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><script src="STEM_compatibility_files/header-attrs-2.5/header-attrs.js"></script><script src="STEM_compatibility_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="STEM_compatibility_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
+<script src="STEM_compatibility_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>STEM compatibility</h1>
                         <h4 class="author">Roche</h4>
             
-            <h4 class="date">2021-05-20</h4>
+            <h4 class="date">2021-07-08</h4>
       
       
       <div class="hidden name"><code>STEM_compatibility.Rmd</code></div>
@@ -140,11 +144,12 @@ pre { /* Code block - determines code spacing between lines */
 <h1 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h1>
 <p>This vignette describes the use of the <tt>convSTEM</tt> function which enables backwards compatibility with STEM economic models which use an alternative formulation of parametric survival models. For most users this vignette can be safely ignored. The following packages are required to run this example:</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">flexsurvPlus</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tibble</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">survival</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">boot</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">flexsurvPlus</span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tibble.tidyverse.org/">tibble</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/therneau/survival">survival</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">boot</span><span class="op">)</span></pre></div>
 <div id="read-in-the-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#read-in-the-data" class="anchor"></a>Read in the data</h2>
@@ -155,71 +160,74 @@ pre { /* Code block - determines code spacing between lines */
 <li>Event - a binary variable (event=1, censor=0)</li>
 </ul>
 <p>In this example, we use only progression-free survival (PFS).</p>
-<div class="sourceCode" id="cb2"><html><body><pre class="r">
+<div class="sourceCode" id="cb2"><pre class="downlit">
+
 
 <span class="co"># simulate data with a medium correlation between PFS &amp; OS on the patient level</span>
-<span class="no">adtte</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/sim_adtte.html">sim_adtte</a></span>(<span class="kw">seed</span> <span class="kw">=</span> <span class="fl">2020</span>, <span class="co"># for reproducibility</span>
-                   <span class="kw">rho</span> <span class="kw">=</span> <span class="fl">0.6</span> <span class="co"># defines a correlation on underlying survival times</span>
-                   )
+<span class="va">adtte</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sim_adtte.html">sim_adtte</a></span><span class="op">(</span>seed <span class="op">=</span> <span class="fl">2020</span>, <span class="co"># for reproducibility</span>
+                   rho <span class="op">=</span> <span class="fl">0.6</span> <span class="co"># defines a correlation on underlying survival times</span>
+                   <span class="op">)</span> 
 
 <span class="co"># subset PFS data and rename</span>
-<span class="no">PFS_data</span> <span class="kw">&lt;-</span> <span class="no">adtte</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">PARAMCD</span><span class="kw">==</span><span class="st">"PFS"</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">transmute</a></span>(<span class="no">USUBJID</span>, <span class="no">ARMCD</span>,
-            <span class="no">AVAL</span>,
-            <span class="kw">event</span> <span class="kw">=</span> <span class="fl">1</span> - <span class="no">CNSR</span> <span class="co">#needs to be coded as 1 for event</span>
-  )</pre></body></html></div>
+<span class="va">PFS_data</span> <span class="op">&lt;-</span> <span class="va">adtte</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">PARAMCD</span><span class="op">==</span><span class="st">"PFS"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">transmute</a></span><span class="op">(</span><span class="va">USUBJID</span>, <span class="va">ARMCD</span>,
+            <span class="va">AVAL</span>,
+            event <span class="op">=</span> <span class="fl">1</span> <span class="op">-</span> <span class="va">CNSR</span> <span class="co">#needs to be coded as 1 for event</span>
+  <span class="op">)</span></pre></div>
 </div>
 </div>
 <div id="fitting-models" class="section level1">
 <h1 class="hasAnchor">
 <a href="#fitting-models" class="anchor"></a>Fitting models</h1>
 <p>This section uses <tt>runPSM</tt> as described in other vignettes to estimate survival models. As described in other vignettes <tt>flexsurvPlus</tt> primarily uses bootstrapping to handle uncertainty with the <tt>bootPSM</tt> function in conjunction with <tt>boot</tt>.</p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r">
+<div class="sourceCode" id="cb3"><pre class="downlit">
+
 <span class="co"># For speed only 4 models are considered for this example but </span>
 <span class="co"># all models could be considered</span>
 
-<span class="no">psm_PFS_expweib</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/runPSM.html">runPSM</a></span>(<span class="kw">data</span> <span class="kw">=</span> <span class="no">PFS_data</span>,
-                          <span class="kw">time_var</span> <span class="kw">=</span> <span class="st">"AVAL"</span>,
-                          <span class="kw">event_var</span> <span class="kw">=</span><span class="st">"event"</span>,
-                          <span class="kw">model.type</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Common shape"</span>,
-                                         <span class="st">"Separate"</span>),
-                     <span class="kw">distr</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'exp'</span>,
-                               <span class="st">'weibull'</span>),
-                     <span class="kw">strata_var</span> <span class="kw">=</span> <span class="st">"ARMCD"</span>,
-                     <span class="kw">int_name</span> <span class="kw">=</span> <span class="st">"A"</span>,
-                     <span class="kw">ref_name</span> <span class="kw">=</span> <span class="st">"B"</span>)
+<span class="va">psm_PFS_expweib</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runPSM.html">runPSM</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">PFS_data</span>,
+                          time_var <span class="op">=</span> <span class="st">"AVAL"</span>,
+                          event_var <span class="op">=</span><span class="st">"event"</span>,
+                          model.type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Common shape"</span>, 
+                                         <span class="st">"Separate"</span><span class="op">)</span>,
+                     distr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'exp'</span>,
+                               <span class="st">'weibull'</span><span class="op">)</span>,
+                     strata_var <span class="op">=</span> <span class="st">"ARMCD"</span>,
+                     int_name <span class="op">=</span> <span class="st">"A"</span>,
+                     ref_name <span class="op">=</span> <span class="st">"B"</span><span class="op">)</span>
 
 
 <span class="co"># Apply bootstrapping for illustration 100 samples are taken</span>
 <span class="co"># In practice a larger number maybe preferable.</span>
 
-<span class="no">psm_boot_PFS_expweib</span>  <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/boot/man/boot.html">boot</a></span>(<span class="kw">statistic</span> <span class="kw">=</span> <span class="no">bootPSM</span>, <span class="co"># bootstrap function</span>
-                              <span class="kw">R</span> <span class="kw">=</span> <span class="fl">100</span>, <span class="co"># number of bootstrap samples</span>
-                              <span class="kw">data</span> <span class="kw">=</span> <span class="no">PFS_data</span>, <span class="co"># the dataset</span>
-                              <span class="kw">time_var</span> <span class="kw">=</span> <span class="st">"AVAL"</span>, <span class="co"># the time variable</span>
-                              <span class="kw">event_var</span> <span class="kw">=</span> <span class="st">"event"</span>, <span class="co"># the event variable coded as 1 for event</span>
-                              <span class="kw">model.type</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Common shape"</span>,
-                                             <span class="st">"Separate"</span>),
-                              <span class="kw">distr</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'exp'</span>, <span class="st">'weibull'</span>),
-                              <span class="kw">int_name</span> <span class="kw">=</span> <span class="st">"A"</span>,
-                              <span class="kw">ref_name</span> <span class="kw">=</span> <span class="st">"B"</span>,
-                              <span class="kw">strata_var</span> <span class="kw">=</span> <span class="st">"ARMCD"</span>
-)</pre></body></html></div>
+<span class="va">psm_boot_PFS_expweib</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/boot/man/boot.html">boot</a></span><span class="op">(</span>statistic <span class="op">=</span> <span class="va">bootPSM</span>, <span class="co"># bootstrap function</span>
+                              R <span class="op">=</span> <span class="fl">100</span>, <span class="co"># number of bootstrap samples</span>
+                              data <span class="op">=</span> <span class="va">PFS_data</span>, <span class="co"># the dataset</span>
+                              time_var <span class="op">=</span> <span class="st">"AVAL"</span>, <span class="co"># the time variable</span>
+                              event_var <span class="op">=</span> <span class="st">"event"</span>, <span class="co"># the event variable coded as 1 for event</span>
+                              model.type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Common shape"</span>, 
+                                             <span class="st">"Separate"</span><span class="op">)</span>, 
+                              distr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'exp'</span>, <span class="st">'weibull'</span><span class="op">)</span>,
+                              int_name <span class="op">=</span> <span class="st">"A"</span>,
+                              ref_name <span class="op">=</span> <span class="st">"B"</span>,
+                              strata_var <span class="op">=</span> <span class="st">"ARMCD"</span>
+<span class="op">)</span></pre></div>
 </div>
 <div id="converting-to-a-stem-format" class="section level1">
 <h1 class="hasAnchor">
 <a href="#converting-to-a-stem-format" class="anchor"></a>Converting to a STEM format</h1>
 <p>This is done using <tt>convSTEM</tt>. Depending on if a <tt>runPSM</tt> object or a <tt>bootPSM</tt> object or both are provided different quantities will be estimated.</p>
-<div class="sourceCode" id="cb4"><html><body><pre class="r">
+<div class="sourceCode" id="cb4"><pre class="downlit">
+
 <span class="co"># only supplying x</span>
-<span class="no">PFS_conv_x</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/convSTEM.html">convSTEM</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">psm_PFS_expweib</span>)
+<span class="va">PFS_conv_x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/convSTEM.html">convSTEM</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">psm_PFS_expweib</span><span class="op">)</span>
 
 <span class="co"># only supplying samples</span>
-<span class="no">PFS_conv_samples</span> <span class="kw">&lt;-</span>  <span class="fu"><a href="../reference/convSTEM.html">convSTEM</a></span>(<span class="kw">samples</span> <span class="kw">=</span> <span class="no">psm_boot_PFS_expweib</span>)
+<span class="va">PFS_conv_samples</span> <span class="op">&lt;-</span>  <span class="fu"><a href="../reference/convSTEM.html">convSTEM</a></span><span class="op">(</span>samples <span class="op">=</span> <span class="va">psm_boot_PFS_expweib</span><span class="op">)</span>
 
 <span class="co"># supplying both x and samples from the same set of models</span>
-<span class="no">PFS_conv_both</span> <span class="kw">&lt;-</span>  <span class="fu"><a href="../reference/convSTEM.html">convSTEM</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">psm_PFS_expweib</span>, <span class="kw">samples</span> <span class="kw">=</span> <span class="no">psm_boot_PFS_expweib</span>)</pre></body></html></div>
+<span class="va">PFS_conv_both</span> <span class="op">&lt;-</span>  <span class="fu"><a href="../reference/convSTEM.html">convSTEM</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">psm_PFS_expweib</span>, samples <span class="op">=</span> <span class="va">psm_boot_PFS_expweib</span><span class="op">)</span></pre></div>
 </div>
 <div id="the-output-of-convstem" class="section level1">
 <h1 class="hasAnchor">
@@ -239,12 +247,13 @@ pre { /* Code block - determines code spacing between lines */
 <h2 class="hasAnchor">
 <a href="#stem_param" class="anchor"></a>stem_param</h2>
 <p><tt>stem_param</tt> contains the parameter estimates and is calculated if either x or samples is provided.</p>
-<div class="sourceCode" id="cb5"><html><body><pre class="r">
-<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="no">PFS_conv_x</span>$<span class="no">stem_param</span>)
+<div class="sourceCode" id="cb5"><pre class="downlit">
+
+<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">PFS_conv_x</span><span class="op">$</span><span class="va">stem_param</span><span class="op">)</span>
 <span class="co">#&gt; [1] "Model"    "ModelF"   "Dist"     "DistF"    "Param"    "ParamF"   "Estimate"</span>
 
-<span class="no">PFS_conv_x</span>$<span class="no">stem_param</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">transmute</a></span>(<span class="no">Model</span>, <span class="no">Dist</span>, <span class="no">Param</span>, <span class="no">Estimate</span>)
+<span class="va">PFS_conv_x</span><span class="op">$</span><span class="va">stem_param</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">transmute</a></span><span class="op">(</span><span class="va">Model</span>, <span class="va">Dist</span>, <span class="va">Param</span>, <span class="va">Estimate</span><span class="op">)</span> 
 <span class="co">#&gt;                      Model        Dist            Param   Estimate</span>
 <span class="co">#&gt; 1             Common Shape Exponential        INTERCEPT  6.1145985</span>
 <span class="co">#&gt; 2             Common Shape Exponential TX(Intervention) -0.7675910</span>
@@ -258,8 +267,8 @@ pre { /* Code block - determines code spacing between lines */
 <span class="co">#&gt; 10 Separate - Intervention     Weibull        INTERCEPT  5.4170457</span>
 <span class="co">#&gt; 11 Separate - Intervention     Weibull            SCALE  0.7224962</span>
 
-<span class="no">PFS_conv_samples</span>$<span class="no">stem_param</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">transmute</a></span>(<span class="no">Model</span>, <span class="no">Dist</span>, <span class="no">Param</span>, <span class="no">Estimate</span>)
+<span class="va">PFS_conv_samples</span><span class="op">$</span><span class="va">stem_param</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">transmute</a></span><span class="op">(</span><span class="va">Model</span>, <span class="va">Dist</span>, <span class="va">Param</span>, <span class="va">Estimate</span><span class="op">)</span> 
 <span class="co">#&gt;                      Model        Dist            Param   Estimate</span>
 <span class="co">#&gt; 1             Common Shape Exponential        INTERCEPT  6.1145985</span>
 <span class="co">#&gt; 2             Common Shape Exponential TX(Intervention) -0.7675910</span>
@@ -271,23 +280,24 @@ pre { /* Code block - determines code spacing between lines */
 <span class="co">#&gt; 8     Separate - Reference     Weibull            SCALE  0.7171585</span>
 <span class="co">#&gt; 9  Separate - Intervention Exponential        INTERCEPT  5.3470075</span>
 <span class="co">#&gt; 10 Separate - Intervention     Weibull        INTERCEPT  5.4170457</span>
-<span class="co">#&gt; 11 Separate - Intervention     Weibull            SCALE  0.7224962</span></pre></body></html></div>
+<span class="co">#&gt; 11 Separate - Intervention     Weibull            SCALE  0.7224962</span></pre></div>
 </div>
 <div id="stem_cov" class="section level2">
 <h2 class="hasAnchor">
 <a href="#stem_cov" class="anchor"></a>stem_cov</h2>
 <p><tt>stem_cov</tt> contains estimates for a covariance matrix for the parameters and is only derived if samples is provided.</p>
-<div class="sourceCode" id="cb6"><html><body><pre class="r">
-<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="no">PFS_conv_x</span>$<span class="no">stem_cov</span>)
+<div class="sourceCode" id="cb6"><pre class="downlit">
+
+<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">PFS_conv_x</span><span class="op">$</span><span class="va">stem_cov</span><span class="op">)</span>
 <span class="co">#&gt;  [1] "Model"     "ModelF"    "Dist"      "DistF"     "rowParam"  "colParam" </span>
 <span class="co">#&gt;  [7] "rowParamF" "colParamF" "rowNum"    "colNum"    "CovEst"</span>
 
 <span class="co"># note is empty here as samples were not provided</span>
-<span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="no">PFS_conv_x</span>$<span class="no">stem_cov</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">PFS_conv_x</span><span class="op">$</span><span class="va">stem_cov</span><span class="op">)</span>
 <span class="co">#&gt; [1] 0</span>
 
-<span class="no">PFS_conv_samples</span>$<span class="no">stem_cov</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">transmute</a></span>(<span class="no">Model</span>, <span class="no">Dist</span>, <span class="no">rowParam</span>, <span class="no">colParam</span>, <span class="no">rowNum</span>, <span class="no">colNum</span>, <span class="no">CovEst</span>)
+<span class="va">PFS_conv_samples</span><span class="op">$</span><span class="va">stem_cov</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">transmute</a></span><span class="op">(</span><span class="va">Model</span>, <span class="va">Dist</span>, <span class="va">rowParam</span>, <span class="va">colParam</span>, <span class="va">rowNum</span>, <span class="va">colNum</span>, <span class="va">CovEst</span><span class="op">)</span> 
 <span class="co">#&gt; # A tibble: 23 x 7</span>
 <span class="co">#&gt;    Model       Dist       rowParam        colParam       rowNum colNum    CovEst</span>
 <span class="co">#&gt;    &lt;chr&gt;       &lt;chr&gt;      &lt;chr&gt;           &lt;chr&gt;           &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;</span>
@@ -301,15 +311,16 @@ pre { /* Code block - determines code spacing between lines */
 <span class="co">#&gt;  8 Common Sha… Weibull    TX(Interventio… INTERCEPT           2      1  -3.18e-3</span>
 <span class="co">#&gt;  9 Common Sha… Weibull    TX(Interventio… TX(Interventi…      2      2   5.80e-3</span>
 <span class="co">#&gt; 10 Common Sha… Weibull    TX(Interventio… SCALE               2      3  -7.51e-5</span>
-<span class="co">#&gt; # … with 13 more rows</span></pre></body></html></div>
+<span class="co">#&gt; # … with 13 more rows</span></pre></div>
 <p>The matrix is described by row and column numbers so can be back converted to a matrix if desired.</p>
-<div class="sourceCode" id="cb7"><html><body><pre class="r">
-<span class="co"># select a single model from the data frame</span>
-<span class="no">weibull_common_data</span> <span class="kw">&lt;-</span> <span class="no">PFS_conv_samples</span>$<span class="no">stem_cov</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">Model</span> <span class="kw">==</span> <span class="st">"Common Shape"</span>, <span class="no">Dist</span> <span class="kw">==</span> <span class="st">"Weibull"</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">transmute</a></span>(<span class="no">rowParam</span>, <span class="no">colParam</span>, <span class="no">rowNum</span>, <span class="no">colNum</span>, <span class="no">CovEst</span>)
+<div class="sourceCode" id="cb7"><pre class="downlit">
 
-<span class="no">weibull_common_data</span>
+<span class="co"># select a single model from the data frame</span>
+<span class="va">weibull_common_data</span> <span class="op">&lt;-</span> <span class="va">PFS_conv_samples</span><span class="op">$</span><span class="va">stem_cov</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">Model</span> <span class="op">==</span> <span class="st">"Common Shape"</span>, <span class="va">Dist</span> <span class="op">==</span> <span class="st">"Weibull"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">transmute</a></span><span class="op">(</span><span class="va">rowParam</span>, <span class="va">colParam</span>, <span class="va">rowNum</span>, <span class="va">colNum</span>, <span class="va">CovEst</span><span class="op">)</span>
+
+<span class="va">weibull_common_data</span>
 <span class="co">#&gt; # A tibble: 9 x 5</span>
 <span class="co">#&gt;   rowParam         colParam         rowNum colNum     CovEst</span>
 <span class="co">#&gt;   &lt;chr&gt;            &lt;chr&gt;             &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;</span>
@@ -325,33 +336,34 @@ pre { /* Code block - determines code spacing between lines */
 
 <span class="co"># can see is ordered by row so can convert to a matrix</span>
 
-<span class="no">weibull_common_matrix</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="kw">data</span> <span class="kw">=</span> <span class="no">weibull_common_data</span>$<span class="no">CovEst</span>,
-                                <span class="kw">nrow</span> <span class="kw">=</span> <span class="fl">3</span>, <span class="kw">ncol</span> <span class="kw">=</span> <span class="fl">3</span>, <span class="kw">byrow</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
+<span class="va">weibull_common_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">weibull_common_data</span><span class="op">$</span><span class="va">CovEst</span>,
+                                nrow <span class="op">=</span> <span class="fl">3</span>, ncol <span class="op">=</span> <span class="fl">3</span>, byrow <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 
 <span class="co"># applying names</span>
-<span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html">rownames</a></span>(<span class="no">weibull_common_matrix</span>) <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span>(<span class="no">weibull_common_matrix</span>) <span class="kw">&lt;-</span> <span class="no">weibull_common_data</span>$<span class="no">colParam</span>[<span class="fl">1</span>:<span class="fl">3</span>]
+<span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html">rownames</a></span><span class="op">(</span><span class="va">weibull_common_matrix</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">weibull_common_matrix</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">weibull_common_data</span><span class="op">$</span><span class="va">colParam</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span>
 
-<span class="no">weibull_common_matrix</span>
+<span class="va">weibull_common_matrix</span>
 <span class="co">#&gt;                      INTERCEPT TX(Intervention)         SCALE</span>
 <span class="co">#&gt; INTERCEPT         2.976351e-03    -3.184138e-03  8.859245e-05</span>
 <span class="co">#&gt; TX(Intervention) -3.184138e-03     5.803708e-03 -7.510364e-05</span>
-<span class="co">#&gt; SCALE             8.859245e-05    -7.510364e-05  7.501754e-04</span></pre></body></html></div>
+<span class="co">#&gt; SCALE             8.859245e-05    -7.510364e-05  7.501754e-04</span></pre></div>
 </div>
 <div id="stem_modsum" class="section level2">
 <h2 class="hasAnchor">
 <a href="#stem_modsum" class="anchor"></a>stem_modsum</h2>
 <p><tt>stem_modsum</tt> contains a summary of the model fit statistics and is only produced if x is provided.</p>
-<div class="sourceCode" id="cb8"><html><body><pre class="r">
-<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="no">PFS_conv_x</span>$<span class="no">stem_modsum</span>)
+<div class="sourceCode" id="cb8"><pre class="downlit">
+
+<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">PFS_conv_x</span><span class="op">$</span><span class="va">stem_modsum</span><span class="op">)</span>
 <span class="co">#&gt; [1] "Model"   "ModelF"  "Dist"    "DistF"   "Status"  "AIC"     "AIC_SAS"</span>
 <span class="co">#&gt; [8] "BIC"     "BIC_SAS"</span>
 
 <span class="co"># note is empty here as x was not provided</span>
-<span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="no">PFS_conv_samples</span>$<span class="no">stem_modsum</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">PFS_conv_samples</span><span class="op">$</span><span class="va">stem_modsum</span><span class="op">)</span>
 <span class="co">#&gt; [1] 0</span>
 
-<span class="no">PFS_conv_x</span>$<span class="no">stem_modsum</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">transmute</a></span>(<span class="no">Model</span>, <span class="no">Dist</span>, <span class="no">Status</span>, <span class="no">AIC</span>, <span class="no">AIC_SAS</span>, <span class="no">BIC</span>, <span class="no">BIC_SAS</span>)
+<span class="va">PFS_conv_x</span><span class="op">$</span><span class="va">stem_modsum</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">transmute</a></span><span class="op">(</span><span class="va">Model</span>, <span class="va">Dist</span>, <span class="va">Status</span>, <span class="va">AIC</span>, <span class="va">AIC_SAS</span>, <span class="va">BIC</span>, <span class="va">BIC_SAS</span><span class="op">)</span> 
 <span class="co">#&gt;                     Model        Dist    Status      AIC   AIC_SAS      BIC</span>
 <span class="co">#&gt; 1            Common Shape Exponential Converged 5600.660 1326.3479 5609.089</span>
 <span class="co">#&gt; 2            Common Shape     Weibull Converged 5545.222 1270.9094 5557.866</span>
@@ -365,57 +377,59 @@ pre { /* Code block - determines code spacing between lines */
 <span class="co">#&gt; 3  675.0816</span>
 <span class="co">#&gt; 4  646.3702</span>
 <span class="co">#&gt; 5  658.3092</span>
-<span class="co">#&gt; 6  640.6170</span></pre></body></html></div>
+<span class="co">#&gt; 6  640.6170</span></pre></div>
 </div>
 <div id="stem_boot" class="section level2">
 <h2 class="hasAnchor">
 <a href="#stem_boot" class="anchor"></a>stem_boot</h2>
 <p><tt>stem_boot</tt> contains a data frame of converted boot strap estimates and is only derived if samples is provided.</p>
-<div class="sourceCode" id="cb9"><html><body><pre class="r">
-<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="no">PFS_conv_samples</span>$<span class="no">stem_boot</span>)
+<div class="sourceCode" id="cb9"><pre class="downlit">
+
+<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">PFS_conv_samples</span><span class="op">$</span><span class="va">stem_boot</span><span class="op">)</span>
 <span class="co">#&gt; [1] "Model"      "ModelF"     "Dist"       "DistF"      "BootSample"</span>
 <span class="co">#&gt; [6] "Param"      "ParamF"     "Estimate"</span>
 
 <span class="co"># note is empty here as samples were not provided</span>
-<span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="no">PFS_conv_x</span>$<span class="no">stem_boot</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">PFS_conv_x</span><span class="op">$</span><span class="va">stem_boot</span><span class="op">)</span>
 <span class="co">#&gt; [1] 0</span>
 
-<span class="no">PFS_conv_samples</span>$<span class="no">stem_boot</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">transmute</a></span>(<span class="no">Model</span>, <span class="no">Dist</span>, <span class="no">BootSample</span>, <span class="no">Param</span>, <span class="no">Estimate</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>()
+<span class="va">PFS_conv_samples</span><span class="op">$</span><span class="va">stem_boot</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">transmute</a></span><span class="op">(</span><span class="va">Model</span>, <span class="va">Dist</span>, <span class="va">BootSample</span>, <span class="va">Param</span>, <span class="va">Estimate</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt;          Model        Dist BootSample            Param   Estimate</span>
 <span class="co">#&gt; 1 Common Shape Exponential          1        INTERCEPT  6.1289156</span>
 <span class="co">#&gt; 2 Common Shape Exponential          1 TX(Intervention) -0.7908096</span>
 <span class="co">#&gt; 3 Common Shape Exponential          2        INTERCEPT  6.0663108</span>
 <span class="co">#&gt; 4 Common Shape Exponential          2 TX(Intervention) -0.6928566</span>
 <span class="co">#&gt; 5 Common Shape Exponential          3        INTERCEPT  6.0120960</span>
-<span class="co">#&gt; 6 Common Shape Exponential          3 TX(Intervention) -0.6119670</span></pre></body></html></div>
+<span class="co">#&gt; 6 Common Shape Exponential          3 TX(Intervention) -0.6119670</span></pre></div>
 </div>
 </div>
 <div id="details-on-conversions" class="section level1">
 <h1 class="hasAnchor">
 <a href="#details-on-conversions" class="anchor"></a>Details on conversions</h1>
 <p>To illustrate the conversions will fit a full set of models to the data.</p>
-<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="no">psm_PFS_all</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/runPSM.html">runPSM</a></span>(<span class="kw">data</span><span class="kw">=</span><span class="no">PFS_data</span>,
-                     <span class="kw">time_var</span><span class="kw">=</span><span class="st">"AVAL"</span>,
-                     <span class="kw">event_var</span><span class="kw">=</span><span class="st">"event"</span>,
-                     <span class="kw">model.type</span><span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Common shape"</span>,
-                                   <span class="st">"Independent shape"</span>,
-                                   <span class="st">"Separate"</span>),
-                     <span class="kw">distr</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'exp'</span>,
+<div class="sourceCode" id="cb10"><pre class="downlit">
+<span class="va">psm_PFS_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runPSM.html">runPSM</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">PFS_data</span>,
+                     time_var<span class="op">=</span><span class="st">"AVAL"</span>,
+                     event_var<span class="op">=</span><span class="st">"event"</span>,
+                     model.type<span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Common shape"</span>, 
+                                   <span class="st">"Independent shape"</span>, 
+                                   <span class="st">"Separate"</span><span class="op">)</span>,
+                     distr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'exp'</span>,
                                <span class="st">'weibull'</span>,
                                <span class="st">'gompertz'</span>,
                                <span class="st">'lnorm'</span>,
                                <span class="st">'llogis'</span>,
                                <span class="st">'gengamma'</span>,
                                <span class="st">'gamma'</span>,
-                               <span class="st">'genf'</span>),
-                     <span class="kw">strata_var</span> <span class="kw">=</span> <span class="st">"ARMCD"</span>,
-                     <span class="kw">int_name</span><span class="kw">=</span><span class="st">"A"</span>,
-                     <span class="kw">ref_name</span> <span class="kw">=</span> <span class="st">"B"</span>)
+                               <span class="st">'genf'</span><span class="op">)</span>,
+                     strata_var <span class="op">=</span> <span class="st">"ARMCD"</span>,
+                     int_name<span class="op">=</span><span class="st">"A"</span>,
+                     ref_name <span class="op">=</span> <span class="st">"B"</span><span class="op">)</span>
 
 <span class="co"># only supplying x</span>
-<span class="no">PFS_conv_all</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/convSTEM.html">convSTEM</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">psm_PFS_all</span>)</pre></body></html></div>
+<span class="va">PFS_conv_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/convSTEM.html">convSTEM</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">psm_PFS_all</span><span class="op">)</span></pre></div>
 <div id="conversion-of-parameters" class="section level2">
 <h2 class="hasAnchor">
 <a href="#conversion-of-parameters" class="anchor"></a>Conversion of parameters</h2>
@@ -666,26 +680,27 @@ pre { /* Code block - determines code spacing between lines */
 <a href="#conversion-of-aic-and-bic" class="anchor"></a>Conversion of AIC and BIC</h2>
 <p>As the existing SAS STEM macro estimated models with log(time) as a response variable while <tt>flexsurv</tt> and <tt>flexsurvPlus</tt> estimate models with time as the response variable there are differences in the log-likelihood between the two software packages. These differences do not affect the parameter estimates or ranking of fit but do affect the AIC and BIC reported by a constant.</p>
 <p>This constant is the sum of the events log(time). As such can convert by adding this constant to the maximum log-likelihood and by extension double the sum of the events log(time) to AIC or BIC.</p>
-<div class="sourceCode" id="cb11"><html><body><pre class="r">
+<div class="sourceCode" id="cb11"><pre class="downlit">
+
 <span class="co"># This constant is estimated from the sum of the log of times for patients who have an event</span>
 
-<span class="no">PFS_data</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">event</span> <span class="kw">==</span> <span class="fl">1</span>) <span class="kw">%&gt;%</span> <span class="co"># select events only</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">transmute</a></span>(<span class="kw">log_event_time</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span>(<span class="no">AVAL</span>)) <span class="kw">%&gt;%</span> <span class="co"># difference in log time</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span>(<span class="fl">2</span> * <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">log_event_time</span>))
+<span class="va">PFS_data</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">event</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co"># select events only</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">transmute</a></span><span class="op">(</span>log_event_time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">AVAL</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co"># difference in log time</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span><span class="fl">2</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">log_event_time</span><span class="op">)</span><span class="op">)</span> 
 <span class="co">#&gt;   2 * sum(log_event_time)</span>
 <span class="co">#&gt; 1                4274.312</span>
 
 <span class="co"># So for common shape models (using all data) the difference is 4274.312</span>
 
 <span class="co"># Can be seen in results from convSTEM here</span>
-<span class="no">modsum</span> <span class="kw">&lt;-</span> <span class="no">PFS_conv_all</span>$<span class="no">stem_modsum</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">transmute</a></span>(<span class="no">Model</span>, <span class="no">Dist</span>, <span class="no">AIC</span>, <span class="no">AIC_SAS</span>, <span class="no">BIC</span>, <span class="no">BIC_SAS</span>)
+<span class="va">modsum</span> <span class="op">&lt;-</span> <span class="va">PFS_conv_all</span><span class="op">$</span><span class="va">stem_modsum</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">transmute</a></span><span class="op">(</span><span class="va">Model</span>, <span class="va">Dist</span>, <span class="va">AIC</span>, <span class="va">AIC_SAS</span>, <span class="va">BIC</span>, <span class="va">BIC_SAS</span><span class="op">)</span> 
 
 <span class="co"># note as the separate and common shape models use different data these are not comparable</span>
-<span class="no">modsum</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">delta_AIC</span> <span class="kw">=</span> <span class="no">AIC</span> - <span class="no">AIC_SAS</span>,
-         <span class="kw">delta_BIC</span> <span class="kw">=</span> <span class="no">AIC</span> - <span class="no">AIC_SAS</span>)
+<span class="va">modsum</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>delta_AIC <span class="op">=</span> <span class="va">AIC</span> <span class="op">-</span> <span class="va">AIC_SAS</span>,
+         delta_BIC <span class="op">=</span> <span class="va">AIC</span> <span class="op">-</span> <span class="va">AIC_SAS</span><span class="op">)</span>
 <span class="co">#&gt;                      Model              Dist      AIC   AIC_SAS      BIC</span>
 <span class="co">#&gt; 1             Common Shape       Exponential 5600.660 1326.3479 5609.089</span>
 <span class="co">#&gt; 2             Common Shape           Weibull 5545.222 1270.9094 5557.866</span>
@@ -735,7 +750,7 @@ pre { /* Code block - determines code spacing between lines */
 <span class="co">#&gt; 21 1308.5206  4274.312  4274.312</span>
 <span class="co">#&gt; 22 1308.7478  4274.312  4274.312</span>
 <span class="co">#&gt; 23 1346.9282  4274.312  4274.312</span>
-<span class="co">#&gt; 24 1301.0878  4274.312  4274.312</span></pre></body></html></div>
+<span class="co">#&gt; 24 1301.0878  4274.312  4274.312</span></pre></div>
 </div>
 </div>
   </div>
@@ -755,7 +770,7 @@ pre { /* Code block - determines code spacing between lines */
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

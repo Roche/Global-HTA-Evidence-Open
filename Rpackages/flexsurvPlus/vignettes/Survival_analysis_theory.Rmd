@@ -880,7 +880,7 @@ for the fitted models is as follows:
 Estimation of the rate and shape parameters from each of these models can be then used
 within the following Excel formula to estimate survival at different time points:
 
-`1-((EXP(GAMMALN(rate)) * GAMMA.DIST(shape * time,rate,1,TRUE))/GAMMA(rate)`
+`1-GAMMA.DIST(time, shape, 1/(rate),TRUE)`
 
 This is equivalent to running the following code in R:
 
@@ -931,7 +931,7 @@ knitr::kable(all.params,
 Survival can then be estimated in Excel using the rate and shape parameters
 specific to each treatment with formula:
 
-`1-((EXP(GAMMALN(rate)) * GAMMA.DIST(shape * time,rate,1,TRUE))/GAMMA(rate)`
+`1-GAMMA.DIST(time, shape, 1/(rate),TRUE)`
 
 This is equivalent to running the following code in R:
 
@@ -983,7 +983,7 @@ knitr::kable(all.params,
 Survival can then be estimated in Excel using the rate and shape parameters
 specific to each treatment with formula:
 
-`1-((EXP(GAMMALN(rate)) * GAMMA.DIST(shape * time,rate,1,TRUE))/GAMMA(rate)`
+`1-GAMMA.DIST(time, shape, 1/(rate),TRUE)`
 
 This is equivalent to running the following code in R:
 
