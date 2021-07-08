@@ -23,9 +23,11 @@ gradfn <- function(a1, X){
 #' @param matching_vars A character vector giving the names of the covariates to
 #'   use in matching. These names must match the column names in
 #'   intervention_data.
-#' @param ... Additional arguments to be passed to optimisation functions such
-#'   as the method for maximum likelihood optimisation. The default is method =
+#' @param method The method used for optimisation - The default is method =
 #'   "BFGS". Refer to \code{\link[stats]{optim}} for options.
+#' @param ... Additional arguments to be passed to optimisation functions such
+#'   as the method for maximum likelihood optimisation. Refer to \code{\link[stats]{optim}} 
+#'   for options.
 #'
 #' @details The premise of MAIC methods is to adjust for between-trial
 #'   differences in patient demographic or disease characteristics at baseline.
@@ -85,7 +87,7 @@ gradfn <- function(a1, X){
 #' @example inst/examples/MAIC_example_weights.R
 #'
 #' @export
-estimate_weights <- function(intervention_data,  matching_vars){
+estimate_weights <- function(intervention_data,  matching_vars, method = "BFGS", ...){
 
   #Basic checks of inputs before proceeding
   #Check intervention data is a data frame
@@ -112,7 +114,8 @@ estimate_weights <- function(intervention_data,  matching_vars){
                 fn = objfn,
                 gr = gradfn,
                 X = as.matrix(intervention_data[,matching_vars]),
-                method = "BFGS")
+                method = method,
+                ...)
 
   a1 <- opt1$par
 

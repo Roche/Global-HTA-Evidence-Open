@@ -90,7 +90,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa-home"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
@@ -119,13 +119,16 @@
     <li>
       <a href="https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/rpsftmPlus/docs/index.html">rpsftmPlus</a>
     </li>
+    <li>
+      <a href="https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/descem/docs/index.html">descem</a>
+    </li>
   </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/Roche/Global-HTA-Evidence-Open/tree/master/Rpackages/MAIC">
-    <span class="fas fa-github"></span>
+    <span class="fa fa-github"></span>
      
   </a>
 </li>
@@ -151,7 +154,7 @@
     <p>Estimate propensity weights for matching-adjusted indirect comparison (MAIC).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>estimate_weights</span>(<span class='no'>intervention_data</span>, <span class='no'>matching_vars</span>)</pre>
+    <pre class="usage"><span class='fu'>estimate_weights</span><span class='op'>(</span><span class='va'>intervention_data</span>, <span class='va'>matching_vars</span>, method <span class='op'>=</span> <span class='st'>"BFGS"</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -168,10 +171,15 @@ use in matching. These names must match the column names in
 intervention_data.</p></td>
     </tr>
     <tr>
+      <th>method</th>
+      <td><p>The method used for optimisation - The default is method =
+"BFGS". Refer to <code><a href='https://rdrr.io/r/stats/optim.html'>optim</a></code> for options.</p></td>
+    </tr>
+    <tr>
       <th>...</th>
       <td><p>Additional arguments to be passed to optimisation functions such
-as the method for maximum likelihood optimisation. The default is method =
-"BFGS". Refer to <code><a href='https://rdrr.io/r/stats/optim.html'>optim</a></code> for options.</p></td>
+as the method for maximum likelihood optimisation. Refer to <code><a href='https://rdrr.io/r/stats/optim.html'>optim</a></code> 
+for options.</p></td>
     </tr>
     </table>
 
@@ -239,8 +247,8 @@ as the method for maximum likelihood optimisation. The default is method =
 <span class='co'># arm study of 'intervention' based on aggregate baseline characteristics from</span>
 <span class='co'># the comparator trial</span>
 
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>MAIC</span>)
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>MAIC</span><span class='op'>)</span>
 
 
 <span class='co'>#### Prepare the data ----------------------------------------------------------</span>
@@ -248,54 +256,54 @@ as the method for maximum likelihood optimisation. The default is method =
 <span class='co'>### Intervention data</span>
 
 <span class='co'># Read in relevant ADaM data and rename variables of interest</span>
-<span class='no'>adsl</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.csv</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"adsl.csv"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"MAIC"</span>,
-                             <span class='kw'>mustWork</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))
-<span class='no'>adrs</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.csv</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"adrs.csv"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"MAIC"</span>,
-                             <span class='kw'>mustWork</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))
-<span class='no'>adtte</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.csv</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"adtte.csv"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"MAIC"</span>,
-                              <span class='kw'>mustWork</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))
+<span class='va'>adsl</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.csv</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"adsl.csv"</span>, package <span class='op'>=</span> <span class='st'>"MAIC"</span>,
+                             mustWork <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>adrs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.csv</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"adrs.csv"</span>, package <span class='op'>=</span> <span class='st'>"MAIC"</span>,
+                             mustWork <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>adtte</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.csv</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"adtte.csv"</span>, package <span class='op'>=</span> <span class='st'>"MAIC"</span>,
+                              mustWork <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>
 
-<span class='no'>adsl</span> <span class='kw'>&lt;-</span> <span class='no'>adsl</span> <span class='kw'>%&gt;%</span> <span class='co'># Data containing the matching variables</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='kw'>SEX</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span>(<span class='no'>SEX</span><span class='kw'>==</span><span class='st'>"Male"</span>, <span class='fl'>1</span>, <span class='fl'>0</span>)) <span class='co'># Coded 1 for males and 0 for females</span>
+<span class='va'>adsl</span> <span class='op'>&lt;-</span> <span class='va'>adsl</span> <span class='op'>%&gt;%</span> <span class='co'># Data containing the matching variables</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>SEX<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='va'>SEX</span><span class='op'>==</span><span class='st'>"Male"</span>, <span class='fl'>1</span>, <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># Coded 1 for males and 0 for females</span>
 
-<span class='no'>adrs</span> <span class='kw'>&lt;-</span> <span class='no'>adrs</span> <span class='kw'>%&gt;%</span> <span class='co'># Response data</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>PARAM</span><span class='kw'>==</span><span class='st'>"Response"</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>transmute</a></span>(<span class='no'>USUBJID</span>, <span class='no'>ARM</span>, <span class='kw'>response</span><span class='kw'>=</span><span class='no'>AVAL</span>)
+<span class='va'>adrs</span> <span class='op'>&lt;-</span> <span class='va'>adrs</span> <span class='op'>%&gt;%</span> <span class='co'># Response data</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>PARAM</span><span class='op'>==</span><span class='st'>"Response"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>transmute</a></span><span class='op'>(</span><span class='va'>USUBJID</span>, <span class='va'>ARM</span>, response<span class='op'>=</span><span class='va'>AVAL</span><span class='op'>)</span>
 
-<span class='no'>adtte</span> <span class='kw'>&lt;-</span> <span class='no'>adtte</span> <span class='kw'>%&gt;%</span> <span class='co'># Time to event data (overall survival)</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>PARAMCD</span><span class='kw'>==</span><span class='st'>"OS"</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='kw'>Event</span><span class='kw'>=</span><span class='fl'>1</span>-<span class='no'>CNSR</span>) <span class='kw'>%&gt;%</span> <span class='co'>#Set up coding as Event = 1, Censor = 0</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>transmute</a></span>(<span class='no'>USUBJID</span>, <span class='no'>ARM</span>, <span class='kw'>Time</span><span class='kw'>=</span><span class='no'>AVAL</span>, <span class='no'>Event</span>)
+<span class='va'>adtte</span> <span class='op'>&lt;-</span> <span class='va'>adtte</span> <span class='op'>%&gt;%</span> <span class='co'># Time to event data (overall survival)</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>PARAMCD</span><span class='op'>==</span><span class='st'>"OS"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>Event<span class='op'>=</span><span class='fl'>1</span><span class='op'>-</span><span class='va'>CNSR</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='co'>#Set up coding as Event = 1, Censor = 0</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>transmute</a></span><span class='op'>(</span><span class='va'>USUBJID</span>, <span class='va'>ARM</span>, Time<span class='op'>=</span><span class='va'>AVAL</span>, <span class='va'>Event</span><span class='op'>)</span>
 
 <span class='co'># Combine all intervention data</span>
-<span class='no'>intervention_input</span> <span class='kw'>&lt;-</span> <span class='no'>adsl</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate-joins.html'>full_join</a></span>(<span class='no'>adrs</span>, <span class='kw'>by</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"USUBJID"</span>, <span class='st'>"ARM"</span>)) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate-joins.html'>full_join</a></span>(<span class='no'>adtte</span>, <span class='kw'>by</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"USUBJID"</span>, <span class='st'>"ARM"</span>))
+<span class='va'>intervention_input</span> <span class='op'>&lt;-</span> <span class='va'>adsl</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate-joins.html'>full_join</a></span><span class='op'>(</span><span class='va'>adrs</span>, by<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"USUBJID"</span>, <span class='st'>"ARM"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate-joins.html'>full_join</a></span><span class='op'>(</span><span class='va'>adtte</span>, by<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"USUBJID"</span>, <span class='st'>"ARM"</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'># List out the variables in the intervention data that have been identified as</span>
 <span class='co'># prognostic factors or treatment effect modifiers and will be used in the</span>
 <span class='co'># matching</span>
-<span class='no'>match_cov</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"AGE"</span>,
+<span class='va'>match_cov</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"AGE"</span>,
                <span class='st'>"SEX"</span>,
                <span class='st'>"SMOKE"</span>,
-               <span class='st'>"ECOG0"</span>)
+               <span class='st'>"ECOG0"</span><span class='op'>)</span>
 
 <span class='co'>## Baseline data from the comparator trial</span>
 <span class='co'># Baseline aggregate data for the comparator population</span>
-<span class='no'>target_pop</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.csv</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"Aggregate data.csv"</span>,
-                                     <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"MAIC"</span>, <span class='kw'>mustWork</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))
+<span class='va'>target_pop</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.csv</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"Aggregate data.csv"</span>,
+                                     package <span class='op'>=</span> <span class='st'>"MAIC"</span>, mustWork <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'># Rename target population cols to be consistent with match_cov</span>
-<span class='no'>target_pop_standard</span> <span class='kw'>&lt;-</span> <span class='no'>target_pop</span> <span class='kw'>%&gt;%</span>
-        <span class='fu'><a href='https://dplyr.tidyverse.org/reference/rename.html'>rename</a></span>(
-           <span class='kw'>N</span><span class='kw'>=</span><span class='no'>N</span>,
-           <span class='kw'>Treatment</span><span class='kw'>=</span><span class='no'>ARM</span>,
-           <span class='kw'>AGE</span><span class='kw'>=</span><span class='no'>age.mean</span>,
-           <span class='kw'>SEX</span><span class='kw'>=</span><span class='no'>prop.male</span>,
-           <span class='kw'>SMOKE</span><span class='kw'>=</span><span class='no'>prop.smoke</span>,
-           <span class='kw'>ECOG0</span><span class='kw'>=</span><span class='no'>prop.ecog0</span>
-              ) <span class='kw'>%&gt;%</span>
-        <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>transmute</a></span>(<span class='no'>N</span>, <span class='no'>Treatment</span>, <span class='no'>AGE</span>, <span class='no'>SEX</span>, <span class='no'>SMOKE</span>, <span class='no'>ECOG0</span>)
+<span class='va'>target_pop_standard</span> <span class='op'>&lt;-</span> <span class='va'>target_pop</span> <span class='op'>%&gt;%</span>
+        <span class='fu'><a href='https://dplyr.tidyverse.org/reference/rename.html'>rename</a></span><span class='op'>(</span>
+           N<span class='op'>=</span><span class='va'>N</span>,
+           Treatment<span class='op'>=</span><span class='va'>ARM</span>,
+           AGE<span class='op'>=</span><span class='va'>age.mean</span>,
+           SEX<span class='op'>=</span><span class='va'>prop.male</span>,
+           SMOKE<span class='op'>=</span><span class='va'>prop.smoke</span>,
+           ECOG0<span class='op'>=</span><span class='va'>prop.ecog0</span>
+              <span class='op'>)</span> <span class='op'>%&gt;%</span>
+        <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>transmute</a></span><span class='op'>(</span><span class='va'>N</span>, <span class='va'>Treatment</span>, <span class='va'>AGE</span>, <span class='va'>SEX</span>, <span class='va'>SMOKE</span>, <span class='va'>ECOG0</span><span class='op'>)</span>
 
 
 <span class='co'>#### Estimate weights ----------------------------------------------------------</span>
@@ -303,21 +311,21 @@ as the method for maximum likelihood optimisation. The default is method =
 <span class='co'>### Center baseline characteristics</span>
 <span class='co'># (subtract the aggregate comparator data from the corresponding column of</span>
 <span class='co'># intervention PLD)</span>
-<span class='no'>intervention_data</span> <span class='kw'>&lt;-</span> <span class='no'>intervention_input</span> <span class='kw'>%&gt;%</span>
-    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(
-     <span class='kw'>Age_centered</span> <span class='kw'>=</span> <span class='no'>AGE</span> - <span class='no'>target_pop</span>$<span class='no'>age.mean</span>,
+<span class='va'>intervention_data</span> <span class='op'>&lt;-</span> <span class='va'>intervention_input</span> <span class='op'>%&gt;%</span>
+    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>
+     Age_centered <span class='op'>=</span> <span class='va'>AGE</span> <span class='op'>-</span> <span class='va'>target_pop</span><span class='op'>$</span><span class='va'>age.mean</span>,
      <span class='co'># matching on both mean and standard deviation for continuous variables (optional)</span>
-     <span class='kw'>Age_squared_centered</span> <span class='kw'>=</span> (<span class='no'>AGE</span>^<span class='fl'>2</span>) - (<span class='no'>target_pop</span>$<span class='no'>age.mean</span>^<span class='fl'>2</span> + <span class='no'>target_pop</span>$<span class='no'>age.sd</span>^<span class='fl'>2</span>),
-     <span class='kw'>Sex_centered</span> <span class='kw'>=</span> <span class='no'>SEX</span> - <span class='no'>target_pop</span>$<span class='no'>prop.male</span>,
-     <span class='kw'>Smoke_centered</span> <span class='kw'>=</span> <span class='no'>SMOKE</span> - <span class='no'>target_pop</span>$<span class='no'>prop.smoke</span>,
-     <span class='kw'>ECOG0_centered</span> <span class='kw'>=</span> <span class='no'>ECOG0</span> - <span class='no'>target_pop</span>$<span class='no'>prop.ecog0</span>)
+     Age_squared_centered <span class='op'>=</span> <span class='op'>(</span><span class='va'>AGE</span><span class='op'>^</span><span class='fl'>2</span><span class='op'>)</span> <span class='op'>-</span> <span class='op'>(</span><span class='va'>target_pop</span><span class='op'>$</span><span class='va'>age.mean</span><span class='op'>^</span><span class='fl'>2</span> <span class='op'>+</span> <span class='va'>target_pop</span><span class='op'>$</span><span class='va'>age.sd</span><span class='op'>^</span><span class='fl'>2</span><span class='op'>)</span>,
+     Sex_centered <span class='op'>=</span> <span class='va'>SEX</span> <span class='op'>-</span> <span class='va'>target_pop</span><span class='op'>$</span><span class='va'>prop.male</span>,
+     Smoke_centered <span class='op'>=</span> <span class='va'>SMOKE</span> <span class='op'>-</span> <span class='va'>target_pop</span><span class='op'>$</span><span class='va'>prop.smoke</span>,
+     ECOG0_centered <span class='op'>=</span> <span class='va'>ECOG0</span> <span class='op'>-</span> <span class='va'>target_pop</span><span class='op'>$</span><span class='va'>prop.ecog0</span><span class='op'>)</span>
 
 <span class='co'>## Define the matching covariates</span>
-<span class='no'>cent_match_cov</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Age_centered"</span>,
+<span class='va'>cent_match_cov</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Age_centered"</span>,
                     <span class='st'>"Age_squared_centered"</span>,
                     <span class='st'>"Sex_centered"</span>,
                     <span class='st'>"Smoke_centered"</span>,
-                    <span class='st'>"ECOG0_centered"</span>)
+                    <span class='st'>"ECOG0_centered"</span><span class='op'>)</span>
 
 <span class='co'>## Optimization procedure</span>
 <span class='co'># Following the centering of the baseline characteristics of the intervention</span>
@@ -325,8 +333,10 @@ as the method for maximum likelihood optimisation. The default is method =
 <span class='co'># The function output is a list containing (1) a data set of the individual</span>
 <span class='co'># patient data with the assigned weights "analysis_data" and (2) a vector</span>
 <span class='co'># containing the matching variables "matching_vars"</span>
-<span class='no'>est_weights</span> <span class='kw'>&lt;-</span> <span class='fu'>estimate_weights</span>(<span class='kw'>intervention_data</span> <span class='kw'>=</span> <span class='no'>intervention_data</span>,
-                                <span class='kw'>matching_vars</span> <span class='kw'>=</span> <span class='no'>cent_match_cov</span>)</div></pre>
+<span class='va'>est_weights</span> <span class='op'>&lt;-</span> <span class='fu'>estimate_weights</span><span class='op'>(</span>intervention_data <span class='op'>=</span> <span class='va'>intervention_data</span>,
+                                matching_vars <span class='op'>=</span> <span class='va'>cent_match_cov</span><span class='op'>)</span>
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -342,7 +352,7 @@ as the method for maximum likelihood optimisation. The default is method =
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

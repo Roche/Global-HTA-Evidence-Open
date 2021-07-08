@@ -4,7 +4,7 @@
 \alias{estimate_weights}
 \title{Estimate MAIC propensity weights}
 \usage{
-estimate_weights(intervention_data, matching_vars)
+estimate_weights(intervention_data, matching_vars, method = "BFGS", ...)
 }
 \arguments{
 \item{intervention_data}{A data frame containing individual patient data from
@@ -14,9 +14,12 @@ the intervention study.}
 use in matching. These names must match the column names in
 intervention_data.}
 
-\item{...}{Additional arguments to be passed to optimisation functions such
-as the method for maximum likelihood optimisation. The default is method =
+\item{method}{The method used for optimisation - The default is method =
 "BFGS". Refer to \code{\link[stats]{optim}} for options.}
+
+\item{...}{Additional arguments to be passed to optimisation functions such
+as the method for maximum likelihood optimisation. Refer to \code{\link[stats]{optim}} 
+for options.}
 }
 \value{
 A list containing 2 objects. First, a data frame named analysis_data

@@ -91,7 +91,7 @@ rescaled weights)." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa-home"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
@@ -120,13 +120,16 @@ rescaled weights)." />
     <li>
       <a href="https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/rpsftmPlus/docs/index.html">rpsftmPlus</a>
     </li>
+    <li>
+      <a href="https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/descem/docs/index.html">descem</a>
+    </li>
   </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/Roche/Global-HTA-Evidence-Open/tree/master/Rpackages/MAIC">
-    <span class="fas fa-github"></span>
+    <span class="fa fa-github"></span>
      
   </a>
 </li>
@@ -153,7 +156,7 @@ rescaled weights)." />
 rescaled weights).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>hist_wts</span>(<span class='no'>data</span>, <span class='kw'>wt_col</span> <span class='kw'>=</span> <span class='st'>"wt"</span>, <span class='kw'>rs_wt_col</span> <span class='kw'>=</span> <span class='st'>"wt_rs"</span>, <span class='kw'>bin</span> <span class='kw'>=</span> <span class='fl'>30</span>)</pre>
+    <pre class="usage"><span class='fu'>hist_wts</span><span class='op'>(</span><span class='va'>data</span>, wt_col <span class='op'>=</span> <span class='st'>"wt"</span>, rs_wt_col <span class='op'>=</span> <span class='st'>"wt_rs"</span>, bin <span class='op'>=</span> <span class='fl'>30</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -199,20 +202,20 @@ weights. The default is wt_rs.</p></td>
 <span class='co'># vignette for more information on how to use the estimate_weights function and</span>
 <span class='co'># derive the "target_pop_standard" data.</span>
 
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>MAIC</span>)
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>MAIC</span><span class='op'>)</span>
 
 <span class='co'># load est_weights</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>est_weights</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"MAIC"</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>est_weights</span>, package <span class='op'>=</span> <span class='st'>"MAIC"</span><span class='op'>)</span>
 
 <span class='co'># load target_pop_standard</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>target_pop_standard</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"MAIC"</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>target_pop_standard</span>, package <span class='op'>=</span> <span class='st'>"MAIC"</span><span class='op'>)</span>
 
 <span class='co'># List out the uncentered variables used in the matching</span>
-<span class='no'>match_cov</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"AGE"</span>,
+<span class='va'>match_cov</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"AGE"</span>,
                <span class='st'>"SEX"</span>,
                <span class='st'>"SMOKE"</span>,
-               <span class='st'>"ECOG0"</span>)
+               <span class='st'>"ECOG0"</span><span class='op'>)</span>
 
 <span class='co'># Are the weights sensible? ----------------------------------------------------</span>
 
@@ -224,12 +227,15 @@ weights. The default is wt_rs.</p></td>
 <span class='co'># - a unique set of weights with the corresponding patient profile based on the</span>
 <span class='co'>#   matching variables</span>
 
-<span class='no'>diagnostics</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='wt_diagnostics.html'>wt_diagnostics</a></span>(<span class='no'>est_weights</span>$<span class='no'>analysis_data</span>,
-                              <span class='kw'>vars</span> <span class='kw'>=</span> <span class='no'>match_cov</span>)
+<span class='va'>diagnostics</span> <span class='op'>&lt;-</span> <span class='fu'><a href='wt_diagnostics.html'>wt_diagnostics</a></span><span class='op'>(</span><span class='va'>est_weights</span><span class='op'>$</span><span class='va'>analysis_data</span>,
+                              vars <span class='op'>=</span> <span class='va'>match_cov</span><span class='op'>)</span>
 
-<span class='no'>diagnostics</span>$<span class='no'>ESS</span></div><div class='output co'>#&gt; [1] 157.0715</div><div class='input'><span class='no'>diagnostics</span>$<span class='no'>Summary_of_weights</span></div><div class='output co'>#&gt;               type      mean       sd     median          min      max
+<span class='va'>diagnostics</span><span class='op'>$</span><span class='va'>ESS</span>
+</div><div class='output co'>#&gt; [1] 157.0715</div><div class='input'><span class='va'>diagnostics</span><span class='op'>$</span><span class='va'>Summary_of_weights</span>
+</div><div class='output co'>#&gt;               type      mean       sd     median          min      max
 #&gt; 1          Weights 0.3763805 0.556692 0.03467630 1.855194e-11 2.373310
-#&gt; 2 Rescaled weights 1.0000000 1.479067 0.09213098 4.929037e-11 6.305614</div><div class='input'><span class='no'>diagnostics</span>$<span class='no'>Weight_profiles</span></div><div class='output co'>#&gt;     AGE SEX SMOKE ECOG0           wt        wt_rs
+#&gt; 2 Rescaled weights 1.0000000 1.479067 0.09213098 4.929037e-11 6.305614</div><div class='input'><span class='va'>diagnostics</span><span class='op'>$</span><span class='va'>Weight_profiles</span>
+</div><div class='output co'>#&gt;     AGE SEX SMOKE ECOG0           wt        wt_rs
 #&gt; 1    45   1     0     0 1.301506e+00 3.457953e+00
 #&gt; 2    71   1     0     0 7.024764e-08 1.866400e-07
 #&gt; 3    58   1     1     1 6.384284e-02 1.696231e-01
@@ -429,14 +435,15 @@ weights. The default is wt_rs.</p></td>
 #&gt; 197  46   0     1     1 4.436790e-01 1.178804e+00
 #&gt; 198  67   1     1     1 1.047111e-05 2.782053e-05</div><div class='input'>
 <span class='co'># Each of the wt_diagnostics outputs can also be estimated individually</span>
-<span class='no'>ESS</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='estimate_ess.html'>estimate_ess</a></span>(<span class='no'>est_weights</span>$<span class='no'>analysis_data</span>)
-<span class='no'>weight_summ</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='summarize_wts.html'>summarize_wts</a></span>(<span class='no'>est_weights</span>$<span class='no'>analysis_data</span>)
-<span class='no'>wts_profile</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='profile_wts.html'>profile_wts</a></span>(<span class='no'>est_weights</span>$<span class='no'>analysis_data</span>, <span class='kw'>vars</span> <span class='kw'>=</span> <span class='no'>match_cov</span>)
+<span class='va'>ESS</span> <span class='op'>&lt;-</span> <span class='fu'><a href='estimate_ess.html'>estimate_ess</a></span><span class='op'>(</span><span class='va'>est_weights</span><span class='op'>$</span><span class='va'>analysis_data</span><span class='op'>)</span>
+<span class='va'>weight_summ</span> <span class='op'>&lt;-</span> <span class='fu'><a href='summarize_wts.html'>summarize_wts</a></span><span class='op'>(</span><span class='va'>est_weights</span><span class='op'>$</span><span class='va'>analysis_data</span><span class='op'>)</span>
+<span class='va'>wts_profile</span> <span class='op'>&lt;-</span> <span class='fu'><a href='profile_wts.html'>profile_wts</a></span><span class='op'>(</span><span class='va'>est_weights</span><span class='op'>$</span><span class='va'>analysis_data</span>, vars <span class='op'>=</span> <span class='va'>match_cov</span><span class='op'>)</span>
 
 <span class='co'># Plot histograms of unscaled and rescaled weights</span>
 <span class='co'># bin_width needs to be adapted depending on the sample size in the data set</span>
-<span class='no'>histogram</span> <span class='kw'>&lt;-</span> <span class='fu'>hist_wts</span>(<span class='no'>est_weights</span>$<span class='no'>analysis_data</span>, <span class='kw'>bin</span> <span class='kw'>=</span> <span class='fl'>50</span>)
-<span class='no'>histogram</span></div><div class='img'><img src='hist_wts-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='va'>histogram</span> <span class='op'>&lt;-</span> <span class='fu'>hist_wts</span><span class='op'>(</span><span class='va'>est_weights</span><span class='op'>$</span><span class='va'>analysis_data</span>, bin <span class='op'>=</span> <span class='fl'>50</span><span class='op'>)</span>
+<span class='va'>histogram</span>
+</div><div class='img'><img src='hist_wts-1.png' alt='' width='700' height='433' /></div><div class='input'>
 
 <span class='co'># Has the optimization worked? -------------------------------------------------</span>
 
@@ -445,47 +452,50 @@ weights. The default is wt_rs.</p></td>
 <span class='co'># baseline characteristics:</span>
 
 <span class='co'># Create an object to hold the output</span>
-<span class='no'>baseline_summary</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='st'>'Intervention'</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
-                         <span class='st'>'Intervention_weighted'</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
-                         <span class='st'>'Comparator'</span> <span class='kw'>=</span> <span class='fl'>NA</span>)
+<span class='va'>baseline_summary</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='st'>'Intervention'</span> <span class='op'>=</span> <span class='cn'>NA</span>,
+                         <span class='st'>'Intervention_weighted'</span> <span class='op'>=</span> <span class='cn'>NA</span>,
+                         <span class='st'>'Comparator'</span> <span class='op'>=</span> <span class='cn'>NA</span><span class='op'>)</span>
 
 <span class='co'># Summarise matching variables for weighted intervention data</span>
-<span class='no'>baseline_summary</span>$<span class='no'>Intervention_weighted</span> <span class='kw'>&lt;-</span> <span class='no'>est_weights</span>$<span class='no'>analysis_data</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>transmute</a></span>(<span class='no'>AGE</span>, <span class='no'>SEX</span>, <span class='no'>SMOKE</span>, <span class='no'>ECOG0</span>, <span class='no'>wt</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise_all.html'>summarise_at</a></span>(<span class='no'>match_cov</span>, <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(~ <span class='fu'><a href='https://rdrr.io/r/stats/weighted.mean.html'>weighted.mean</a></span>(<span class='no'>.</span>, <span class='no'>wt</span>)))
+<span class='va'>baseline_summary</span><span class='op'>$</span><span class='va'>Intervention_weighted</span> <span class='op'>&lt;-</span> <span class='va'>est_weights</span><span class='op'>$</span><span class='va'>analysis_data</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>transmute</a></span><span class='op'>(</span><span class='va'>AGE</span>, <span class='va'>SEX</span>, <span class='va'>SMOKE</span>, <span class='va'>ECOG0</span>, <span class='va'>wt</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise_all.html'>summarise_at</a></span><span class='op'>(</span><span class='va'>match_cov</span>, <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/stats/weighted.mean.html'>weighted.mean</a></span><span class='op'>(</span><span class='va'>.</span>, <span class='va'>wt</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'># Summarise matching variables for unweighted intervention data</span>
-<span class='no'>baseline_summary</span>$<span class='no'>Intervention</span> <span class='kw'>&lt;-</span> <span class='no'>est_weights</span>$<span class='no'>analysis_data</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>transmute</a></span>(<span class='no'>AGE</span>, <span class='no'>SEX</span>, <span class='no'>SMOKE</span>, <span class='no'>ECOG0</span>, <span class='no'>wt</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise_all.html'>summarise_at</a></span>(<span class='no'>match_cov</span>, <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(~ <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span>(<span class='no'>.</span>)))
+<span class='va'>baseline_summary</span><span class='op'>$</span><span class='va'>Intervention</span> <span class='op'>&lt;-</span> <span class='va'>est_weights</span><span class='op'>$</span><span class='va'>analysis_data</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>transmute</a></span><span class='op'>(</span><span class='va'>AGE</span>, <span class='va'>SEX</span>, <span class='va'>SMOKE</span>, <span class='va'>ECOG0</span>, <span class='va'>wt</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise_all.html'>summarise_at</a></span><span class='op'>(</span><span class='va'>match_cov</span>, <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>.</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'># baseline data for the comparator study</span>
-<span class='no'>baseline_summary</span>$<span class='no'>Comparator</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>transmute</a></span>(<span class='no'>target_pop_standard</span>,
-                                         <span class='no'>AGE</span>,
-                                         <span class='no'>SEX</span>,
-                                         <span class='no'>SMOKE</span>,
-                                         <span class='no'>ECOG0</span>)
+<span class='va'>baseline_summary</span><span class='op'>$</span><span class='va'>Comparator</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>transmute</a></span><span class='op'>(</span><span class='va'>target_pop_standard</span>,
+                                         <span class='va'>AGE</span>,
+                                         <span class='va'>SEX</span>,
+                                         <span class='va'>SMOKE</span>,
+                                         <span class='va'>ECOG0</span><span class='op'>)</span>
 
 <span class='co'># Combine the three summaries</span>
 <span class='co'># Takes a list of data frames and binds these together</span>
-<span class='no'>trt</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>baseline_summary</span>)
-<span class='no'>baseline_summary</span> <span class='kw'>&lt;-</span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/bind.html'>bind_rows</a></span>(<span class='no'>baseline_summary</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate_all.html'>transmute_all</a></span>(<span class='no'>sprintf</span>, <span class='kw'>fmt</span> <span class='kw'>=</span> <span class='st'>"%.2f"</span>) <span class='kw'>%&gt;%</span> <span class='co'>#apply rounding for presentation</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>transmute</a></span>(<span class='kw'>ARM</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>as.character</a></span>(<span class='no'>trt</span>), <span class='no'>AGE</span>, <span class='no'>SEX</span>, <span class='no'>SMOKE</span>, <span class='no'>ECOG0</span>)
+<span class='va'>trt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>baseline_summary</span><span class='op'>)</span>
+<span class='va'>baseline_summary</span> <span class='op'>&lt;-</span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/bind.html'>bind_rows</a></span><span class='op'>(</span><span class='va'>baseline_summary</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate_all.html'>transmute_all</a></span><span class='op'>(</span><span class='va'>sprintf</span>, fmt <span class='op'>=</span> <span class='st'>"%.2f"</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='co'>#apply rounding for presentation</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>transmute</a></span><span class='op'>(</span>ARM <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>as.character</a></span><span class='op'>(</span><span class='va'>trt</span><span class='op'>)</span>, <span class='va'>AGE</span>, <span class='va'>SEX</span>, <span class='va'>SMOKE</span>, <span class='va'>ECOG0</span><span class='op'>)</span>
 
 <span class='co'># Insert N of intervention  as number of patients</span>
-<span class='no'>baseline_summary</span>$<span class='no'>`N/ESS`</span>[<span class='no'>baseline_summary</span>$<span class='no'>ARM</span> <span class='kw'>==</span> <span class='st'>"Intervention"</span>] <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span>(<span class='no'>est_weights</span>$<span class='no'>analysis_data</span>)
+<span class='va'>baseline_summary</span><span class='op'>$</span><span class='va'>`N/ESS`</span><span class='op'>[</span><span class='va'>baseline_summary</span><span class='op'>$</span><span class='va'>ARM</span> <span class='op'>==</span> <span class='st'>"Intervention"</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>est_weights</span><span class='op'>$</span><span class='va'>analysis_data</span><span class='op'>)</span>
 
 <span class='co'># Insert N for comparator from target_pop_standard</span>
-<span class='no'>baseline_summary</span>$<span class='no'>`N/ESS`</span>[<span class='no'>baseline_summary</span>$<span class='no'>ARM</span> <span class='kw'>==</span> <span class='st'>"Comparator"</span>] <span class='kw'>&lt;-</span> <span class='no'>target_pop_standard</span>$<span class='no'>N</span>
+<span class='va'>baseline_summary</span><span class='op'>$</span><span class='va'>`N/ESS`</span><span class='op'>[</span><span class='va'>baseline_summary</span><span class='op'>$</span><span class='va'>ARM</span> <span class='op'>==</span> <span class='st'>"Comparator"</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='va'>target_pop_standard</span><span class='op'>$</span><span class='va'>N</span>
 
 <span class='co'># Insert the ESS as the sample size for the weighted data</span>
 <span class='co'># This is calculated above but can also be obtained using the estimate_ess function as shown below</span>
-<span class='no'>baseline_summary</span>$<span class='no'>`N/ESS`</span>[<span class='no'>baseline_summary</span>$<span class='no'>ARM</span> <span class='kw'>==</span> <span class='st'>"Intervention_weighted"</span>] <span class='kw'>&lt;-</span> <span class='no'>est_weights</span>$<span class='no'>analysis_data</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='estimate_ess.html'>estimate_ess</a></span>(<span class='kw'>wt_col</span> <span class='kw'>=</span> <span class='st'>'wt'</span>)
+<span class='va'>baseline_summary</span><span class='op'>$</span><span class='va'>`N/ESS`</span><span class='op'>[</span><span class='va'>baseline_summary</span><span class='op'>$</span><span class='va'>ARM</span> <span class='op'>==</span> <span class='st'>"Intervention_weighted"</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='va'>est_weights</span><span class='op'>$</span><span class='va'>analysis_data</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='estimate_ess.html'>estimate_ess</a></span><span class='op'>(</span>wt_col <span class='op'>=</span> <span class='st'>'wt'</span><span class='op'>)</span>
 
-<span class='no'>baseline_summary</span> <span class='kw'>&lt;-</span> <span class='no'>baseline_summary</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>transmute</a></span>(<span class='no'>ARM</span>, <span class='kw'>`N/ESS`</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/Round.html'>round</a></span>(<span class='no'>`N/ESS`</span>,<span class='fl'>1</span>), <span class='no'>AGE</span>, <span class='no'>SEX</span>, <span class='no'>SMOKE</span>, <span class='no'>ECOG0</span>)</div></pre>
+<span class='va'>baseline_summary</span> <span class='op'>&lt;-</span> <span class='va'>baseline_summary</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>transmute</a></span><span class='op'>(</span><span class='va'>ARM</span>, `N/ESS`<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/Round.html'>round</a></span><span class='op'>(</span><span class='va'>`N/ESS`</span>,<span class='fl'>1</span><span class='op'>)</span>, <span class='va'>AGE</span>, <span class='va'>SEX</span>, <span class='va'>SMOKE</span>, <span class='va'>ECOG0</span><span class='op'>)</span>
+
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -501,7 +511,7 @@ weights. The default is wt_rs.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
