@@ -110,16 +110,16 @@ add_util <- function(.data=NULL,util,evt,trt,cycle_l=NULL,cycle_starttime=0){
 add_item <- function(.data=NULL,...){
 
   data_list <- .data
-
-  list_item <- lazyeval::lazy_dots(...)
-
+  
+  list_item <- as.list(substitute(...()))
+  
   if (is.null(data_list)) {
     data_list <- list_item
   } else{
     data_list <- append(data_list,list_item)
   }
-
-
+  
+  
   return(data_list)
 }
 
@@ -147,27 +147,20 @@ add_item <- function(.data=NULL,...){
 #' }
 
 new_event <- function(evt, env_ch = NULL){
-  if (is.null(env_ch)) {
-    env_ch <- parent.frame()$list_env
-  }
-
   new_evt_name <- names(evt)
   new_evt <- setNames(unlist(evt),new_evt_name)
-
-  evtlist_temp <- list(output = c(env_ch$input_list_trt$output,
+  
+  input_list_trt <- parent.frame()$input_list_trt
+  
+  evtlist_temp <- list(cur_evtlist = c(input_list_trt$cur_evtlist,
                                   new_evt))
-
-  evtlist_temp$output <- sort(evtlist_temp$output) #this is faster than using [(order())]
-
-  new_list <- env_ch$input_list_trt
-  new_list[["output"]] <- evtlist_temp$output
-
-
-
-  assign("input_list_trt",
-         new_list,
-         envir = env_ch$input_list_trt$list_env)
-
+  
+  evtlist_temp$cur_evtlist <- sort(evtlist_temp$cur_evtlist) 
+  
+  input_list_trt[["cur_evtlist"]] <- evtlist_temp$cur_evtlist
+  
+  list2env(input_list_trt["cur_evtlist"],envir = parent.frame())
+  assign("input_list_trt",input_list_trt, envir = parent.frame())
 
 }
 
@@ -194,29 +187,23 @@ new_event <- function(evt, env_ch = NULL){
 #' }
 
 modify_event <- function(evt, env_ch = NULL){
-  if (is.null(env_ch)) {
-    env_ch <- parent.frame()$list_env
-  }
-  obj_temp <- env_ch$input_list_trt$output
-  names_obj_temp <- names(obj_temp)
+  input_list_trt <- parent.frame()$input_list_trt
+  
+  names_obj_temp <- names(input_list_trt$cur_evtlist)
   names_evt <- names(evt)
   names_found <- names_evt[names_evt %in% names_obj_temp]
   if (length(names_found)==0) {
-    warning("Some or all event/s in modify_event() within ", paste(names_evt,collapse=", "), " not found. Use new_event() to add new events.")
+    warning("Some or all event/s in modify_evt within ", paste(names_evt,collapse=", "), " not found. Use new_evt to add new events.")
   }
   matched <- which(names_obj_temp %in% names_found)
-
-  evt2 <- setNames(unlist(evt,use.names = FALSE),names_evt)
-
-  obj_temp[matched] <- evt2[names_obj_temp[names_obj_temp %in% names_found]]
-
-  evtlist_temp <- list(output = obj_temp)
-  evtlist_temp$output <- sort(evtlist_temp$output)
-
-  assign("input_list_trt",
-         modifyList(env_ch$input_list_trt, evtlist_temp),
-         envir = env_ch$input_list_trt$list_env)
-
+  
+  input_list_trt[["cur_evtlist"]][matched] <- unlist(evt[names_obj_temp[names_obj_temp %in% names_found]])
+  
+  input_list_trt[["cur_evtlist"]] <- sort(input_list_trt[["cur_evtlist"]])
+  
+  list2env(input_list_trt["cur_evtlist"],envir = parent.frame())
+  assign("input_list_trt",input_list_trt, envir = parent.frame())
+  
 
 }
 
@@ -243,19 +230,12 @@ modify_event <- function(evt, env_ch = NULL){
 #' }
 
 modify_item <- function(list_item, env_ch = NULL){
-  list2env(list_item, envir= parent.frame()) #to review
-
-  if (is.null(env_ch)) {
-    env_ch <- parent.frame()$list_env
-  }
-
-  input_list_trt_h <- env_ch$input_list_trt
-
-  input_list_trt_h[names(list_item)] <- lapply(list_item, unname)
-
-  assign("input_list_trt",
-         input_list_trt_h,
-         envir = input_list_trt_h$list_env)
+  input_list_trt <- parent.frame()$input_list_trt
+  
+  input_list_trt[names(list_item)] <- lapply(list_item, unname)
+  
+  list2env(list_item,envir = parent.frame())
+  assign("input_list_trt",input_list_trt, envir = parent.frame())
 }
 
 
@@ -308,10 +288,9 @@ add_reactevt <- function(.data=NULL,name_evt,input){
       curtime_i=curtime,
       starttime_i=cycle_starttime,
       util_starttime_i=util_cycle_starttime,
-      env_ch = list_env
+      input_list_trt = input_list_trt
     )
   ))[[1]]
-
 
   data_list <- .data
 

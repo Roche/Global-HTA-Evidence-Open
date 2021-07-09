@@ -37,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">descem</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -120,7 +120,7 @@
       <h1 data-toc-skip>Example for a Sick-Sicker-Dead model</h1>
                         <h4 class="author">Javier Sanchez Alvarez and Valerie Aponte Ribero</h4>
             
-            <h4 class="date">June 29, 2021</h4>
+            <h4 class="date">July 09, 2021</h4>
       
       
       <div class="hidden name"><code>example_ssd.Rmd</code></div>
@@ -296,7 +296,6 @@
   <span class="fu"><a href="../reference/add_reactevt.html">add_reactevt</a></span><span class="op">(</span>name_evt <span class="op">=</span> <span class="st">"death"</span>,
                input <span class="op">=</span> <span class="op">{</span>
                  <span class="fu"><a href="../reference/modify_item.html">modify_item</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>curtime <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span><span class="op">)</span> 
-                 <span class="fu"><a href="../reference/modify_event.html">modify_event</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"potato"</span> <span class="op">=</span> <span class="fl">5</span><span class="op">)</span><span class="op">)</span> 
                <span class="op">}</span><span class="op">)</span> </pre></div>
 </div>
 </div>
@@ -360,8 +359,8 @@
   drq <span class="op">=</span> <span class="fl">0.035</span>                               <span class="co"># discount rate for qaly/lys</span>
 <span class="op">)</span>
 <span class="co">#&gt; [1] "Simulation number: 1"</span>
-<span class="co">#&gt; [1] "Time to run iteration 1: 2.74s"</span>
-<span class="co">#&gt; [1] "Total time to run: 2.74s"</span></pre></div>
+<span class="co">#&gt; [1] "Time to run iteration 1: 2.19s"</span>
+<span class="co">#&gt; [1] "Total time to run: 2.19s"</span></pre></div>
 </div>
 </div>
 <div id="post-processing-of-model-outputs" class="section level1">
@@ -376,19 +375,19 @@
 
 <span class="fu"><a href="../reference/summary_results_det.html">summary_results_det</a></span><span class="op">(</span><span class="va">results</span><span class="op">$</span><span class="va">final_output</span><span class="op">)</span> <span class="co">#will print the last simulation!</span>
 <span class="co">#&gt;            int    noint</span>
-<span class="co">#&gt; costs 54127.25 52300.56</span>
-<span class="co">#&gt; lys       9.69     9.69</span>
-<span class="co">#&gt; qalys     6.21     6.01</span>
+<span class="co">#&gt; costs 54397.01 53379.50</span>
+<span class="co">#&gt; lys       9.75     9.75</span>
+<span class="co">#&gt; qalys     6.26     5.99</span>
 <span class="co">#&gt; ICER        NA      Inf</span>
-<span class="co">#&gt; ICUR        NA  8906.75</span>
+<span class="co">#&gt; ICUR        NA  3777.60</span>
 
 <span class="fu"><a href="../reference/summary_results_psa.html">summary_results_psa</a></span><span class="op">(</span><span class="va">results</span><span class="op">$</span><span class="va">output_psa</span><span class="op">)</span>
 <span class="co">#&gt;                       int               noint</span>
-<span class="co">#&gt; costs 54127(54127, 54127) 52301(52301, 52301)</span>
-<span class="co">#&gt; lys      9.69(9.69, 9.69)    9.69(9.69, 9.69)</span>
-<span class="co">#&gt; qalys    6.21(6.21, 6.21)    6.01(6.01, 6.01)</span>
+<span class="co">#&gt; costs 54397(54397, 54397) 53379(53379, 53379)</span>
+<span class="co">#&gt; lys      9.75(9.75, 9.75)    9.75(9.75, 9.75)</span>
+<span class="co">#&gt; qalys    6.26(6.26, 6.26)    5.99(5.99, 5.99)</span>
 <span class="co">#&gt; ICER          NaN(NA, NA)       Inf(Inf, Inf)</span>
-<span class="co">#&gt; ICUR          NaN(NA, NA)    8907(8907, 8907)</span>
+<span class="co">#&gt; ICUR          NaN(NA, NA)    3778(3778, 3778)</span>
 
 <span class="va">psa_ipd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_rows</a></span><span class="op">(</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span><span class="op">(</span><span class="va">results</span><span class="op">$</span><span class="va">output_psa</span>, <span class="st">"merged_df"</span><span class="op">)</span><span class="op">)</span> 
 
@@ -437,7 +436,7 @@ simulation
 sick
 </td>
 <td style="text-align:right;">
-0.000000
+0.0000000
 </td>
 <td style="text-align:right;">
 0.000
@@ -446,7 +445,7 @@ sick
 0.0000000
 </td>
 <td style="text-align:right;">
-0.000000
+0.0000000
 </td>
 <td style="text-align:right;">
 1
@@ -455,13 +454,13 @@ sick
 int
 </td>
 <td style="text-align:right;">
-60703.67
+25170.61
 </td>
 <td style="text-align:right;">
-5.098204
+3.715921
 </td>
 <td style="text-align:right;">
-9.307143
+5.194152
 </td>
 <td style="text-align:right;">
 1
@@ -472,16 +471,16 @@ int
 sicker
 </td>
 <td style="text-align:right;">
-1.521230
+3.9913883
 </td>
 <td style="text-align:right;">
-5928.441
+14917.935
 </td>
 <td style="text-align:right;">
-1.1856882
+2.9835871
 </td>
 <td style="text-align:right;">
-1.482110
+3.7294838
 </td>
 <td style="text-align:right;">
 1
@@ -490,13 +489,13 @@ sicker
 int
 </td>
 <td style="text-align:right;">
-60703.67
+25170.61
 </td>
 <td style="text-align:right;">
-5.098204
+3.715921
 </td>
 <td style="text-align:right;">
-9.307143
+5.194152
 </td>
 <td style="text-align:right;">
 1
@@ -507,16 +506,16 @@ int
 death
 </td>
 <td style="text-align:right;">
-11.218306
+5.7221481
 </td>
 <td style="text-align:right;">
-54775.227
+10252.675
 </td>
 <td style="text-align:right;">
-3.9125162
+0.7323339
 </td>
 <td style="text-align:right;">
-7.825032
+1.4646678
 </td>
 <td style="text-align:right;">
 1
@@ -525,13 +524,13 @@ death
 int
 </td>
 <td style="text-align:right;">
-60703.67
+25170.61
 </td>
 <td style="text-align:right;">
-5.098204
+3.715921
 </td>
 <td style="text-align:right;">
-9.307143
+5.194152
 </td>
 <td style="text-align:right;">
 1
@@ -542,7 +541,7 @@ int
 sick
 </td>
 <td style="text-align:right;">
-0.000000
+0.0000000
 </td>
 <td style="text-align:right;">
 0.000
@@ -551,7 +550,7 @@ sick
 0.0000000
 </td>
 <td style="text-align:right;">
-0.000000
+0.0000000
 </td>
 <td style="text-align:right;">
 2
@@ -560,13 +559,83 @@ sick
 int
 </td>
 <td style="text-align:right;">
-50364.13
+39419.77
 </td>
 <td style="text-align:right;">
-5.241635
+7.883955
 </td>
 <td style="text-align:right;">
-8.565040
+9.854943
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+death
+</td>
+<td style="text-align:right;">
+12.0354871
+</td>
+<td style="text-align:right;">
+39419.774
+</td>
+<td style="text-align:right;">
+7.8839548
+</td>
+<td style="text-align:right;">
+9.8549435
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:right;">
+39419.77
+</td>
+<td style="text-align:right;">
+7.883955
+</td>
+<td style="text-align:right;">
+9.854943
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+sick
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:right;">
+68005.99
+</td>
+<td style="text-align:right;">
+7.875179
+</td>
+<td style="text-align:right;">
+12.229815
 </td>
 <td style="text-align:right;">
 1
@@ -577,31 +646,31 @@ int
 sicker
 </td>
 <td style="text-align:right;">
-3.386918
+6.5538636
 </td>
 <td style="text-align:right;">
-12788.199
+23470.284
 </td>
 <td style="text-align:right;">
-2.5576397
+4.6940569
 </td>
 <td style="text-align:right;">
-3.197050
+5.8675711
 </td>
 <td style="text-align:right;">
-2
+3
 </td>
 <td style="text-align:left;">
 int
 </td>
 <td style="text-align:right;">
-50364.13
+68005.99
 </td>
 <td style="text-align:right;">
-5.241635
+7.875179
 </td>
 <td style="text-align:right;">
-8.565040
+12.229815
 </td>
 <td style="text-align:right;">
 1
@@ -612,31 +681,31 @@ int
 death
 </td>
 <td style="text-align:right;">
-10.146689
+15.8706978
 </td>
 <td style="text-align:right;">
-37575.935
+44535.707
 </td>
 <td style="text-align:right;">
-2.6839954
+3.1811219
 </td>
 <td style="text-align:right;">
-5.367991
+6.3622438
 </td>
 <td style="text-align:right;">
-2
+3
 </td>
 <td style="text-align:left;">
 int
 </td>
 <td style="text-align:right;">
-50364.13
+68005.99
 </td>
 <td style="text-align:right;">
-5.241635
+7.875179
 </td>
 <td style="text-align:right;">
-8.565040
+12.229815
 </td>
 <td style="text-align:right;">
 1
@@ -647,7 +716,7 @@ int
 sick
 </td>
 <td style="text-align:right;">
-0.000000
+0.0000000
 </td>
 <td style="text-align:right;">
 0.000
@@ -656,112 +725,7 @@ sick
 0.0000000
 </td>
 <td style="text-align:right;">
-0.000000
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:right;">
-57176.35
-</td>
-<td style="text-align:right;">
-4.675222
-</td>
-<td style="text-align:right;">
-8.660714
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-sicker
-</td>
-<td style="text-align:right;">
-1.172897
-</td>
-<td style="text-align:right;">
-4598.198
-</td>
-<td style="text-align:right;">
-0.9196397
-</td>
-<td style="text-align:right;">
-1.149550
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:right;">
-57176.35
-</td>
-<td style="text-align:right;">
-4.675222
-</td>
-<td style="text-align:right;">
-8.660714
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-death
-</td>
-<td style="text-align:right;">
-10.282647
-</td>
-<td style="text-align:right;">
-52578.154
-</td>
-<td style="text-align:right;">
-3.7555824
-</td>
-<td style="text-align:right;">
-7.511165
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:right;">
-57176.35
-</td>
-<td style="text-align:right;">
-4.675222
-</td>
-<td style="text-align:right;">
-8.660714
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-sick
-</td>
-<td style="text-align:right;">
-0.000000
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-<td style="text-align:right;">
 0.0000000
-</td>
-<td style="text-align:right;">
-0.000000
 </td>
 <td style="text-align:right;">
 4
@@ -770,13 +734,48 @@ sick
 int
 </td>
 <td style="text-align:right;">
-58798.43
+68399.06
 </td>
 <td style="text-align:right;">
-4.430407
+5.233331
 </td>
 <td style="text-align:right;">
-8.591875
+10.061031
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+sicker
+</td>
+<td style="text-align:right;">
+0.6840372
+</td>
+<td style="text-align:right;">
+2704.207
+</td>
+<td style="text-align:right;">
+0.5408413
+</td>
+<td style="text-align:right;">
+0.6760517
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:right;">
+68399.06
+</td>
+<td style="text-align:right;">
+5.233331
+</td>
+<td style="text-align:right;">
+10.061031
 </td>
 <td style="text-align:right;">
 1
@@ -828,7 +827,7 @@ int
 sicker
 </td>
 <td style="text-align:right;">
-829
+822
 </td>
 </tr>
 <tr>
@@ -861,7 +860,7 @@ noint
 sicker
 </td>
 <td style="text-align:right;">
-890
+914
 </td>
 </tr>
 </tbody>

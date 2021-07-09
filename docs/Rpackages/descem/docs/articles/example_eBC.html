@@ -37,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">descem</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -48,6 +48,9 @@
     <span class="fa fa-home"></span>
      
   </a>
+</li>
+<li>
+  <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -66,9 +69,6 @@
       <a href="https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/descem/docs/articles/example_markov.html">Example in a Markov Model</a>
     </li>
   </ul>
-</li>
-<li>
-  <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -121,7 +121,7 @@
       <h1 data-toc-skip>Example in Early Breast Cancer</h1>
                         <h4 class="author">Javier Sanchez Alvarez and Valerie Aponte Ribero</h4>
             
-            <h4 class="date">June 29, 2021</h4>
+            <h4 class="date">July 09, 2021</h4>
       
       
       <div class="hidden name"><code>example_eBC.Rmd</code></div>
@@ -166,8 +166,8 @@
 <h2 class="hasAnchor">
 <a href="#model-concept" class="anchor"></a>Model Concept</h2>
 <p>The model is represented below. Patients start in early breast cancer, and draw times to event. Patients also draw a probability of going into metastatic breast cancer or going into remission. If they go into remission, they can have a metastatic recurrence. At any point in time they can die, depending on the risk of each disease stage.</p>
-<div id="htmlwidget-4d4689f18780fac70052" style="width:700px;height:500px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-4d4689f18780fac70052">{"x":{"diagram":"\n  digraph graph1 {\n  \n  graph [layout = dot, rankdir = LR, nodesep=\"1\", fontsize = 12]\n  \n  # node definitions with substituted label text\n  node [shape = oval]\n  a [label = \"Early BC\"]\n  b [label = \"Remission\"]\n  c [label = \"Metastatic BC\"]\n  d [label = \"Death\"]\n  \n  a -> d\n  a -> b \n  a -> c [label=\"eBC to mBC\"];\n  c -> d;\n  b -> c [label=\"Recurrence\"];\n  b -> d; \n  \n  }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-816a4d9a641810b68370" style="width:700px;height:500px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-816a4d9a641810b68370">{"x":{"diagram":"\n  digraph graph1 {\n  \n  graph [layout = dot, rankdir = LR, nodesep=\"1\", fontsize = 12]\n  \n  # node definitions with substituted label text\n  node [shape = oval]\n  a [label = \"Early BC\"]\n  b [label = \"Remission\"]\n  c [label = \"Metastatic BC\"]\n  d [label = \"Death\"]\n  \n  a -> d\n  a -> b \n  a -> c [label=\"eBC to mBC\"];\n  c -> d;\n  b -> c [label=\"Recurrence\"];\n  b -> d; \n  \n  }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="load-data" class="section level2">
 <h2 class="hasAnchor">
@@ -603,8 +603,8 @@
 <span class="co">#&gt; c("int", : Item cost_v is named. It is strongly advised to assign unnamed</span>
 <span class="co">#&gt; objects if they are going to be processed in the model, as they can create</span>
 <span class="co">#&gt; errors depending on how they are used within the model</span>
-<span class="co">#&gt; [1] "Time to run iteration 1: 8.01s"</span>
-<span class="co">#&gt; [1] "Total time to run: 8.01s"</span></pre></div>
+<span class="co">#&gt; [1] "Time to run iteration 1: 6.78s"</span>
+<span class="co">#&gt; [1] "Total time to run: 6.78s"</span></pre></div>
 </div>
 </div>
 <div id="post-processing-of-model-outputs" class="section level1">
@@ -619,19 +619,19 @@
 
 <span class="fu"><a href="../reference/summary_results_det.html">summary_results_det</a></span><span class="op">(</span><span class="va">results</span><span class="op">$</span><span class="va">final_output</span><span class="op">)</span> <span class="co">#will print the last simulation!</span>
 <span class="co">#&gt;             int     noint</span>
-<span class="co">#&gt; costs 370380.04 268605.68</span>
-<span class="co">#&gt; lys       13.10     11.83</span>
-<span class="co">#&gt; qalys      9.93      8.91</span>
-<span class="co">#&gt; ICER         NA  80223.93</span>
-<span class="co">#&gt; ICUR         NA  99375.65</span>
+<span class="co">#&gt; costs 363813.07 268408.09</span>
+<span class="co">#&gt; lys       13.08     11.88</span>
+<span class="co">#&gt; qalys      9.92      9.00</span>
+<span class="co">#&gt; ICER         NA  79595.50</span>
+<span class="co">#&gt; ICUR         NA 102972.28</span>
 
 <span class="fu"><a href="../reference/summary_results_psa.html">summary_results_psa</a></span><span class="op">(</span><span class="va">results</span><span class="op">$</span><span class="va">output_psa</span><span class="op">)</span>
 <span class="co">#&gt;                          int                  noint</span>
-<span class="co">#&gt; costs 370380(370380, 370380) 268606(268606, 268606)</span>
-<span class="co">#&gt; lys         13.1(13.1, 13.1)    11.83(11.83, 11.83)</span>
-<span class="co">#&gt; qalys       9.93(9.93, 9.93)       8.91(8.91, 8.91)</span>
-<span class="co">#&gt; ICER             NaN(NA, NA)    80224(80224, 80224)</span>
-<span class="co">#&gt; ICUR             NaN(NA, NA)    99376(99376, 99376)</span>
+<span class="co">#&gt; costs 363813(363813, 363813) 268408(268408, 268408)</span>
+<span class="co">#&gt; lys      13.08(13.08, 13.08)    11.88(11.88, 11.88)</span>
+<span class="co">#&gt; qalys       9.92(9.92, 9.92)                9(9, 9)</span>
+<span class="co">#&gt; ICER             NaN(NA, NA)    79596(79596, 79596)</span>
+<span class="co">#&gt; ICUR             NaN(NA, NA) 102972(102972, 102972)</span>
 
 <span class="va">psa_ipd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_rows</a></span><span class="op">(</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span><span class="op">(</span><span class="va">results</span><span class="op">$</span><span class="va">output_psa</span>, <span class="st">"merged_df"</span><span class="op">)</span><span class="op">)</span> 
 
@@ -695,7 +695,7 @@ start
 0.000000
 </td>
 <td style="text-align:right;">
-0.00
+0.0000
 </td>
 <td style="text-align:right;">
 0.0000000
@@ -713,116 +713,22 @@ int
 female
 </td>
 <td style="text-align:right;">
-42.35818
+39.15722
 </td>
 <td style="text-align:right;">
-17.82895
+20.82166
 </td>
 <td style="text-align:right;">
-24.83855
+32.15433
 </td>
 <td style="text-align:right;">
-197524.3
+387876.3
 </td>
 <td style="text-align:right;">
-10.63167
+12.56762
 </td>
 <td style="text-align:right;">
-13.32682
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ttot.beva
-</td>
-<td style="text-align:right;">
-6.914803
-</td>
-<td style="text-align:right;">
-141539.08
-</td>
-<td style="text-align:right;">
-4.6154047
-</td>
-<td style="text-align:right;">
-6.1538729
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-female
-</td>
-<td style="text-align:right;">
-42.35818
-</td>
-<td style="text-align:right;">
-17.82895
-</td>
-<td style="text-align:right;">
-24.83855
-</td>
-<td style="text-align:right;">
-197524.3
-</td>
-<td style="text-align:right;">
-10.63167
-</td>
-<td style="text-align:right;">
-13.32682
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-idfs
-</td>
-<td style="text-align:right;">
-7.658997
-</td>
-<td style="text-align:right;">
-28960.04
-</td>
-<td style="text-align:right;">
-0.4344007
-</td>
-<td style="text-align:right;">
-0.5792009
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-female
-</td>
-<td style="text-align:right;">
-42.35818
-</td>
-<td style="text-align:right;">
-17.82895
-</td>
-<td style="text-align:right;">
-24.83855
-</td>
-<td style="text-align:right;">
-197524.3
-</td>
-<td style="text-align:right;">
-10.63167
-</td>
-<td style="text-align:right;">
-13.32682
+14.74418
 </td>
 <td style="text-align:right;">
 1
@@ -833,10 +739,104 @@ female
 ttot.early
 </td>
 <td style="text-align:right;">
-7.658997
+5.563740
 </td>
 <td style="text-align:right;">
-0.00
+303821.6206
+</td>
+<td style="text-align:right;">
+3.7977703
+</td>
+<td style="text-align:right;">
+5.0636937
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:left;">
+female
+</td>
+<td style="text-align:right;">
+39.15722
+</td>
+<td style="text-align:right;">
+20.82166
+</td>
+<td style="text-align:right;">
+32.15433
+</td>
+<td style="text-align:right;">
+387876.3
+</td>
+<td style="text-align:right;">
+12.56762
+</td>
+<td style="text-align:right;">
+14.74418
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ae
+</td>
+<td style="text-align:right;">
+5.563840
+</td>
+<td style="text-align:right;">
+825.7989
+</td>
+<td style="text-align:right;">
+0.0000826
+</td>
+<td style="text-align:right;">
+0.0000826
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:left;">
+female
+</td>
+<td style="text-align:right;">
+39.15722
+</td>
+<td style="text-align:right;">
+20.82166
+</td>
+<td style="text-align:right;">
+32.15433
+</td>
+<td style="text-align:right;">
+387876.3
+</td>
+<td style="text-align:right;">
+12.56762
+</td>
+<td style="text-align:right;">
+14.74418
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ae
+</td>
+<td style="text-align:right;">
+5.563840
+</td>
+<td style="text-align:right;">
+825.7989
 </td>
 <td style="text-align:right;">
 0.0000000
@@ -854,22 +854,116 @@ int
 female
 </td>
 <td style="text-align:right;">
-42.35818
+39.15722
 </td>
 <td style="text-align:right;">
-17.82895
+20.82166
 </td>
 <td style="text-align:right;">
-24.83855
+32.15433
 </td>
 <td style="text-align:right;">
-197524.3
+387876.3
 </td>
 <td style="text-align:right;">
-10.63167
+12.56762
 </td>
 <td style="text-align:right;">
-13.32682
+14.74418
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ttot.beva
+</td>
+<td style="text-align:right;">
+7.084417
+</td>
+<td style="text-align:right;">
+28138.5067
+</td>
+<td style="text-align:right;">
+1.2234133
+</td>
+<td style="text-align:right;">
+1.2234133
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:left;">
+female
+</td>
+<td style="text-align:right;">
+39.15722
+</td>
+<td style="text-align:right;">
+20.82166
+</td>
+<td style="text-align:right;">
+32.15433
+</td>
+<td style="text-align:right;">
+387876.3
+</td>
+<td style="text-align:right;">
+12.56762
+</td>
+<td style="text-align:right;">
+14.74418
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+idfs
+</td>
+<td style="text-align:right;">
+10.881678
+</td>
+<td style="text-align:right;">
+27897.7637
+</td>
+<td style="text-align:right;">
+2.7897764
+</td>
+<td style="text-align:right;">
+2.7897764
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:left;">
+female
+</td>
+<td style="text-align:right;">
+39.15722
+</td>
+<td style="text-align:right;">
+20.82166
+</td>
+<td style="text-align:right;">
+32.15433
+</td>
+<td style="text-align:right;">
+387876.3
+</td>
+<td style="text-align:right;">
+12.56762
+</td>
+<td style="text-align:right;">
+14.74418
 </td>
 <td style="text-align:right;">
 1
@@ -880,10 +974,10 @@ female
 remission
 </td>
 <td style="text-align:right;">
-7.658997
+10.881678
 </td>
 <td style="text-align:right;">
-0.00
+0.0000
 </td>
 <td style="text-align:right;">
 0.0000000
@@ -901,22 +995,22 @@ int
 female
 </td>
 <td style="text-align:right;">
-42.35818
+39.15722
 </td>
 <td style="text-align:right;">
-17.82895
+20.82166
 </td>
 <td style="text-align:right;">
-24.83855
+32.15433
 </td>
 <td style="text-align:right;">
-197524.3
+387876.3
 </td>
 <td style="text-align:right;">
-10.63167
+12.56762
 </td>
 <td style="text-align:right;">
-13.32682
+14.74418
 </td>
 <td style="text-align:right;">
 1
@@ -927,16 +1021,16 @@ female
 recurrence
 </td>
 <td style="text-align:right;">
-15.736347
+18.333700
 </td>
 <td style="text-align:right;">
-0.00
+0.0000
 </td>
 <td style="text-align:right;">
-4.8768614
+4.0687522
 </td>
 <td style="text-align:right;">
-5.4187349
+4.5208358
 </td>
 <td style="text-align:right;">
 1
@@ -948,22 +1042,22 @@ int
 female
 </td>
 <td style="text-align:right;">
-42.35818
+39.15722
 </td>
 <td style="text-align:right;">
-17.82895
+20.82166
 </td>
 <td style="text-align:right;">
-24.83855
+32.15433
 </td>
 <td style="text-align:right;">
-197524.3
+387876.3
 </td>
 <td style="text-align:right;">
-10.63167
+12.56762
 </td>
 <td style="text-align:right;">
-13.32682
+14.74418
 </td>
 <td style="text-align:right;">
 1
@@ -974,16 +1068,16 @@ female
 os
 </td>
 <td style="text-align:right;">
-17.828945
+20.571660
 </td>
 <td style="text-align:right;">
-27025.19
+26366.8070
 </td>
 <td style="text-align:right;">
-0.7050050
+0.6878297
 </td>
 <td style="text-align:right;">
-1.1750084
+1.1463829
 </td>
 <td style="text-align:right;">
 1
@@ -995,22 +1089,22 @@ int
 female
 </td>
 <td style="text-align:right;">
-42.35818
+39.15722
 </td>
 <td style="text-align:right;">
-17.82895
+20.82166
 </td>
 <td style="text-align:right;">
-24.83855
+32.15433
 </td>
 <td style="text-align:right;">
-197524.3
+387876.3
 </td>
 <td style="text-align:right;">
-10.63167
+12.56762
 </td>
 <td style="text-align:right;">
-13.32682
+14.74418
 </td>
 <td style="text-align:right;">
 1
@@ -1024,7 +1118,7 @@ start
 0.000000
 </td>
 <td style="text-align:right;">
-0.00
+0.0000
 </td>
 <td style="text-align:right;">
 0.0000000
@@ -1042,116 +1136,22 @@ int
 female
 </td>
 <td style="text-align:right;">
-50.08206
+16.98257
 </td>
 <td style="text-align:right;">
-18.05958
+22.75188
 </td>
 <td style="text-align:right;">
-26.24004
+24.40937
 </td>
 <td style="text-align:right;">
-440705.5
+175658.6
 </td>
 <td style="text-align:right;">
-10.76628
+10.30339
 </td>
 <td style="text-align:right;">
-13.45122
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-idfs
-</td>
-<td style="text-align:right;">
-7.552738
-</td>
-<td style="text-align:right;">
-399076.68
-</td>
-<td style="text-align:right;">
-4.9884585
-</td>
-<td style="text-align:right;">
-6.6512779
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-female
-</td>
-<td style="text-align:right;">
-50.08206
-</td>
-<td style="text-align:right;">
-18.05958
-</td>
-<td style="text-align:right;">
-26.24004
-</td>
-<td style="text-align:right;">
-440705.5
-</td>
-<td style="text-align:right;">
-10.76628
-</td>
-<td style="text-align:right;">
-13.45122
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ttot.early
-</td>
-<td style="text-align:right;">
-7.552738
-</td>
-<td style="text-align:right;">
-0.00
-</td>
-<td style="text-align:right;">
-0.0000000
-</td>
-<td style="text-align:right;">
-0.0000000
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-female
-</td>
-<td style="text-align:right;">
-50.08206
-</td>
-<td style="text-align:right;">
-18.05958
-</td>
-<td style="text-align:right;">
-26.24004
-</td>
-<td style="text-align:right;">
-440705.5
-</td>
-<td style="text-align:right;">
-10.76628
-</td>
-<td style="text-align:right;">
-13.45122
+12.86173
 </td>
 <td style="text-align:right;">
 1
@@ -1203,7 +1203,7 @@ int
 ttot.early
 </td>
 <td style="text-align:right;">
-1973
+1978
 </td>
 </tr>
 <tr>
@@ -1225,7 +1225,7 @@ int
 ttot.beva
 </td>
 <td style="text-align:right;">
-1961
+1955
 </td>
 </tr>
 <tr>
@@ -1236,7 +1236,7 @@ int
 remission
 </td>
 <td style="text-align:right;">
-1596
+1587
 </td>
 </tr>
 <tr>
@@ -1247,7 +1247,7 @@ int
 recurrence
 </td>
 <td style="text-align:right;">
-1347
+1366
 </td>
 </tr>
 <tr>
@@ -1258,7 +1258,7 @@ int
 ae
 </td>
 <td style="text-align:right;">
-1100
+1186
 </td>
 </tr>
 <tr>
@@ -1269,7 +1269,7 @@ int
 progression.mbc
 </td>
 <td style="text-align:right;">
-566
+530
 </td>
 </tr>
 <tr>
@@ -1280,7 +1280,7 @@ int
 ttot
 </td>
 <td style="text-align:right;">
-536
+521
 </td>
 </tr>
 <tr>
@@ -1291,7 +1291,7 @@ int
 start.early.mbc
 </td>
 <td style="text-align:right;">
-363
+370
 </td>
 </tr>
 <tr>
@@ -1302,7 +1302,7 @@ int
 2ndline_mbc
 </td>
 <td style="text-align:right;">
-238
+239
 </td>
 </tr>
 <tr>
@@ -1335,7 +1335,7 @@ noint
 ttot.early
 </td>
 <td style="text-align:right;">
-1978
+1984
 </td>
 </tr>
 <tr>
@@ -1346,7 +1346,7 @@ noint
 idfs
 </td>
 <td style="text-align:right;">
-1974
+1980
 </td>
 </tr>
 <tr>
@@ -1357,7 +1357,7 @@ noint
 remission
 </td>
 <td style="text-align:right;">
-1565
+1616
 </td>
 </tr>
 <tr>
@@ -1368,7 +1368,7 @@ noint
 ae
 </td>
 <td style="text-align:right;">
-1363
+1472
 </td>
 </tr>
 <tr>
@@ -1379,7 +1379,7 @@ noint
 recurrence
 </td>
 <td style="text-align:right;">
-1197
+1238
 </td>
 </tr>
 <tr>
@@ -1401,7 +1401,7 @@ noint
 ttot
 </td>
 <td style="text-align:right;">
-457
+443
 </td>
 </tr>
 <tr>
@@ -1412,7 +1412,7 @@ noint
 start.early.mbc
 </td>
 <td style="text-align:right;">
-392
+348
 </td>
 </tr>
 <tr>
@@ -1423,7 +1423,7 @@ noint
 2ndline_mbc
 </td>
 <td style="text-align:right;">
-195
+182
 </td>
 </tr>
 </tbody>

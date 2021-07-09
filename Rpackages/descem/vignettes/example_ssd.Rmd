@@ -134,7 +134,6 @@ evt_react_list <-
   add_reactevt(name_evt = "death",
                input = {
                  modify_item(list(curtime = Inf)) 
-                 modify_event(list("potato" = 5)) 
                }) 
 
 ```

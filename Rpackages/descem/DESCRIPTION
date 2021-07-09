@@ -1,6 +1,6 @@
 Package: descem
 Title: Discrete Event Simulation for Cost-Effectiveness Modelling
-Version: 0.1
+Version: 0.1.1
 Authors@R: 
     c(person(given = "Valerie",
            family = "Aponte Ribero",
@@ -28,7 +28,6 @@ Suggests:
     DiagrammeR,
     MASS
 Imports: 
-    lazyeval,
     purrr,
     tidyr,
     doParallel,

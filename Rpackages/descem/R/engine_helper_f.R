@@ -28,9 +28,9 @@ InitEventList <- function(trt_name,input_list_trt){
   },input_list_trt)
 
   #Event data
-  output <- unlist(time_data$evttime)
-  output <- sort(output)
-  return(list(output = output, time_data = unlist(time_data$othertime)))
+  cur_evtlist <- unlist(time_data$evttime)
+  cur_evtlist <- sort(cur_evtlist)
+  return(list(cur_evtlist = cur_evtlist, time_data = unlist(time_data$othertime)))
 }
 
 
@@ -44,7 +44,7 @@ InitEventList <- function(trt_name,input_list_trt){
 #' @return Two lists: one containing the name and time of the next event, the other with the remaining events to be processed
 #'
 #' @examples
-#' GetNxtEvt(evt_list = input_list_trt$output)
+#' GetNxtEvt(evt_list = input_list_trt$cur_evtlist)
 #'
 #' @keywords internal
 #' @noRd
@@ -52,13 +52,13 @@ InitEventList <- function(trt_name,input_list_trt){
 GetNxtEvt <- function(evt_list){                  # This function identifies which event is to be processed next for each patient, depending on intervention
 
   if (length(evt_list)>0) {
-    output <- list(out = list(evt = names(evt_list[1]), evttime = evt_list[[1]]), evt_list = evt_list[-1])
+    cur_evtlist <- list(out = list(evt = names(evt_list[1]), evttime = evt_list[[1]]), evt_list = evt_list[-1])
   } else {
-    output <- NULL
+    cur_evtlist <- NULL
   }
 
 
-  return(output)
+  return(cur_evtlist)
 }
 
 
@@ -71,7 +71,7 @@ GetNxtEvt <- function(evt_list){                  # This function identifies whi
 #' @param trt A character string of the name of the intervention currently being processed
 #' @param input_list_trt A list of simulation inputs
 #'
-#' @return No explicit return, see eval_reactevt() to understand how outputs are used
+#' @return The updated input list with after the reaction to the event is evaluated
 #'
 #' @examples
 #' ReactEvt(thisevt="evt1",trt="int",input_list_trt=input_list_trt)
@@ -80,38 +80,37 @@ GetNxtEvt <- function(evt_list){                  # This function identifies whi
 #' @noRd
 
 ReactEvt <- function(thisevt,trt,input_list_trt=NULL){      # This function processes the next event (as identified in the GetNextEvt function)
-  cur_evtlist <- input_list_trt$output
   evt <- thisevt$evt                  # Identify event type
   prevtime <- input_list_trt$curtime                 # Identify time of previous event
   curtime <- thisevt$evttime         # Identify time of next event
-
-  modify_item(list("curtime"=curtime),env_ch = input_list_trt$list_env) #modify curtime also in main input_list_trt
-
-  input_list_trt2 <- c(input_list_trt,list(cur_evtlist = cur_evtlist, evt = evt, prevtime = prevtime, trt = trt))
-  input_list_trt2[["curtime"]] <- curtime
-  # Create costs and utilities for event
-
+  
+  input_list_trt[["curtime"]] <- curtime
+  input_list_trt[["evt"]] <- evt
+  input_list_trt[["prevtime"]] <- prevtime
+  input_list_trt[["trt"]] <- trt
+  
+  # Create costs and utilities for event --------------------------------------------------
   evt_trt <- paste(evt,trt,sep = "_")
-  input_list_trt2 <- c(input_list_trt2, list(
-    cost_ongoing         = unname(get_input(input_list_trt$uc_lists$cost_ongoing_list,ifnull=0,type="cost",evt_trt_i=evt_trt,input_list_trt_i=input_list_trt2)),
-    cost_instant         = unname(get_input(input_list_trt$uc_lists$cost_instant_list,ifnull=0,type="cost",evt_trt_i=evt_trt,input_list_trt_i=input_list_trt2)),
-    cost_cycle           = unname(get_input(input_list_trt$uc_lists$cost_cycle_list,ifnull=0,type="cost",evt_trt_i=evt_trt,input_list_trt_i=input_list_trt2)),  #can be a vector
-    cycle_l              = unname(get_input(input_list_trt$uc_lists$cost_cycle_list,ifnull=1,type="cycle_l",evt_trt_i=evt_trt,input_list_trt_i=input_list_trt2)), #can be a vector
-    cycle_starttime      = unname(get_input(input_list_trt$uc_lists$cost_cycle_list,ifnull=0,type="cycle_starttime",evt_trt_i=evt_trt,input_list_trt_i=input_list_trt2)), #can be a vector
-    utilmlt              = unname(get_input(input_list_trt$uc_lists$util_ongoing_list,ifnull=0,type="util",evt_trt_i=evt_trt,input_list_trt_i=input_list_trt2)),
-    util_instant         = unname(get_input(input_list_trt$uc_lists$util_instant_list,ifnull=0,type="util",evt_trt_i=evt_trt,input_list_trt_i=input_list_trt2)),
-    util_cycle           = unname(get_input(input_list_trt$uc_lists$util_cycle_list,ifnull=0,type="util",evt_trt_i=evt_trt,input_list_trt_i=input_list_trt2)),    #can be a vector
-    util_cycle_l         = unname(get_input(input_list_trt$uc_lists$util_cycle_list,ifnull=1,type="cycle_l",evt_trt_i=evt_trt,input_list_trt_i=input_list_trt2)),
-    util_cycle_starttime = unname(get_input(input_list_trt$uc_lists$util_cycle_list,ifnull=0,type="cycle_starttime",evt_trt_i=evt_trt,input_list_trt_i=input_list_trt2)) #can be a vector
-  ))
-
-
-
-  # Evaluate event
-  eval_reactevt(input_list_trt$evt_react_list, evt,input_list_trt2)
-
-  return(NULL)
-
+  
+  input_list_trt[c("cost_ongoing", "cost_instant", "cost_cycle", "cycle_l", "cycle_starttime", 
+                   "utilmlt", "util_instant", "util_cycle", "util_cycle_l", "util_cycle_starttime")] <- lapply(list(
+                     cost_ongoing         = get_input(input_list_trt$uc_lists$cost_ongoing_list,ifnull=0,type="cost",evt_trt_i=evt_trt,input_list_trt_i=input_list_trt),
+                     cost_instant         = get_input(input_list_trt$uc_lists$cost_instant_list,ifnull=0,type="cost",evt_trt_i=evt_trt,input_list_trt_i=input_list_trt),
+                     cost_cycle           = get_input(input_list_trt$uc_lists$cost_cycle_list,ifnull=0,type="cost",evt_trt_i=evt_trt,input_list_trt_i=input_list_trt),  #can be a vector
+                     cycle_l              = get_input(input_list_trt$uc_lists$cost_cycle_list,ifnull=1,type="cycle_l",evt_trt_i=evt_trt,input_list_trt_i=input_list_trt), #can be a vector
+                     cycle_starttime      = get_input(input_list_trt$uc_lists$cost_cycle_list,ifnull=0,type="cycle_starttime",evt_trt_i=evt_trt,input_list_trt_i=input_list_trt), #can be a vector
+                     utilmlt              = get_input(input_list_trt$uc_lists$util_ongoing_list,ifnull=0,type="util",evt_trt_i=evt_trt,input_list_trt_i=input_list_trt), 
+                     util_instant         = get_input(input_list_trt$uc_lists$util_instant_list,ifnull=0,type="util",evt_trt_i=evt_trt,input_list_trt_i=input_list_trt),
+                     util_cycle           = get_input(input_list_trt$uc_lists$util_cycle_list,ifnull=0,type="util",evt_trt_i=evt_trt,input_list_trt_i=input_list_trt),    #can be a vector
+                     util_cycle_l         = get_input(input_list_trt$uc_lists$util_cycle_list,ifnull=1,type="cycle_l",evt_trt_i=evt_trt,input_list_trt_i=input_list_trt), 
+                     util_cycle_starttime = get_input(input_list_trt$uc_lists$util_cycle_list,ifnull=0,type="cycle_starttime",evt_trt_i=evt_trt,input_list_trt_i=input_list_trt) #can be a vector
+                   ),unname)
+  
+  
+  # Evaluate event ------------------------------------------------------------------------------------------------------------------------------------------
+  input_list_trt <- eval_reactevt(input_list_trt$evt_react_list, evt,input_list_trt)
+  
+  return(input_list_trt)
 
 }
 
@@ -125,7 +124,7 @@ ReactEvt <- function(thisevt,trt,input_list_trt=NULL){      # This function proc
 #' @param evt_name The current event being processed
 #' @param input_list_trt A list of simulation inputs
 #'
-#' @return No explicit return, it evaluates the costs/qalys/costs, executes the corresponding reactions and stores the inputs in the main simulation input list
+#' @return The modified input list with the updates after executing the corresponding reactions
 #'
 #' @examples
 #' eval_reactevt(x = input_list_trt$evt_react_list,evt_name ="evt1",input_list_trt=input_list_trt)
@@ -136,18 +135,37 @@ ReactEvt <- function(thisevt,trt,input_list_trt=NULL){      # This function proc
 eval_reactevt <-  function(x,evt_name,input_list_trt=NULL){
   position <- which(evt_name==names(x))
   pos_l <- length(position)
-
   if (pos_l==0 | pos_l>1 ) {
-    stop("Reaction to event ", evt_name, " not recognised or more than one reaction found. Make sure that only one reaction has been defined for the event")
+    stop("Reaction to event ", evt_name, " not recognised or more than one reaction found. Make sure that only one reaction has been defined for the event")    
   } else{
-
     #compute outputs
-    eval(x[[position]][["comp_out"]], c(input_list_trt,input_list_trt$env))
-
+    input_list_trt <- compute_outputs(cost_ongoing_i = input_list_trt[["cost_ongoing"]],
+                                      cost_instant_i =input_list_trt[["cost_instant"]],
+                                      cost_cycle_i=input_list_trt[["cost_cycle"]],
+                                      util_cycle_i=input_list_trt[["util_cycle"]],
+                                      util_instant_i=input_list_trt[["util_instant"]],
+                                      utilmlt_i=input_list_trt[["utilmlt"]],
+                                      cycle_l_i = input_list_trt[["cycle_l"]],
+                                      util_cycle_l_i = input_list_trt[["util_cycle_l"]],
+                                      prevtime_i=input_list_trt[["prevtime"]],
+                                      curtime_i=input_list_trt[["curtime"]],
+                                      starttime_i=input_list_trt[["cycle_starttime"]],
+                                      util_starttime_i=input_list_trt[["util_cycle_starttime"]],
+                                      input_list_trt = input_list_trt)
+    
     #evaluate reaction
-    eval(x[[position]][["react"]], c(input_list_trt,input_list_trt$env))
+    
+    input_list_trt <- local({
+      input_list_trt <- input_list_trt
+      eval(x[[position]][["react"]]) #run script
+      out <- input_list_trt
+    },input_list_trt)
+    
+    
+    
   }
-  return(NULL)
+  return(input_list_trt)
+  
 
 }
 
@@ -222,36 +240,35 @@ get_input <-  function(x,ifnull=0,type,evt_trt_i =evt_trt, input_list_trt_i=inpu
 #' @param curtime_i A numeric with the time of the current event
 #' @param starttime_i A numeric vector with the starting times of the cycled costs. This is used to understand what is the corresponding time of the cycle for the current event.
 #' @param util_starttime_i A numeric vector with the starting times of the cycled utilities. This is used to understand what is the corresponding time of the cycle for the current event.
-#' @param env_ch The environment in which the list of simulation inputs is stored
+#' @param input_list_trt The list with all the inputs stored
 #'
-#' @return Modifies the cumulative costs/qalys/lys and adds the current event's costs/qalys/lys in the main list of simulation inputs
+#' @return The modified input list with the updated discounted outputs
 #'
 #' @examples
-#' compute_outputs(cost_ongoing_i = 10, cost_instant_i = 0, cost_cycle_i = 0,util_cycle_i = 0, util_instant_i = 0, utilmlt_i = 0.7, cycle_l_i = 1, util_cycle_l_i = 0,prevtime_i = 0,curtime_i = 1,starttime_i = 0,=util_starttime_i = 0,env_ch = envir())
+#' compute_outputs(cost_ongoing_i = 10, cost_instant_i = 0, cost_cycle_i = 0,util_cycle_i = 0, util_instant_i = 0, utilmlt_i = 0.7, cycle_l_i = 1, util_cycle_l_i = 0,prevtime_i = 0,curtime_i = 1,starttime_i = 0,=util_starttime_i = 0,input_list_trt = input_list_trt)
 #'
 #' @keywords internal
 #' @noRd
 
 compute_outputs <- function(cost_ongoing_i = cost_ongoing,
-                            cost_instant_i = cost_instant,
-                            cost_cycle_i = cost_cycle,
-                            util_cycle_i = util_cycle,
-                            util_instant_i = util_instant,
-                            utilmlt_i = utilmlt,
+                            cost_instant_i =cost_instant,
+                            cost_cycle_i=cost_cycle,
+                            util_cycle_i=util_cycle,
+                            util_instant_i=util_instant,
+                            utilmlt_i=utilmlt,
                             cycle_l_i = cycle_l,
                             util_cycle_l_i = util_cycle_l,
-                            prevtime_i = prevtime,
-                            curtime_i = curtime,
-                            starttime_i = cycle_starttime,
-                            util_starttime_i = util_cycle_starttime,
-                            env_ch = list_env){
-  drq <- env_ch$list_env$list_env$input_list_trt$drq
-  drc <- env_ch$list_env$list_env$input_list_trt$drc
-
-  additionals <-     AddOngoing(lcldrq=drq, lcldrc=drc,lclprvtime=prevtime_i, lclcurtime=curtime_i, lclvalq=utilmlt_i,
+                            prevtime_i=prevtime,
+                            curtime_i=curtime,
+                            starttime_i=cycle_starttime,
+                            util_starttime_i=util_cycle_starttime,
+                            input_list_trt = input_list_trt){
+  drq <- input_list_trt$drq
+  drc <- input_list_trt$drc
+  additionals <-     AddOngoing(lcldrq=drq, lcldrc=drc,lclprvtime=prevtime_i, lclcurtime=curtime_i, lclvalq=utilmlt_i, 
                                 lclvalc= cost_ongoing_i)
   instadditionals <- AddInstant(lcldrq=drq, lcldrc=drc,lclcurtime=curtime_i, lclvalq=util_instant_i,lclvalc=cost_instant_i)
-
+  
   #Cycle costs and utilities
   if (length(cost_cycle_i)==1 & length(util_cycle_i)==1 & util_cycle_i==0 & cost_cycle_i==0) {
     cycleadditionals <- list(addcycleqalys=0, addcyclecosts=0)
@@ -259,19 +276,17 @@ compute_outputs <- function(cost_ongoing_i = cost_ongoing,
     cycleadditionals <- AddCycle(lcldrq=drq, lcldrc=drc,lclprvtime=prevtime_i, cyclelength = cycle_l_i,lclcurtime=curtime_i, lclvalq=0, lclvalc= cost_cycle_i,starttime = starttime_i) #cycles of 1 week
     cycleadditionals$addcycleqalys <- AddCycle(lcldrq=drq, lcldrc=drc,lclprvtime=prevtime_i, cyclelength = util_cycle_l_i,lclcurtime=curtime_i, lclvalq=util_cycle_i, lclvalc= 0,starttime = util_starttime_i)$addcycleqalys #cycles of 1 week
   }
-
   additional_ly <- AddOngoing(lcldrq=drq, lcldrc=drc,lclprvtime=prevtime_i, lclcurtime=curtime_i, lclvalq=1,lclvalc=0)$addqalys
-
-  modify_item(list("thsqalys" = env_ch$list_env$list_env$input_list_trt$thsqalys + additionals$addqalys + instadditionals$addinstqalys + cycleadditionals$addcycleqalys,
-                   "thscosts"= env_ch$list_env$list_env$input_list_trt$thscosts + additionals$addcosts + instadditionals$addinstcosts + cycleadditionals$addcyclecosts,
-                   "thslys"= env_ch$list_env$list_env$input_list_trt$thslys + additional_ly,
-                   "itemlys" = additional_ly,
-                   "itemcosts" = additionals$addcosts + instadditionals$addinstcosts + cycleadditionals$addcyclecosts,
-                   "itemqalys" = additionals$addqalys + instadditionals$addinstqalys + cycleadditionals$addcycleqalys),
-              env_ch = env_ch$list_env$list_env #modify curtime also in main input_list_trt
-  )
-
-
+  
+  input_list_trt[["thsqalys"]] <-  input_list_trt$thsqalys + additionals$addqalys + instadditionals$addinstqalys + cycleadditionals$addcycleqalys
+  input_list_trt[["thscosts"]] <- input_list_trt$thscosts + additionals$addcosts + instadditionals$addinstcosts + cycleadditionals$addcyclecosts
+  input_list_trt[["thslys"]] <- input_list_trt$thslys + additional_ly
+  input_list_trt[["itemlys"]] <- additional_ly
+  input_list_trt[["itemcosts"]] <- additionals$addcosts + instadditionals$addinstcosts + cycleadditionals$addcyclecosts
+  input_list_trt[["itemqalys"]] <- additionals$addqalys + instadditionals$addinstqalys + cycleadditionals$addcycleqalys
+  
+  return(input_list_trt)
+  
 }
 
 # Helper function to create mean and 95% interval -------------------------

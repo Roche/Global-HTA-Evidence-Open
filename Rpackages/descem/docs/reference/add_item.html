@@ -82,7 +82,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">descem</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -195,29 +195,21 @@ So rather than use two <code>add_item</code> with a list of one element, it's be
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>add_item</span><span class='op'>(</span>fl.idfs <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $fl.idfs
-#&gt; &lt;lazy&gt;
-#&gt;   expr: 0
-#&gt;   env:  &lt;environment: 0x62f77c0&gt;
-#&gt; 
-#&gt; attr(,"class")
-#&gt; [1] "lazy_dots"</div><div class='input'><span class='fu'>add_item</span><span class='op'>(</span>util_idfs <span class='op'>=</span> <span class='kw'>if</span><span class='op'>(</span><span class='va'>psa_bool</span><span class='op'>)</span><span class='op'>{</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>0.8</span>,<span class='fl'>0.2</span><span class='op'>)</span><span class='op'>}</span> <span class='kw'>else</span><span class='op'>{</span><span class='fl'>0.8</span><span class='op'>}</span>, util.mbc <span class='op'>=</span> <span class='fl'>0.6</span>, cost_idfs <span class='op'>=</span> <span class='fl'>2500</span><span class='op'>)</span>
+#&gt; [1] 0
+#&gt; </div><div class='input'><span class='fu'>add_item</span><span class='op'>(</span>util_idfs <span class='op'>=</span> <span class='kw'>if</span><span class='op'>(</span><span class='va'>psa_bool</span><span class='op'>)</span><span class='op'>{</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>0.8</span>,<span class='fl'>0.2</span><span class='op'>)</span><span class='op'>}</span> <span class='kw'>else</span><span class='op'>{</span><span class='fl'>0.8</span><span class='op'>}</span>, util.mbc <span class='op'>=</span> <span class='fl'>0.6</span>, cost_idfs <span class='op'>=</span> <span class='fl'>2500</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $util_idfs
-#&gt; &lt;lazy&gt;
-#&gt;   expr: if (psa_bool) { ...
-#&gt;   env:  &lt;environment: 0x62f77c0&gt;
+#&gt; if (psa_bool) {
+#&gt;     rnorm(1, 0.8, 0.2)
+#&gt; } else {
+#&gt;     0.8
+#&gt; }
 #&gt; 
 #&gt; $util.mbc
-#&gt; &lt;lazy&gt;
-#&gt;   expr: 0.6
-#&gt;   env:  &lt;environment: 0x62f77c0&gt;
+#&gt; [1] 0.6
 #&gt; 
 #&gt; $cost_idfs
-#&gt; &lt;lazy&gt;
-#&gt;   expr: 2500
-#&gt;   env:  &lt;environment: 0x62f77c0&gt;
-#&gt; 
-#&gt; attr(,"class")
-#&gt; [1] "lazy_dots"</div><div class='input'>
+#&gt; [1] 2500
+#&gt; </div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

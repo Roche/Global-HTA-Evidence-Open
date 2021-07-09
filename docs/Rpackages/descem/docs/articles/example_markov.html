@@ -37,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">descem</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -48,6 +48,9 @@
     <span class="fa fa-home"></span>
      
   </a>
+</li>
+<li>
+  <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -66,9 +69,6 @@
       <a href="https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/descem/docs/articles/example_markov.html">Example in a Markov Model</a>
     </li>
   </ul>
-</li>
-<li>
-  <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -120,7 +120,7 @@
       <h1 data-toc-skip>Example for a Markov Model</h1>
                         <h4 class="author">Javier Sanchez Alvarez and Valerie Aponte Ribero</h4>
             
-            <h4 class="date">June 29, 2021</h4>
+            <h4 class="date">July 09, 2021</h4>
       
       
       <div class="hidden name"><code>example_markov.Rmd</code></div>
@@ -356,8 +356,8 @@
 <span class="co">#&gt; Item cost_v is named. It is strongly advised to assign unnamed objects if they</span>
 <span class="co">#&gt; are going to be processed in the model, as they can create errors depending on</span>
 <span class="co">#&gt; how they are used within the model</span>
-<span class="co">#&gt; [1] "Time to run iteration 1: 0.15s"</span>
-<span class="co">#&gt; [1] "Total time to run: 0.15s"</span></pre></div>
+<span class="co">#&gt; [1] "Time to run iteration 1: 0.13s"</span>
+<span class="co">#&gt; [1] "Total time to run: 0.13s"</span></pre></div>
 </div>
 </div>
 <div id="post-processing-of-model-outputs" class="section level1">
@@ -552,7 +552,6 @@ int
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">state</span><span class="op">!=</span><span class="fl">4</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co">#erase death state for LY computation</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>ly_final <span class="op">=</span> <span class="va">ly</span><span class="op">*</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/lead-lag.html">lag</a></span><span class="op">(</span><span class="va">trace</span>,<span class="fl">3L</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co">#multiply by previous trace</span>
 <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span>ly_final <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">ly_final</span>,na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="co">#get final discounted life years</span>
-<span class="co">#&gt; `summarise()` ungrouping output (override with `.groups` argument)</span>
 
 <span class="va">life_years</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>

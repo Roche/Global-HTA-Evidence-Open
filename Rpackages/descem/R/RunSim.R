@@ -74,18 +74,19 @@ RunSim <- function(trt_list=c("int","noint"),
   # if (is.null(psa_bool)) {
   #   warning("psa_bool not defined in RunSim.")
   # }
-
-
+  
+  registerDoParallel(ncores)
+  
   trt_list <- trt_list
-
+  
   output_psa <- list()
-
+  
   start_time_simulations <-  proc.time()
   for (simulation in 1:n_sim) {
-
+    
     print(paste0("Simulation number: ",simulation))
     start_time <-  proc.time()
-
+    
     input_list <- list(drc = drc,
                        drq = drq,
                        psa_bool = psa_bool,
@@ -103,68 +104,66 @@ RunSim <- function(trt_list=c("int","noint"),
                        simulation = simulation,
                        npats = npats,
                        n_sim = n_sim
-
+                       
     )
-
+    
     #5.3 Draw Common parameters  -------------------------------
     if(!is.null(common_all_inputs)){
       for (inp in 1:length(common_all_inputs)) {
         set.seed(simulation)
-        list.common_all_inputs <- lapply(common_all_inputs[inp], function(x) lazyeval::lazy_eval(x, data=input_list))
+        list.common_all_inputs <- lapply(common_all_inputs[inp],function(x) eval(x, input_list))
         if (!is.null(names(list.common_all_inputs[[1]]))) {
           warning("Item ", names(list.common_all_inputs), " is named. It is strongly advised to assign unnamed objects if they are going to be processed in the model, as they can create errors depending on how they are used within the model")
         }
         input_list <- c(input_list,list.common_all_inputs)
-      }
+      }      
     }
-
+    
     #Make sure there are no duplicated inputs in the model, if so, take the last one
     duplic <- duplicated(names(input_list),fromLast = T)
     if (sum(duplic)>0) { warning("Duplicated items detected, using the last one added")  }
     input_list <- input_list[!duplic]
-
+    
     #5.5 Run engine ----------------------------------------------------------
-
+    
     #Run engine
-
+    
     if (debug==TRUE) {
       final_output <- RunEngine_debug(trt_list=trt_list,
                                       common_pt_inputs=common_pt_inputs,
                                       unique_pt_inputs=unique_pt_inputs,
                                       input_list = input_list)                    # run simulation
     } else{
-      registerDoParallel(ncores)
-
       final_output <- RunEngine(trt_list=trt_list,
                                 common_pt_inputs=common_pt_inputs,
                                 unique_pt_inputs=unique_pt_inputs,
                                 input_list = input_list)                    # run simulation
     }
-
+    
     if (input_list$ipd==TRUE) {
-
+      
       final_output$merged_df$simulation <- simulation
     }
-
-
+    
+    
     output_psa[[simulation]] <- final_output
-
-
-
-
-
+    
+    
+    
+    
+    
     print(paste0("Time to run iteration ", simulation,": ",  round(proc.time()[3]- start_time[3] , 2 ), "s"))
   }
   print(paste0("Total time to run: ",  round(proc.time()[3]- start_time_simulations[3] , 2), "s"))
-
-
-
-
+  
+  
+  
+  
   # Export results ----------------------------------------------------------
-
-
+  
+  
   results <- list(final_output=final_output,output_psa=output_psa)
-
+  
   return(results)
 
 }
