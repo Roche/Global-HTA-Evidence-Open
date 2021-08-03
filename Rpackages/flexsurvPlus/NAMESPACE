@@ -3,7 +3,7 @@
 export(bootPSM)
 export(convSTEM)
 export(fit_models)
-export(get_model_summary)
 export(runPSM)
 export(sim_adtte)
+export(summaryPSM)
 importFrom(magrittr,"%>%")

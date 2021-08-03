@@ -25,6 +25,7 @@ Possible distributions include
 \item Log-normal ('lnorm')
 \item Log-logistic ('llogis')
 \item Generalized gamma ('gengamma')
+\item Gamma ('gamma')
 }}
 }
 \value{

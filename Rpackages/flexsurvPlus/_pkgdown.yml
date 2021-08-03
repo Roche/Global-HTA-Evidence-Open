@@ -26,6 +26,27 @@ navbar:
    right:
     - icon: fa-github
       href: https://github.com/Roche/Global-HTA-Evidence-Open/tree/master/Rpackages/flexsurvPlus
+
+reference:
+- title: "Core functions"
+  desc: >
+    These functions are the core functions used to perform survival analysis.
+  contents: 
+  - runPSM
+  - bootPSM
+  - summaryPSM
+- title: "Supporting functions"
+  desc: >
+    These functions are provided for convinience but are not part of core workflow
+  contents:
+  - sim_adtte
+  - fit_models
+- title: "STEM appendix"
+  desc: >
+    These functions are used to convert to parametrizations that were used in a prior SAS 
+    macro. For most users these can be safely ignored.
+  contents:
+  - convSTEM
       
   
 articles:

@@ -37,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">flexsurvPlus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.02</span>
       </span>
     </div>
 
@@ -104,7 +104,7 @@
       <h1 data-toc-skip>Fitting parametric survival models in R</h1>
                         <h4 class="author">Roche</h4>
             
-            <h4 class="date">2021-07-08</h4>
+            <h4 class="date">2021-08-03</h4>
       
       
       <div class="hidden name"><code>Fitting_models_in_R.Rmd</code></div>
@@ -1217,20 +1217,19 @@ pre { /* Code block - determines code spacing between lines */
 
 <span class="co"># show the first 3 samples</span>
 <span class="va">PFS_bootsamples</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>,<span class="op">]</span>
-<span class="co">#&gt; # A tibble: 3 x 18</span>
-<span class="co">#&gt;   comshp.weibull.sca… comshp.weibull.sca… comshp.weibull.sha… comshp.weibull.sh…</span>
-<span class="co">#&gt;                 &lt;dbl&gt;               &lt;dbl&gt;               &lt;dbl&gt;              &lt;dbl&gt;</span>
-<span class="co">#&gt; 1                454.                230.                1.41               1.41</span>
-<span class="co">#&gt; 2                453.                252.                1.29               1.29</span>
-<span class="co">#&gt; 3                425.                224.                1.42               1.42</span>
+<span class="co">#&gt; # A tibble: 3 × 18</span>
+<span class="co">#&gt;   comshp.weibull.scale.int comshp.weibull.s… comshp.weibull.s… comshp.weibull.s…</span>
+<span class="co">#&gt;                      &lt;dbl&gt;             &lt;dbl&gt;             &lt;dbl&gt;             &lt;dbl&gt;</span>
+<span class="co">#&gt; 1                     454.              230.              1.41              1.41</span>
+<span class="co">#&gt; 2                     453.              252.              1.29              1.29</span>
+<span class="co">#&gt; 3                     425.              224.              1.42              1.42</span>
 <span class="co">#&gt; # … with 14 more variables: comshp.weibull.scale.TE &lt;dbl&gt;,</span>
 <span class="co">#&gt; #   comshp.gamma.rate.int &lt;dbl&gt;, comshp.gamma.rate.ref &lt;dbl&gt;,</span>
 <span class="co">#&gt; #   comshp.gamma.shape.int &lt;dbl&gt;, comshp.gamma.shape.ref &lt;dbl&gt;,</span>
 <span class="co">#&gt; #   comshp.gamma.rate.TE &lt;dbl&gt;, sep.weibull.scale.int &lt;dbl&gt;,</span>
 <span class="co">#&gt; #   sep.weibull.scale.ref &lt;dbl&gt;, sep.weibull.shape.int &lt;dbl&gt;,</span>
 <span class="co">#&gt; #   sep.weibull.shape.ref &lt;dbl&gt;, sep.gamma.rate.int &lt;dbl&gt;,</span>
-<span class="co">#&gt; #   sep.gamma.rate.ref &lt;dbl&gt;, sep.gamma.shape.int &lt;dbl&gt;,</span>
-<span class="co">#&gt; #   sep.gamma.shape.ref &lt;dbl&gt;</span></pre></div>
+<span class="co">#&gt; #   sep.gamma.rate.ref &lt;dbl&gt;, sep.gamma.shape.int &lt;dbl&gt;, …</span></pre></div>
 </div>
 <div id="estimating-quantities-from-the-sample" class="section level1">
 <h1 class="hasAnchor">

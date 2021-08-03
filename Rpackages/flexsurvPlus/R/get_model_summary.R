@@ -1,23 +1,23 @@
 
-#' Get model summary from \code{\link{fit_models}} objects
-#'
-#' Manipulates \code{\link{fit_models}} objects to get a model summary of AIC and BIC and status of whether the model converged or produced an error or warning.
-#'
-#' For more details and examples see the package vignettes:
-#' \itemize{
-#'   \item \code{vignette("Fitting_models_in_R", package = "flexsurvPlus")}
-#'   \item \code{vignette("Fitting_models_in_R_bootstrap", package = "flexsurvPlus")}
-#'   \item \code{vignette("Survival_analysis_theory", package = "flexsurvPlus")}
-#'   }
-#'
-#' @param models Object from \code{\link{fit_models}}
-#'
-#' @return A data frame containing the \code{\link{AIC}}, \code{\link{BIC}}
-#'   from flexsurv objects and a status column of whether the model converged or produced an error or warning.
-#'
-#' @seealso \code{\link{fit_models}} \code{\link{flexsurvreg}}
-#'
-#' @export
+# Get model summary from \code{\link{fit_models}} objects
+#
+# Manipulates \code{\link{fit_models}} objects to get a model summary of AIC and BIC and status of whether the model converged or produced an error or warning.
+#
+#
+# For more details and examples see the package vignettes:
+# \itemize{
+#   \item \code{vignette("Fitting_models_in_R", package = "flexsurvPlus")}
+#   \item \code{vignette("Fitting_models_in_R_bootstrap", package = "flexsurvPlus")}
+#   \item \code{vignette("Survival_analysis_theory", package = "flexsurvPlus")}
+#   }
+#
+# @param models Object from \code{\link{fit_models}}
+#
+# @return A data frame containing the \code{\link{AIC}}, \code{\link{BIC}}
+#   from flexsurv objects and a status column of whether the model converged or produced an error or warning.
+#
+# @seealso \code{\link{fit_models}} \code{\link{flexsurvreg}}
+#
 get_model_summary <- function(models) {
   
   # Filter on flexsurv models

@@ -37,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">flexsurvPlus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.02</span>
       </span>
     </div>
 
@@ -104,7 +104,7 @@
       <h1 data-toc-skip>STEM compatibility</h1>
                         <h4 class="author">Roche</h4>
             
-            <h4 class="date">2021-07-08</h4>
+            <h4 class="date">2021-08-03</h4>
       
       
       <div class="hidden name"><code>STEM_compatibility.Rmd</code></div>
@@ -298,19 +298,19 @@ pre { /* Code block - determines code spacing between lines */
 
 <span class="va">PFS_conv_samples</span><span class="op">$</span><span class="va">stem_cov</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">transmute</a></span><span class="op">(</span><span class="va">Model</span>, <span class="va">Dist</span>, <span class="va">rowParam</span>, <span class="va">colParam</span>, <span class="va">rowNum</span>, <span class="va">colNum</span>, <span class="va">CovEst</span><span class="op">)</span> 
-<span class="co">#&gt; # A tibble: 23 x 7</span>
-<span class="co">#&gt;    Model       Dist       rowParam        colParam       rowNum colNum    CovEst</span>
-<span class="co">#&gt;    &lt;chr&gt;       &lt;chr&gt;      &lt;chr&gt;           &lt;chr&gt;           &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;</span>
-<span class="co">#&gt;  1 Common Sha… Exponenti… INTERCEPT       INTERCEPT           1      1   4.54e-3</span>
-<span class="co">#&gt;  2 Common Sha… Exponenti… INTERCEPT       TX(Interventi…      1      2  -4.86e-3</span>
-<span class="co">#&gt;  3 Common Sha… Exponenti… TX(Interventio… INTERCEPT           2      1  -4.86e-3</span>
-<span class="co">#&gt;  4 Common Sha… Exponenti… TX(Interventio… TX(Interventi…      2      2   7.93e-3</span>
-<span class="co">#&gt;  5 Common Sha… Weibull    INTERCEPT       INTERCEPT           1      1   2.98e-3</span>
-<span class="co">#&gt;  6 Common Sha… Weibull    INTERCEPT       TX(Interventi…      1      2  -3.18e-3</span>
-<span class="co">#&gt;  7 Common Sha… Weibull    INTERCEPT       SCALE               1      3   8.86e-5</span>
-<span class="co">#&gt;  8 Common Sha… Weibull    TX(Interventio… INTERCEPT           2      1  -3.18e-3</span>
-<span class="co">#&gt;  9 Common Sha… Weibull    TX(Interventio… TX(Interventi…      2      2   5.80e-3</span>
-<span class="co">#&gt; 10 Common Sha… Weibull    TX(Interventio… SCALE               2      3  -7.51e-5</span>
+<span class="co">#&gt; # A tibble: 23 × 7</span>
+<span class="co">#&gt;    Model        Dist        rowParam         colParam     rowNum colNum   CovEst</span>
+<span class="co">#&gt;    &lt;chr&gt;        &lt;chr&gt;       &lt;chr&gt;            &lt;chr&gt;         &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;</span>
+<span class="co">#&gt;  1 Common Shape Exponential INTERCEPT        INTERCEPT         1      1  4.54e-3</span>
+<span class="co">#&gt;  2 Common Shape Exponential INTERCEPT        TX(Interven…      1      2 -4.86e-3</span>
+<span class="co">#&gt;  3 Common Shape Exponential TX(Intervention) INTERCEPT         2      1 -4.86e-3</span>
+<span class="co">#&gt;  4 Common Shape Exponential TX(Intervention) TX(Interven…      2      2  7.93e-3</span>
+<span class="co">#&gt;  5 Common Shape Weibull     INTERCEPT        INTERCEPT         1      1  2.98e-3</span>
+<span class="co">#&gt;  6 Common Shape Weibull     INTERCEPT        TX(Interven…      1      2 -3.18e-3</span>
+<span class="co">#&gt;  7 Common Shape Weibull     INTERCEPT        SCALE             1      3  8.86e-5</span>
+<span class="co">#&gt;  8 Common Shape Weibull     TX(Intervention) INTERCEPT         2      1 -3.18e-3</span>
+<span class="co">#&gt;  9 Common Shape Weibull     TX(Intervention) TX(Interven…      2      2  5.80e-3</span>
+<span class="co">#&gt; 10 Common Shape Weibull     TX(Intervention) SCALE             2      3 -7.51e-5</span>
 <span class="co">#&gt; # … with 13 more rows</span></pre></div>
 <p>The matrix is described by row and column numbers so can be back converted to a matrix if desired.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit">
@@ -321,7 +321,7 @@ pre { /* Code block - determines code spacing between lines */
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">transmute</a></span><span class="op">(</span><span class="va">rowParam</span>, <span class="va">colParam</span>, <span class="va">rowNum</span>, <span class="va">colNum</span>, <span class="va">CovEst</span><span class="op">)</span>
 
 <span class="va">weibull_common_data</span>
-<span class="co">#&gt; # A tibble: 9 x 5</span>
+<span class="co">#&gt; # A tibble: 9 × 5</span>
 <span class="co">#&gt;   rowParam         colParam         rowNum colNum     CovEst</span>
 <span class="co">#&gt;   &lt;chr&gt;            &lt;chr&gt;             &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 INTERCEPT        INTERCEPT             1      1  0.00298  </span>

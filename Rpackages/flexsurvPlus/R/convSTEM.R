@@ -17,6 +17,7 @@
 #'   \item Log-normal ('lnorm')
 #'   \item Log-logistic ('llogis')
 #'   \item Generalized gamma ('gengamma')
+#'   \item Gamma ('gamma')
 #'   }
 #'
 #' @return a list containing 4 data frames
@@ -757,6 +758,118 @@ convSTEM <- function(x = NULL, samples = NULL){
       ) %>%
       bind_rows(rc)
   }
+  
+  #############################
+  #### gamma models
+  #############################
+  
+  # common shape
+  if (any(grepl("comshp.gamma.", names(ests)))){
+    
+    rc <- rc_struct %>%
+      mutate(Model = "Common Shape", Dist = "Gamma",
+             Param = "INTERCEPT",
+             Value = -log(ests$comshp.gamma.rate.ref)
+      ) %>%
+      bind_rows(rc)
+    
+    rc <- rc_struct %>%
+      mutate(Model = "Common Shape", Dist = "Gamma",
+             Param = "TX(Intervention)",
+             Value = -(log(ests$comshp.gamma.rate.int) - log(ests$comshp.gamma.rate.ref))
+      ) %>%
+      bind_rows(rc)
+    
+    rc <- rc_struct %>%
+      mutate(Model = "Common Shape", Dist = "Gamma",
+             Param = "SCALE",
+             Value = ests$comshp.gamma.shape.ref
+      ) %>%
+      bind_rows(rc)
+  }
+  
+  # separate
+  if (any(grepl("sep.gamma.", names(ests)))){
+    
+    rc <- rc_struct %>%
+      mutate(Model = "Separate - Reference", Dist = "Gamma",
+             Param = "INTERCEPT",
+             Value = -log(ests$sep.gamma.rate.ref)
+      ) %>%
+      bind_rows(rc)
+    
+    rc <- rc_struct %>%
+      mutate(Model = "Separate - Reference", Dist = "Gamma",
+             Param = "SCALE",
+             Value = ests$sep.gamma.shape.ref
+      ) %>%
+      bind_rows(rc)
+    
+    rc <- rc_struct %>%
+      mutate(Model = "Separate - Intervention", Dist = "Gamma",
+             Param = "INTERCEPT",
+             Value = -log(ests$sep.gamma.rate.int)
+      ) %>%
+      bind_rows(rc)
+    
+    rc <- rc_struct %>%
+      mutate(Model = "Separate - Intervention", Dist = "Gamma",
+             Param = "SCALE",
+             Value = ests$sep.gamma.shape.int
+      ) %>%
+      bind_rows(rc)
+  }
+  
+  # independent shape (not really supported by STEM so handled as if separate models)
+  if (any(grepl("indshp.gamma.", names(ests)))){
+    
+    rc <- rc_struct %>%
+      mutate(Model = "Independent Shape - Reference", Dist = "Gamma",
+             Param = "INTERCEPT",
+             Value = -log(ests$indshp.gamma.rate.ref)
+      ) %>%
+      bind_rows(rc)
+    
+    rc <- rc_struct %>%
+      mutate(Model = "Independent Shape - Reference", Dist = "Gamma",
+             Param = "SCALE",
+             Value = ests$indshp.gamma.shape.ref
+      ) %>%
+      bind_rows(rc)
+    
+    rc <- rc_struct %>%
+      mutate(Model = "Independent Shape - Intervention", Dist = "Gamma",
+             Param = "INTERCEPT",
+             Value = -log(ests$indshp.gamma.rate.int)
+      ) %>%
+      bind_rows(rc)
+    
+    rc <- rc_struct %>%
+      mutate(Model = "Independent Shape - Intervention", Dist = "Gamma",
+             Param = "SCALE",
+             Value = ests$indshp.gamma.shape.int
+      ) %>%
+      bind_rows(rc)
+  }
+  
+  # onearm
+  if (any(grepl("onearm.gamma.", names(ests)))){
+    
+    rc <- rc_struct %>%
+      mutate(Model = "One arm - Intervention", Dist = "Gamma",
+             Param = "INTERCEPT",
+             Value = -log(ests$onearm.gamma.rate.int)
+      ) %>%
+      bind_rows(rc)
+    
+    rc <- rc_struct %>%
+      mutate(Model = "One arm - Intervention", Dist = "Gamma",
+             Param = "SCALE",
+             Value = ests$onearm.gamma.shape.int
+      ) %>%
+      bind_rows(rc)
+  }
+  
   
   
   stemParamDF <- rc

@@ -66,8 +66,8 @@
 #'   \item \code{vignette("Survival_analysis_theory", package = "flexsurvPlus")}
 #'   }
 #' 
-#' @return A list containing 'models' (output from \code{\link{fit_models}}), 'model_summary' (output from \code{\link{get_model_summary}}) and
-#'   'parameters', a data frame containing the coefficients of each flexsurv model.
+#' @return A list containing 'models' (models fit using flexsurvreg), 'model_summary' (a tibble containing AIC, BIC and convergence information) and
+#'   'parameters_vector', a vector containing the coefficients of each flexsurv model.
 #' \itemize{
 #'   \item 'models' is a list of flexsurv objects for each distribution specified
 #'   \item 'model_summary' is a tibble object containing the fitted model objects, the parameter
