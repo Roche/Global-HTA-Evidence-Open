@@ -156,3 +156,114 @@ extract_psa_result <- function(x, element,trt) {
   out <- data.frame(element = element, trt = trt , simulation = 1:length(out),value=out)
   return(out)
 }
+
+
+
+
+
+# CEAC -------------------------------------------------------------------------------------------------------------------------
+
+#' Calculate the cost-effectiveness acceptability curve (CEAC) for a DES model with a PSA result
+#'
+#' @param wtp Vector of length >=1 with the willingness to pay
+#' @param results The list object returned by `RunSim()`
+#' @param interventions A character vector with the names of the interventions to be used for the analysis
+#'
+#' @return A data frame with the CEAC results
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' ceac_des(seq(from=10000,to=500000,by=10000),results)
+#' }
+
+ceac_des <- function(wtp, results, interventions = NULL) {
+
+  if (is.null(interventions)) {
+    interventions <- results$final_output$trt_list
+  }
+
+  nmb <- data.frame()
+  for (comparator in interventions) {
+
+     nmb_i <- data.frame(
+       sapply(wtp, function(wtp_i) wtp_i * extract_psa_result(results$output_psa,"qalys",comparator)$value - extract_psa_result(results$output_psa,"costs",comparator)$value),
+       stringsAsFactors = FALSE)
+
+     names(nmb_i) <- format(wtp, scientific=F)
+     nmb_i$iteration <-  1:nrow(nmb_i)
+     nmb_i <- nmb_i %>% gather(key="wtp",value="nmb",-iteration)
+     nmb_i$comparator <- comparator
+     nmb_i$wtp <- as.numeric(nmb_i$wtp)
+
+    nmb <- rbind(nmb,nmb_i)
+  }
+
+  nmb <- nmb %>%
+    group_by(wtp,iteration) %>%
+    mutate(best_nmb= ifelse(max(nmb)>0,comparator[nmb==max(nmb)],NA))
+
+  ceac <- nmb %>%
+    group_by(wtp,comparator) %>%
+    summarise(prob_best= sum(best_nmb==comparator)/n()) %>%
+    mutate(prob_best = ifelse(is.na(prob_best),0,prob_best))
+
+
+  return(ceac)
+}
+
+
+# EVPI -------------------------------------------------------------------------------------------------------------------------
+
+#' Calculate the Expected Value of Perfect Information (EVPI) for a DES model with a PSA result
+#'
+#' @param wtp Vector of length >=1 with the willingness to pay
+#' @param results The list object returned by `RunSim()`
+#' @param interventions A character vector with the names of the interventions to be used for the analysis
+#'
+#' @return A data frame with the EVPI results
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' evpi_des(seq(from=10000,to=500000,by=10000),results)
+#' }
+
+evpi_des <- function(wtp, results, interventions = NULL) {
+
+  if (is.null(interventions)) {
+    interventions <- results$final_output$trt_list
+  }
+
+
+  nmb <- data.frame()
+  for (comparator in interventions) {
+
+    nmb_i <- data.frame(
+      sapply(wtp, function(wtp_i) wtp_i * extract_psa_result(results$output_psa,"qalys",comparator)$value - extract_psa_result(results$output_psa,"costs",comparator)$value),
+      stringsAsFactors = FALSE)
+
+    names(nmb_i) <- format(wtp, scientific=F)
+    nmb_i$iteration <-  1:nrow(nmb_i)
+    nmb_i <- nmb_i %>% gather(key="wtp",value="nmb",-iteration)
+    nmb_i$comparator <- comparator
+    nmb_i$wtp <- as.numeric(nmb_i$wtp)
+
+    nmb <- rbind(nmb,nmb_i)
+  }
+
+  nmb <-nmb %>%
+    group_by(wtp,comparator) %>%
+    mutate(mean_nmb=mean(nmb)) %>%
+    group_by(wtp,iteration) %>%
+    mutate(max_nmb=max(nmb)) %>%
+    group_by(wtp) %>%
+    mutate(max_mean_nmb = max(mean_nmb),
+           mean_max_nmb = mean(max_nmb)) %>%
+    ungroup() %>%
+    mutate(evpi = mean_max_nmb - max_mean_nmb) %>%
+    select(wtp,evpi)
+
+
+  return(nmb)
+}

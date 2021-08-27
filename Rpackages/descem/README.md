@@ -32,7 +32,9 @@ The
 [markov](https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/descem/docs/articles/example_markov.html)
 example shows how to run a cohort Markov model while using the same
 modeling framework. Similarly, a simulation based Markov model could be
-run.
+run. Structural and parametric uncertainty are explored in the
+[corresponding
+vignette](https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/descem/docs/articles/example_uncertainty.html).
 
 ## Documentation
 

@@ -19,7 +19,7 @@ The current version supports:
 * Helper functions to facilitate drawing of time to events and the use of hazard ratios
 * Performing cost-effectiveness and uncertainty analysis
 
-It is recommended that the user checks the vignettes, first the simple Sick-Sicker-Dead model [Sick-Sicker-Dead model](https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/descem/docs/articles/example_ssd.html) and then the more complex model for [early breast cancer](https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/descem/docs/articles/example_eBC.html). The [markov](https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/descem/docs/articles/example_markov.html) example shows how to run a cohort Markov model while using the same modeling framework. Similarly, a simulation based Markov model could be run.
+It is recommended that the user checks the vignettes, first the simple Sick-Sicker-Dead model [Sick-Sicker-Dead model](https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/descem/docs/articles/example_ssd.html) and then the more complex model for [early breast cancer](https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/descem/docs/articles/example_eBC.html). The [markov](https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/descem/docs/articles/example_markov.html) example shows how to run a cohort Markov model while using the same modeling framework. Similarly, a simulation based Markov model could be run. Structural and parametric uncertainty are explored in the [corresponding vignette](https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/descem/docs/articles/example_uncertainty.html).
 
 ## Documentation
 
