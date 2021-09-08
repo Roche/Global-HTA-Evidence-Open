@@ -9,7 +9,7 @@ RunSim(
   common_all_inputs = NULL,
   common_pt_inputs = NULL,
   unique_pt_inputs = NULL,
-  init_event_list = init_event_list,
+  init_event_list = NULL,
   evt_react_list = evt_react_list,
   util_ongoing_list = NULL,
   util_instant_list = NULL,
@@ -37,7 +37,7 @@ RunSim(
 
 \item{unique_pt_inputs}{A list of inputs that change across each intervention}
 
-\item{init_event_list}{A list of initial events and event times}
+\item{init_event_list}{A list of initial events and event times. If no initial events are given, a "Start" event at time 0 is created automatically}
 
 \item{evt_react_list}{A list of event reactions}
 

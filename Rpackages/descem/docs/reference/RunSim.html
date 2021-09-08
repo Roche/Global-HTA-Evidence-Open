@@ -82,7 +82,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">descem</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -90,7 +90,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home"></span>
+    <span class="fas fa-home"></span>
      
   </a>
 </li>
@@ -112,6 +112,9 @@
     </li>
     <li>
       <a href="https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/descem/docs/articles/example_markov.html">Example in a Markov Model</a>
+    </li>
+    <li>
+      <a href="https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/descem/docs/articles/example_uncertainty.html">Structural and Parametric Uncertainty</a>
     </li>
   </ul>
 </li>
@@ -143,7 +146,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/Roche/Global-HTA-Evidence-Open/tree/master/Rpackages/descem">
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -174,7 +177,7 @@
   common_all_inputs <span class='op'>=</span> <span class='cn'>NULL</span>,
   common_pt_inputs <span class='op'>=</span> <span class='cn'>NULL</span>,
   unique_pt_inputs <span class='op'>=</span> <span class='cn'>NULL</span>,
-  init_event_list <span class='op'>=</span> <span class='va'>init_event_list</span>,
+  init_event_list <span class='op'>=</span> <span class='cn'>NULL</span>,
   evt_react_list <span class='op'>=</span> <span class='va'>evt_react_list</span>,
   util_ongoing_list <span class='op'>=</span> <span class='cn'>NULL</span>,
   util_instant_list <span class='op'>=</span> <span class='cn'>NULL</span>,
@@ -214,7 +217,7 @@
     </tr>
     <tr>
       <th>init_event_list</th>
-      <td><p>A list of initial events and event times</p></td>
+      <td><p>A list of initial events and event times. If no initial events are given, a "Start" event at time 0 is created automatically</p></td>
     </tr>
     <tr>
       <th>evt_react_list</th>

@@ -79,7 +79,7 @@ We define here our initial trace, the number of cycles to be simulated, the tran
 common_all_inputs <- add_item(max_n_cycles = 30) %>%
   add_item( #utilities
     util_v = if(psa_bool){
-      setNames(draw.rgamma(util.data$value,util.data$se^2),util.data$name) #in this case I choose a multivariate normal with no correlation
+      setNames(draw_gamma(util.data$value,util.data$se^2),util.data$name) #in this case I choose a gamma distribution
     } else{setNames(util.data$value,util.data$name)},
     util1 = util_v[["util1"]], 
     util2 = util_v[["util2"]],
@@ -87,7 +87,7 @@ common_all_inputs <- add_item(max_n_cycles = 30) %>%
     util4 = util_v[["util4"]]) %>%
   add_item( #costs
     cost_v = if(psa_bool){
-      setNames(draw.rgamma(cost.data$value,cost.data$se),cost.data$name) #in this case I choose a gamma distribution
+      setNames(draw_gamma(cost.data$value,cost.data$se),cost.data$name) #in this case I choose a gamma distribution
     } else{setNames(cost.data$value,cost.data$name)},
     cost1    = cost_v[["cost1"]],
     cost2    = cost_v[["cost2"]],

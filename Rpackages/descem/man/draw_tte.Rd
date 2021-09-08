@@ -10,7 +10,8 @@ draw_tte(
   coef1 = 1,
   coef2 = NULL,
   coef3 = NULL,
-  hr = 1
+  hr = 1,
+  seed = NULL
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ draw_tte(
 \item{coef3}{Third coefficient of the distribution, defined as in the coef() output on a flexsurvreg object}
 
 \item{hr}{A hazard ratio}
+
+\item{seed}{An integer which will be used to set the seed for this draw. If no seed is set a random integer is used.}
 }
 \value{
 A vector of time to event estimates from the given parameters

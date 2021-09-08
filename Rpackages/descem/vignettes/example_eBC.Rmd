@@ -118,7 +118,7 @@ common_all_inputs <- add_item( #utilities
     ) %>%
   add_item( #costs
     cost_v = if(psa_bool){
-                     setNames(draw.rgamma(cost.data$value,cost.data$se),cost.data$name) #in this case I choose a gamma distribution
+                     setNames(draw_gamma(cost.data$value,cost.data$se),cost.data$name) #in this case I choose a gamma distribution
              } else{setNames(cost.data$value,cost.data$name)},
     cost.idfs.tx  = cost_v[["cost.idfs.tx"]],
     cost.recurrence  = cost_v[["cost.recurrence"]],
@@ -133,7 +133,7 @@ common_all_inputs <- add_item( #utilities
     )
 #Put objects here that do not change as we loop through interventions for a patient
 common_pt_inputs <- add_item(sex_pt = ifelse(rbernoulli(1,p=0.01),"male","female"),
-                             nat.os.s = rresgompertz(1,
+                             nat.os.s = draw_resgompertz(1,
                                                      shape=if(sex_pt=="male"){0.102}else{0.115},
                                                      rate=if(sex_pt=="male"){0.000016}else{0.0000041},
                                                      lower_bound = 50) ) #in years, for a patient who is 50yo
