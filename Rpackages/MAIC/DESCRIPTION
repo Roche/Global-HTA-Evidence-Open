@@ -30,4 +30,5 @@ Suggests:
     knitr,
     flextable,
     officer,
-    survminer
+    survminer,
+    testthat
