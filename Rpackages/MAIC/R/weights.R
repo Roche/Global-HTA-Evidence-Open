@@ -107,10 +107,11 @@ estimate_weights <- function(intervention_data,  matching_vars, method = "BFGS",
     msg = "matching_vars contains variable names that are not in the intervention dataset"
   )
 
-
+  # create visible local bindings for R CMD check
+  wt <- NULL
 
   # Optimise Q(b) using Newton-Raphson techniques
-  opt1 <- optim(par = rep(0,dim(as.data.frame(intervention_data[,matching_vars]))[2]),
+  opt1 <- stats::optim(par = rep(0,dim(as.data.frame(intervention_data[,matching_vars]))[2]),
                 fn = objfn,
                 gr = gradfn,
                 X = as.matrix(intervention_data[,matching_vars]),
@@ -207,8 +208,8 @@ summarize_wts <- function(data, wt_col="wt", rs_wt_col="wt_rs"){
   summary <- data.frame(
     type = c("Weights", "Rescaled weights"),
     mean = c(mean(data[,wt_col]), mean(data[,rs_wt_col])),
-    sd = c(sd(data[,wt_col]), sd(data[,rs_wt_col])),
-    median = c(median(data[,wt_col]), median(data[,rs_wt_col])),
+    sd = c(stats::sd(data[,wt_col]), stats::sd(data[,rs_wt_col])),
+    median = c(stats::median(data[,wt_col]), stats::median(data[,rs_wt_col])),
     min = c(min(data[,wt_col]), min(data[,rs_wt_col])),
     max = c(max(data[,wt_col]), max(data[,rs_wt_col]))
   )
@@ -241,11 +242,19 @@ summarize_wts <- function(data, wt_col="wt", rs_wt_col="wt_rs"){
 #' @export
 hist_wts <- function(data, wt_col="wt", rs_wt_col="wt_rs", bin = 30) {
 
-  wt_data <- data %>%
+  # create visible local bindings for R CMD check
+  value <- `Rescaled weights` <- Weights <- NULL
+  
+  wt_data1 <- data %>%
     dplyr::select(c(wt_col, rs_wt_col)) %>% # select only the weights and rescaled weights
-    dplyr::rename("Weights" = wt_col, "Rescaled weights" = rs_wt_col) %>% # rename so for plots
-    tidyr::gather() # weights and rescaled weights in one column for plotting
-
+    dplyr::rename("Weights" = wt_col, "Rescaled weights" = rs_wt_col)  # rename so for plots
+  
+  # tidyr::gather() # weights and rescaled weights in one column for plotting
+  
+  wt_data <- dplyr::bind_rows(
+    dplyr::transmute(wt_data1, key = "Weights", value = Weights),
+    dplyr::transmute(wt_data1, key = "Rescaled weights", value = `Rescaled weights`)
+  )
 
   hist_plot <- ggplot2::ggplot(wt_data) + ggplot2::geom_histogram(ggplot2::aes(value), bins = bin) +
     ggplot2::facet_wrap(~key,  ncol=1) + # gives the two plots (one on top of the other)
@@ -276,7 +285,7 @@ hist_wts <- function(data, wt_col="wt", rs_wt_col="wt_rs", bin = 30) {
 #' @param wt_col The name of the weights column in the data frame containing the
 #'   intervention individual patient data and the MAIC propensity weights. The
 #'   default is wt.
-#' @param rs_wt_col The name of the rescaled weights column in the data frame
+#' @param wt_rs The name of the rescaled weights column in the data frame
 #'   containing the intervention individual patient data and the MAIC propensity
 #'   weights. The default is wt_rs.
 #' @param vars A character vector giving the variable names of the baseline
@@ -316,7 +325,7 @@ profile_wts <- function(data, wt_col="wt", wt_rs="wt_rs", vars){
 #' @param wt_col The name of the weights column in the data frame containing the
 #'   intervention individual patient data and the MAIC propensity weights. The
 #'   default is wt.
-#' @param rs_wt_col The name of the rescaled weights column in the data frame
+#' @param wt_rs The name of the rescaled weights column in the data frame
 #'   containing the intervention individual patient data and the MAIC propensity
 #'   weights. The default is wt_rs.
 #' @param vars A character vector giving the variable names of the baseline

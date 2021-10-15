@@ -33,7 +33,7 @@ test_that("MAIC full example", {
   #####################################################
   
   # Baseline aggregate data for the comparator population
-  target_pop <- read.csv(system.file("extdata", "Aggregate data.csv",
+  target_pop <- read.csv(system.file("extdata", "aggregate_data.csv",
                                      package = "MAIC", mustWork = TRUE))
   
   # estimate weights

@@ -15,13 +15,13 @@ using \code{\link{estimate_weights}}).}
 intervention individual patient data and the MAIC propensity weights. The
 default is wt.}
 
+\item{wt_rs}{The name of the rescaled weights column in the data frame
+containing the intervention individual patient data and the MAIC propensity
+weights. The default is wt_rs.}
+
 \item{vars}{A character vector giving the variable names of the baseline
 characteristics (not centered). These names must match the column names in
 the data.}
-
-\item{rs_wt_col}{The name of the rescaled weights column in the data frame
-containing the intervention individual patient data and the MAIC propensity
-weights. The default is wt_rs.}
 }
 \value{
 A data frame that includes a summary of patient characteristics

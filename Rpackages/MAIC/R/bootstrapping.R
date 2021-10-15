@@ -30,6 +30,9 @@
 #' @export
 bootstrap_HR <- function(intervention_data, matching, i, model, comparator_data, min_weight = 0.0001){
 
+  # create a visible binding for R CMD check
+  wt <- NULL
+  
   # Samples the data
   bootstrap_data <- intervention_data[i,]
 
@@ -41,7 +44,7 @@ bootstrap_HR <- function(intervention_data, matching, i, model, comparator_data,
 
   # Add the comparator data
   combined_data <- dplyr::bind_rows(perform_wt$analysis_data, comparator_data_wts)
-  combined_data$ARM <- relevel(as.factor(combined_data$ARM), ref="Comparator")
+  combined_data$ARM <- stats::relevel(as.factor(combined_data$ARM), ref="Comparator")
 
   # set weights that are below eta to eta to avoid issues with 0 values
   combined_data$wt <- ifelse(combined_data$wt < min_weight, min_weight, combined_data$wt)
@@ -83,6 +86,9 @@ bootstrap_HR <- function(intervention_data, matching, i, model, comparator_data,
 #' @export
 bootstrap_OR <- function(intervention_data, matching, i, model, comparator_data, min_weight = 0.0001){
 
+  # create a visible binding for R CMD check
+  wt <- NULL
+  
   # Samples the data
   bootstrap_data <- intervention_data[i,]
 
@@ -94,12 +100,12 @@ bootstrap_OR <- function(intervention_data, matching, i, model, comparator_data,
 
   # Add the comparator data
   combined_data <- dplyr::bind_rows(perform_wt$analysis_data, comparator_data_wts)
-  combined_data$ARM <- relevel(as.factor(combined_data$ARM), ref="Comparator")
+  combined_data$ARM <- stats::relevel(as.factor(combined_data$ARM), ref="Comparator")
 
   # set weights that are below eta to eta to avoid issues with 0 values
   combined_data$wt <- ifelse(combined_data$wt < min_weight, min_weight, combined_data$wt)
-  
+
   # Perform logistic regression and extract the OR estimate
-  logistic.regr <- suppressWarnings(glm(formula = model, family=binomial(link="logit"), data = combined_data, weight = wt))
-  OR <- exp(as.numeric(coef(logistic.regr)[2]))
+  logistic.regr <- suppressWarnings(stats::glm(formula = model, family=stats::binomial(link="logit"), data = combined_data, weight = wt))
+  OR <- exp(as.numeric(stats::coef(logistic.regr)[2]))
 }
