@@ -1,15 +1,9 @@
 # rpsftmPlus
 
-The package extends the rpsftm package with some useful default reports and functions to facilitate sensitivity analysis. Covering descriptive, diagnostic and reporting aspects. All the functions are designed to take an rpsftm object (see rpstm::rpsftm() for details on creation) as an argument. The descriptive functions do not actually require an rspft model to be fit but rather just use it as a convenient way to store information about switching alongside survival.
+This package implements some convinience functions for working with the [rpsftm package](https://cran.r-project.org/web/packages/rpsftm/) and general analysis of trials affected by treatment switching.
 
-## installation 
-```
-devtools::install_github(
-  "roche/Global-HTA-Evidence-Open", 
-  subdir = "/Rpackages/rpsftmPlus"
-  )
-```
+This code has been moved. Please see updated locations below:
 
-## documentation
-
-https://roche.github.io/Global-HTA-Evidence-Open/Rpackages/rpsftmPlus/docs/index.html
+| Repository | Documentation |
+|---|---|
+| https://github.com/Roche/rpsftmPlus | https://roche.github.io/rpsftmPlus |

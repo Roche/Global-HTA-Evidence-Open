@@ -1,7 +1,0 @@
-pandoc: 2.9.2
-pkgdown: 1.5.1
-pkgdown_sha: ~
-articles:
-  rpsftmPlus: rpsftmPlus.html
-last_built: 2021-05-12T08:35Z
-
